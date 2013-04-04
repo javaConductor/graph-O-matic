@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+
+
+	  <script src="js/lib/angular/angular.js"            type='text/javascript'></script>
+	  <script src="js/lib/angular/angular-resource.js"   type='text/javascript'></script>
+
+	  <script src="js/services.js"   type='text/javascript'></script>
+	  <script src="js/filters.js"   	type='text/javascript'></script>
+	  <script src="js/directives.js"  type='text/javascript'></script>
+	  <script src="js/controllers.js" type='text/javascript'></script>
+	  <script src="js/app.js"   		type='text/javascript'></script>
+	  <style>
+		  .draggable {
+			  cursor: move;
+		  }
+	  </style>
+  </head>
+  <body ng-controller='AppCtrl'>
+    <h1><%= title %></h1>
+    <p>Welcome to <%= title %></p>
+	<graph-item ng-model="" />
+
+	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+		<g class="draggable">
+
+		<rect x="10" y="10" height="100" width="100"
+			  style="stroke:#006600; fill: #00cc00">    	</rect>
+		<image x="20" y="5" width="80" height="80"
+			   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
+
+		<text y="100" style="stroke:#00ffff; fill: #00ffff">
+				<tspan dy="25" y="50" x="15">tspan line 0</tspan>
+				<tspan dy="25" y="70" x="15">tspan line 1</tspan>
+			</text>
+
+		</g>
+  	</svg>
+
+  </body>
+</html>

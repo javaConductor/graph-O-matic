@@ -6,16 +6,63 @@ function AppCtrl($scope, $http) {
 
 	$scope.title = "Graph O Matic (c)";
 
-	$scope.relationships = [{
+	$scope.relationshipCategories=[
+		{id: 123, name:"Family"},
+		{id: 456, name:"Software Development"},
+		{id: 768, name:"Education"}
+
+	];
+	   // must support hybrid relationship where:
+	/*
+	when we have a item-to-item relationship and we want a different relationship depending on some condition.
+	example:  functionA -> 'calls' -> functionA would change from the 'calls' relationship to 'recursive' when
+	both start and end nodes are the same item.
+	then the 'recursive' relationship can be drawn differently.
+	 */
+	$scope.relationshipTypes = [{
 		id: 123,
-		name: "Father",
+		name: "ParentOf",
 		itemList: [],
-		: {
-			  baseRelationshipId : 234
+		oppositeRelationshipId: 124,
+		reversible: false,
+		category: 123,
+		constraints:{
+
 		}
-
-
-	},{}];
+		},{
+		id: 124,
+		name: "ChildOf",
+		itemList: [],
+		oppositeRelationshipId: 123,
+		reversible: false
+		},{
+		id: 125,
+		name: "SiblingTo",
+		itemList: [],
+		reversible: true,
+		category: 123
+	},{
+		id: 124,
+		name: "Brother",
+		itemList: [],
+		parent: 125,
+		reversible: false
+	},{
+		id: 125,
+		name: "SiblingTo",
+		itemList: [],
+		reversible: true,
+		category: 123
+	},{
+		id: 126,
+		name: "Attends",
+		itemList: [],
+		reversible: true,
+		category: 123,
+		timeBoxed:{
+			start: null,
+			end: null}
+	}];
 
 	$scope.testItemType = {
 		name : "Person",

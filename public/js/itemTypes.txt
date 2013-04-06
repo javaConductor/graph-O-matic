@@ -42,3 +42,17 @@ optimization:
         Image, MediaFile
 
     Better yet, lets create a map {thing, list(hierarchy of thing - specific to generic)}
+
+
+use case:
+
+check to see if an item has a Sibling relationship to another item.
+
+get all outgoing relationships 
+foreach relationship rel
+	if rel.is(Si)
+
+
+
+
+

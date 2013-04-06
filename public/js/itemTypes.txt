@@ -44,12 +44,37 @@ optimization:
     Better yet, lets create a map {thing, list(hierarchy of thing - specific to generic)}
 
 
-use case:
+use case 1:
 
 check to see if an item has a Sibling relationship to another item.
 
 get all outgoing relationships 
 foreach relationship rel
+	if rel.is(Si) return true;
+
+
+-----------------------------------------------
+relationship.is(rel){
+	return isOneOf(getHierarchy(rel));
+}
+
+relationship.isOneOf(relList){
+	relList.any(function(rel){
+		return this.id = rel.id;
+	});
+
+}
+
+
+use case 2:
+validate an item for relationship constraints
+Relationship{name:writerOf, constraint:[item.isInTypes([Person,Writer])]
+check to see if an item is of type Person.
+function foo(relationship
+get all items in view 
+items.foreach (function(item){
+	relationship
+})
 	if rel.is(Si) return true;
 
 

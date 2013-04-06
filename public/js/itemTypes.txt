@@ -50,9 +50,18 @@ check to see if an item has a Sibling relationship to another item.
 
 get all outgoing relationships 
 foreach relationship rel
-	if rel.is(Si)
+	if rel.is(Si) return true;
 
 
+-----------------------------------------------
+relationship.is(rel){
+	return isOneOf(getHierarchy(rel));
+}
 
+relationship.isOneOf(relList){
+	relList.any(function(rel){
+		return this.id = rel.id;
+	});
 
+}
 

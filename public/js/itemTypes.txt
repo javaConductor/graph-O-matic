@@ -143,9 +143,9 @@ Item{type:Person,
 
 and 'from' is:
 
-Item{type:Person,
-	id:123,
-	data:{firstname:'',lastname:''}
+Item{type:Book,
+	id:456,
+	data:{title:'Moby Dick'}
 }
 
 
@@ -155,3 +155,18 @@ RelationshipType{category:Professional,
 	constraintFrom:[item.isInTypes([Person])], 
 	constraintTo:[item.isInTypes([Business])]
 }
+
+where 'from' is:
+
+Item{type:Person,
+	id:123,
+	data:{firstname:'',lastname:''}
+}
+
+where 'to' is:
+
+Item{type:Business,
+	id:456,
+	data:{name:'IBM'}
+}
+

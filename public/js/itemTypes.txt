@@ -162,12 +162,13 @@ Relationship{
 	type:worksFor, 
 	from:123, to:456, 
 	duration:{
-		currentStart:20130330T120000, 
+		currentStart:20130430T120000, 
 		previous:[
-			[20130330T120000,20130330T120000],
-			[20130330T120000,20130330T120000]
+			[20100330T120000,20110330T120000],
+			[20120330T120000,20130330T120000]
 		]
-	}
+	},
+	notes: [ {date:"20130330", note: ""}, ... ]
 }
 
 where 'from' is:

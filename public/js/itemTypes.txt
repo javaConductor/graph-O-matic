@@ -190,5 +190,12 @@ Item Details
 ======================================================================
 
 ItemType {name:Person,
-	requiredData:{},
-	optional
+	requiredData:[
+		{name: firstName, type: text},
+	],
+	optionalData:[
+		{name: lastName, type: text},
+		{name: birthdate, relationshipType: 'hasBirthdate', itemType:"CalendarDate"},
+		{name: familirstName, type: text},
+		{name: firstName, type: text},
+]

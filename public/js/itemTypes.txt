@@ -156,6 +156,20 @@ RelationshipType{category:Professional,
 	constraintTo:[item.isInTypes([Business])]
 }
 
+produces:
+
+Relationship{
+	type:worksFor, 
+	from:123, to:456, 
+	duration:{
+		currentStart:20130330T120000, 
+		previous:[
+			[20130330T120000,20130330T120000],
+			[20130330T120000,20130330T120000]
+		]
+	}
+}
+
 where 'from' is:
 
 Item{type:Person,

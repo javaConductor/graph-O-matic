@@ -44,7 +44,10 @@ optimization:
     Better yet, lets create a map {thing, list(hierarchy of thing - specific to generic)}
 
 
+
+======================================================================
 use case 1:
+======================================================================
 
 check to see if an item has a Sibling relationship to another item.
 
@@ -65,8 +68,9 @@ relationship.isOneOf(relList){
 
 }
 
-
+======================================================================
 use case 2:
+======================================================================
 validate an item for relationship constraints
 Relationship{name:writerOf, constraint:[item.isInTypes([Person,Writer])]
 check to see if an item is of type Person.
@@ -89,4 +93,26 @@ relationship.isOneOf(relList){
 	});
 
 }
+
+
+======================================================================
+use case 3: Load the view
+======================================================================
+Get all items in a view and all relationships between these views.
+
+
+1 - get list of items
+	get the static list
+	then if view has dynamic criteria then do a full scan of all items against the view criteria
+
+2- find all relationship where the 'from' is in the items AND the 'to' is in the items.
+
+At this point the view is loaded!
+
+
+
+======================================================================
+use case 4: Determine possible relationships between two items
+======================================================================
+
 

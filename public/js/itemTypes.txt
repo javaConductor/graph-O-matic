@@ -116,3 +116,16 @@ use case 4: Determine possible relationships between two items
 ======================================================================
 
 
+								
+======================================================================
+Relationship Details
+======================================================================
+Definition examples:
+
+Relationship{name:writerOf, constraintFrom:[item.isInTypes([Person,Writer])], 
+	 constraintTo:[item.isInTypes([LiteraryWork])]
+Relationship{name:worksFor, 
+	
+	constraintFrom:[item.isInTypes([Person])], 
+	constraintTo:[item.isInTypes([Business])]
+}

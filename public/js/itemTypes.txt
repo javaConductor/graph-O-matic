@@ -189,13 +189,43 @@ Item{type:Business,
 Item Details
 ======================================================================
 
-ItemType {name:Person,
+ItemType :
+{
+	name:"Person",
+	category: "People",
 	requiredData:[
 		{name: firstName, type: text},
 	],
 	optionalData:[
 		{name: lastName, type: text},
 		{name: birthdate, relationshipType: 'hasBirthdate', itemType:"CalendarDate"},
-		{name: familirstName, type: text},
-		{name: firstName, type: text},
-]
+		{name: deathDate, relationshipType: 'diedOn', itemType:"CalendarDate"},
+		{name: family,  relationshipType: 'relatedTo', itemType:"Person"},
+		{name: residence, relationshipType: 'resides', itemTypes:["StreetAddress","City","State","Country"]},
+	]
+}
+
+yields:
+
+Item{
+	type:"Person",
+	id: "132",
+	data:{
+		firstName: "Lee",
+		birthdate: 
+	}
+}
+
+Relationship{
+	type:"hasBirthdate",
+	id: "777",
+	from:"132",
+	to: "456"
+}
+
+Item{
+	type:"CalendarDate",
+	id: "456",
+	data:{date: ""}
+}
+	

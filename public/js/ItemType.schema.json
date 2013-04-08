@@ -2,8 +2,7 @@
   "type":"object",
 	"$schema": "http://json-schema.org/draft-03/schema",
 	"id": "http://jsonschema.net",
-    "description": "schema for an fstab entry",
-    
+    	"description": "schema for an item type definition",
 	"required":false,
 	"properties":{
 		"category": {
@@ -17,12 +16,18 @@
 			"required":false
 		},
 		"optionalData": {
+			
+			
+			
 			"type":"array",
 			"id": "http://jsonschema.net/optionalData",
 			"required":false,
 			"items":[
 				{
-					"type":"object",
+				 "oneOf": [
+                			{ "$ref": "#/definitions/property" }
+					]
+				"type":"object",
 					"id": "http://jsonschema.net/optionalData/0",
 					"required":false,
 					"properties":{
@@ -239,5 +244,11 @@
 			
 
 		}
-	}
+	},
+	"definitions": {
+        	"diskDevice": {},
+        	"diskUUID": {},
+        "nfs": {},
+        "tmpfs": {}
+    }
 }

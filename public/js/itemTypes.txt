@@ -212,7 +212,7 @@ Item{
 	id: "132",
 	data:{
 		firstName: "Lee",
-		birthdate: 
+		birthdate: "777"
 	}
 }
 
@@ -226,6 +226,6 @@ Relationship{
 Item{
 	type:"CalendarDate",
 	id: "456",
-	data:{date: ""}
+	data:{date: "", bc:true}
 }
 	

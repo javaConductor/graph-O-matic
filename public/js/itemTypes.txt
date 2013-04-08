@@ -241,9 +241,7 @@ Person
 		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
 		{"name": "comments", "relationshipType": "notes", "itemType":"Notes" },
 	]
-}
-
-Notes
+},
 {
 	"name":Notes",
 	"category": "Notes",
@@ -273,14 +271,15 @@ Notes
 	]
 },
 {
-	"name":"Business",
-	"category": "Business",
-	"requiredData":[
+	name:"Business",
+	category: "Business",
+	requiredData:[
 		{"name": "name", "type": "text"}
 		
 	],
-	"optionalData":[
-		{"name": "address", "relationshipType": "atAddress", "itemType":"StreetAddress"},
+	optionalData:[
+		{"name": "mainAddress", "relationshipType": "atAddress", "itemType":"StreetAddress"},
+		{"name": "branches", "relationshipType": "atAddress", "itemType":"BusinessLocation"},
 		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
 		{"name": "postalAddress", "relationshipType": "mailingAddress", "itemType":"StreetAddress" }
 	]
@@ -305,22 +304,77 @@ Notes
 	"requiredData":[
 		{"name": "title", "type": "text"},
 		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
-		{"name": "producer", "relationshipType":"produced", itemType: ["Person","Artist","Producer"]},
-		{"name": "audioClip", "relationshipTypes":"audioClip", itemType: "Audio" },
-		{"name": "audioFile", "relationshipTypes":"audioFile", itemType: "Audio" },
-		{"name": "credits", "relationshipTypes": "credits", "itemType":"TrackCredits"}
 	],
 	"optionalData":[
-		{"name": "address2", "type": "text"},
-		{"name": "postalCode", "type": "text"},
-		{"name": "country", "type": "text"}
+		{"name": "producer", "relationshipType":"produced", itemType: ["Person","Artist","Producer"]},
+		{"name": "audioClip", "relationshipType":"audioClip", itemType: "Audio" },
+		{"name": "audioFile", "relationshipType":"audioFile", itemType: "Audio" },
+		{"name": "credits", "relationshipType": "credits", "itemType":"TrackCredits"}
+	]
+},
+{
+	"name":"Artist",
+	"category": "Audio",
+	"requiredData":[
+		{"name": "name", "type": "text"},
+		{"name": "photos", "relationshipType":"photoOf", itemType: "Image"},
+	],
+	"optionalData":[
+		{"name": "groupMembers", "relationshipType":"memberOf", itemType: ["Person","GroupMemeber"]}		
+	]
+},
+{
+	"name" : "GroupMember" ,
+	"parent":"Person",
+	"requiredData":[
+	],
+	"optionalData":[
+		{"name": "contribution", "type": "text"}
 	]
 }
-
-Artist{category:Audio, name, photos[]{Image), groupMembers[](GroupMember)}
-GroupMember{parent: Person, requiredData:[{name:"contribution", type:"text" },{}]}
 TrackCredits{category:Audio, track, contribution, contribution(Person|Artist|GroupMember)}
-Recording{category:Audio, title, label(RecordLabel), execProducer(Person), credits(TrackCredits), images[](Image), media, format}
+
+{
+	"name":"Track",
+	"category": "Audio",
+	"requiredData":[
+		{"name": "title", "type": "text"},
+		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
+	],
+	"optionalData":[
+		{"name": "producer", "relationshipType":"produced", itemType: ["Person","Artist","Producer"]},
+		{"name": "audioClip", "relationshipType":"audioClip", itemType: "Audio" },
+		{"name": "audioFile", "relationshipType":"audioFile", itemType: "Audio" },
+		{"name": "credits", "relationshipType": "credits", "itemType":"TrackCredits"}
+	]
+},
+
+Recording{title, media, format}
+
+VideoRecording{category:Audio, parent:"Recording", producer:(Person|Business), credits(RecordingCredits), 
+images[](Image), media, format}
+
+AudioRecording{category:Audio, title, label(RecordLabel), execProducer(Person), credits(TrackCredits), 
+images[](Image), media, format}
+
+{
+	"name":"AudioRecording",
+	"category": "Audio",
+	"requiredData":[
+		{"name": "title", "type": "text"},
+		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
+		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
+		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
+		{"name": "credits", "relationshipType":"pcredits", itemType: ["Person","Artist"]},
+		{"name": images", "relationshipType":"performed", itemType: ["Person","Artist"]},
+	],
+	"optionalData":[
+		{"name": "producer", "relationshipType":"produced", itemType: ["Person","Artist","Producer"]},
+		{"name": "audioClip", "relationshipType":"audioClip", itemType: "Audio" },
+		{"name": "audioFile", "relationshipType":"audioFile", itemType: "Audio" },
+		{"name": "credits", "relationshipType": "credits", "itemType":"TrackCredits"}
+	]
+},
 VinylRecording{parent:Recording, media:Vinyl}
 DigitalRecording{parent:Recording, media:digital }
 CDRecording{parent:DigitalRecording, format:CD}

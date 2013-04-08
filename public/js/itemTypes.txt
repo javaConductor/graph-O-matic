@@ -251,45 +251,40 @@ Notes
 		{"name": date, "type": "date"},
 		{"name": "notes", "type": text}
 	]
-}
-EmailAddress
+},
 {
 	name:"EmailAddress",
 	requiredData:[
 		{"name": "email", "type": "emailAddress"}
 	]
-}
-Man
+},
 {
 	parent:"Person",
 	name: "Man",
 	defaults:[
 		{"name": "sex", "value": "male"}
 	]
-}
-Woman
+},
 {
 	parent:"Person",
 	name: "Woman",
 	defaults:[
 		{"name": "sex", "value": "female"}
 	]
-}
-Business{name, mainAddress(StreetAddress), branches[](StreetAddress), mainIndustry, }
+},
 {
-	name:"Business",
-	category: "Business",
-	requiredData:[
+	"name":"Business",
+	"category": "Business",
+	"requiredData":[
 		{"name": "name", "type": "text"}
 		
 	],
-	optionalData:[
+	"optionalData":[
 		{"name": "address", "relationshipType": "atAddress", "itemType":"StreetAddress"},
 		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
 		{"name": "postalAddress", "relationshipType": "mailingAddress", "itemType":"StreetAddress" }
 	]
-}
-StreetAddress{ address, address2, city, state, postalCode, country }
+},
 {
 	"name":"StreetAddress",
 	"category": "Locations",
@@ -303,10 +298,7 @@ StreetAddress{ address, address2, city, state, postalCode, country }
 		{"name": "postalCode", "type": "text"},
 		{"name": "country", "type": "text"}
 	]
-}
-
-Track{category:Audio, title, artist(Person|Artist), producer(Person|Artist|Producer), 
-audioClip(Audio), audioFile(Audio), credits(TrackCredits) }
+},
 {
 	"name":"Track",
 	"category": "Audio",

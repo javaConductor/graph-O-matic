@@ -1,27 +1,3 @@
-Builtin Item Types
-
-Person{ category:'People', firstName, lastName, photos(IMAGE)[], birthdate, sex, email[], address(StreetAddress), comments }
-Male{parent:Person, sex:male}
-Female{parent:Person, sex:female}
-Business{name, mainAddress(StreetAddress), branches[](StreetAddress), mainIndustry, }
-StreetAddress{ address, address2, city, state, postalCode, country }
-
-Track{category:Audio, title, artist(Person|Artist), producer(Person|Artist|Producer), audioClip(Audio), audioFile(Audio), credits(TrackCredits) }
-Artist{category:Audio, name, photos[]{Image), groupMembers[](GroupMember)}
-GroupMember{category:Audio, parent: Person, contribution}
-TrackCredits{category:Audio, track, contribution, contribution(Person|Artist|GroupMember)}
-Recording{category:Audio, title, label(RecordLabel), execProducer(Person), credits(TrackCredits), images[](Image), media, format}
-VinylRecording{parent:Recording, media:Vinyl}
-DigitalRecording{parent:Recording, media:digital }
-CDRecording{parent:DigitalRecording, format:CD}
-MP3Recording{parent:DigitalRecording, format:mp3}
-WAVRecording{parent:DigitalRecording, format:wav}
-MP4aRecording{parent:DigitalRecording, format:mp4a}
-WMARecording{parent:DigitalRecording, format:wma}
-MediaFile{mimeType, fileURL}
-Audio{parent:MediaFile, mimeType:{mp3,wav,mp4a,wma}}
-Image{parent:MediaFile, mimeType:{gif,jpg,png,bmp}}
-RecordLabel{parent:Business,industry:Music }
 
 
 designations: these are implied attributes
@@ -229,3 +205,27 @@ Item{
 	data:{date: "", bc:true}
 }
 	
+Builtin Item Types
+
+Person{ category:'People', firstName, lastName, photos(IMAGE)[], birthdate, sex, email[], address(StreetAddress), comments }
+Male{parent:Person, sex:male}
+Female{parent:Person, sex:female}
+Business{name, mainAddress(StreetAddress), branches[](StreetAddress), mainIndustry, }
+StreetAddress{ address, address2, city, state, postalCode, country }
+
+Track{category:Audio, title, artist(Person|Artist), producer(Person|Artist|Producer), audioClip(Audio), audioFile(Audio), credits(TrackCredits) }
+Artist{category:Audio, name, photos[]{Image), groupMembers[](GroupMember)}
+GroupMember{parent: Person, requiredData:[{name:"contribution", type:"text" },{}]}
+TrackCredits{category:Audio, track, contribution, contribution(Person|Artist|GroupMember)}
+Recording{category:Audio, title, label(RecordLabel), execProducer(Person), credits(TrackCredits), images[](Image), media, format}
+VinylRecording{parent:Recording, media:Vinyl}
+DigitalRecording{parent:Recording, media:digital }
+CDRecording{parent:DigitalRecording, format:CD}
+MP3Recording{parent:DigitalRecording, format:mp3}
+WAVRecording{parent:DigitalRecording, format:wav}
+MP4aRecording{parent:DigitalRecording, format:mp4a}
+WMARecording{parent:DigitalRecording, format:wma}
+MediaFile{mimeType, fileURL}
+Audio{parent:MediaFile, mimeType:{mp3,wav,mp4a,wma}}
+Image{parent:MediaFile, mimeType:{gif,jpg,png,bmp}}
+RecordLabel{parent:Business,industry:Music }

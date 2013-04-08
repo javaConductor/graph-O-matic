@@ -1,4 +1,3 @@
-
 designations: these are implied attributes
     examples: parent = hasRelationship(item, Child) and IsType(item, Person)
         married = hasRelationship(item, Spouse) and IsType(item, Person)
@@ -204,6 +203,10 @@ Item{
 	data:{date: "", bc:true}
 }
 	
+
+Builtin Relationship Types
+
+
 Builtin Item Types
 
 Person{ category:'People', firstName, lastName, photos(IMAGE)[], birthdate, sex, email[], address(StreetAddress), comments }
@@ -211,22 +214,41 @@ Person{ category:'People', firstName, lastName, photos(IMAGE)[], birthdate, sex,
 	name:"Person",
 	category: "People",
 	requiredData:[
-		{name: firstName, type: text},
+		{"name": "firstName", "type": "text"},
 	],
 	optionalData:[
+		{"name": "lastName", type: text},
+		{"name": "birthdate", "relationshipType": "bornOn", "itemType":"CalendarDate"},
+		{"name": "deathDate", "relationshipType": "diedOn", "itemType":"CalendarDate"},
+		{"name": "family",  "relationshipType": "relatedTo", "itemType":"Person"},
+		{"name": "residence", "relationshipType": "resides", "itemTypes":["StreetAddress","City","State","Country"]},
+		{"name": "images",  "relationshipType": "imagesOf", "itemType":"Image" },
+		{"name": "sex", type="text" },
+		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
+		{"name": "comments", "relationshipType": "notes", "itemType":"Notes" },
+	]
+}
+
+Notes
+{
+	"name":Notes",
+	"category": "Notes",
+	"requiredData":[
+		{"name": date, type: date},
+		{"name": "notes"}
+	],
+	"optionalData":[
 		{name: "lastName", type: text},
-		{name: "birthdate", "relationshipType": 'hasBirthdate', "itemType":"CalendarDate"},
-		{name: "deathDate", "relationshipType": 'diedOn', "itemType":"CalendarDate"},
-		{name: "family",  "relationshipType": 'relatedTo', "itemType":"Person"},
-		{name: "residence", "relationshipType": 'resides', "itemTypes":["StreetAddress","City","State","Country"]},
-		{name: "photos",  "relationshipType": 'imageOf', "itemType":"Image" },
+		{name: "birthdate", "relationshipType": "bornOn", "itemType":"CalendarDate"},
+		{name: "deathDate", "relationshipType": "diedOn", "itemType":"CalendarDate"},
+		{name: "family",  "relationshipType": "relatedTo", "itemType":"Person"},
+		{name: "residence", "relationshipType": "resides", "itemTypes":["StreetAddress","City","State","Country"]},
+		{name: "images",  "relationshipType": "imagesOf", "itemType":"Image" },
 		{name: "sex", type="text" },
 		{name: "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
 		{name: "comments", "relationshipType": "notes", "itemType":"Notes" },
 	]
 }
-
-Notes
 EmailAddress
 Male{parent:Person, sex:male}
 Female{parent:Person, sex:female}

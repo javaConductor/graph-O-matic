@@ -214,6 +214,8 @@ Builtin Relationship Types
 bornOn
 diedOn
 Notes
+RelatedTo
+emailAddress
 
 Builtin Item Categories
 ------------------------------------
@@ -222,24 +224,27 @@ Audio
 
 Builtin Item Types
 ------------------------------------
+ItemType Schema
+
+
 
 Person
 {
-	name:"Person",
-	category: "People",
-	requiredData:[
-		{"name": "firstName", "type": "text"},
+	"name":"Person",
+	"category": "People",
+	"requiredData":[
+		{"name": "firstName", "type": "text"}
 	],
-	optionalData:[
-		{"name": "lastName", type: text},
+	"optionalData":[
+		{"name": "lastName", "type": "text"},
 		{"name": "birthdate", "relationshipType": "bornOn", "itemType":"CalendarDate"},
 		{"name": "deathDate", "relationshipType": "diedOn", "itemType":"CalendarDate"},
 		{"name": "family",  "relationshipType": "relatedTo", "itemType":"Person"},
 		{"name": "residence", "relationshipType": "resides", "itemTypes":["StreetAddress","City","State","Country"]},
 		{"name": "images",  "relationshipType": "imagesOf", "itemType":"Image" },
-		{"name": "sex", type="text" },
+		{"name": "sex", "type":"text" },
 		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
-		{"name": "comments", "relationshipType": "notes", "itemType":"Notes" },
+		{"name": "comments", "itemType":"Notes" }
 	]
 },
 {

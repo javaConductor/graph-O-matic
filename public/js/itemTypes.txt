@@ -335,11 +335,22 @@ Person
 TrackCredits{category:Audio, track, contribution, contribution(Person|Artist|GroupMember)}
 
 {
-	"name":"Track",
+	"name":"TrackCredits",
 	"category": "Audio",
 	"requiredData":[
-		{"name": "title", "type": "text"},
-		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
+		{"name": "trackId", "type": "id"},
+		{"name": "contributors", 
+			"type":"map", 
+			"map":{
+				"key":{
+					"type": "text"
+				}, 
+				"value":{ 
+					"relationshipType":"audioClip", // defaults to name 
+					itemType: "Audio"
+				}
+			},
+		},
 	],
 	"optionalData":[
 		{"name": "producer", "relationshipType":"produced", itemType: ["Person","Artist","Producer"]},
@@ -359,13 +370,14 @@ images[](Image), media, format}
 
 {
 	"name":"AudioRecording",
+	"parent": "Audio",
 	"category": "Audio",
 	"requiredData":[
 		{"name": "title", "type": "text"},
+		{"name": "label", "relationshipType":"onLabel", itemType: ["RecordLabel"]},
 		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
-		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
-		{"name": "artist", "relationshipType":"performed", itemType: ["Person","Artist"]},
-		{"name": "credits", "relationshipType":"pcredits", itemType: ["Person","Artist"]},
+		{"name": "executiveProducer", itemType: ["Person","Artist"]},
+		{"name": "credits", "relationshipType":"credits", itemType: ["TrackCredits"]},
 		{"name": images", "relationshipType":"performed", itemType: ["Person","Artist"]},
 	],
 	"optionalData":[

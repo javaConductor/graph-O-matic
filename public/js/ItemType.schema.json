@@ -1,3 +1,29 @@
+ORDERLY JSON ===>
+
+object {
+	string name;
+	string type?;
+	string relationshipType?;
+	array itemTypes;
+} propertyDefinition;
+	
+object {
+    string categoryId;
+    string name;
+    array {
+        ref propertyDefinition;
+    } requiredData;
+    array {
+        ref propertyDefinition;
+    } optionalData;
+    array {
+        ref propertyDefinition;
+    } defaults;
+} itemType;
+================================================================================
+json schema raw
+================================================================================
+
 {
   "type":"object",
 	"$schema": "http://json-schema.org/draft-03/schema",

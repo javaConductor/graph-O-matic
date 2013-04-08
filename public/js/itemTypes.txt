@@ -205,6 +205,8 @@ Item{
 	
 
 Builtin Relationship Types
+bornOn
+diedOn
 
 
 Builtin Item Types
@@ -234,26 +236,67 @@ Notes
 	"name":Notes",
 	"category": "Notes",
 	"requiredData":[
-		{"name": date, type: date},
-		{"name": "notes"}
-	],
-	"optionalData":[
-		{name: "lastName", type: text},
-		{name: "birthdate", "relationshipType": "bornOn", "itemType":"CalendarDate"},
-		{name: "deathDate", "relationshipType": "diedOn", "itemType":"CalendarDate"},
-		{name: "family",  "relationshipType": "relatedTo", "itemType":"Person"},
-		{name: "residence", "relationshipType": "resides", "itemTypes":["StreetAddress","City","State","Country"]},
-		{name: "images",  "relationshipType": "imagesOf", "itemType":"Image" },
-		{name: "sex", type="text" },
-		{name: "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
-		{name: "comments", "relationshipType": "notes", "itemType":"Notes" },
+		{"name": date, "type": "date"},
+		{"name": "notes", "type": text}
 	]
 }
 EmailAddress
-Male{parent:Person, sex:male}
-Female{parent:Person, sex:female}
+{
+	name:"EmailAddress",
+	requiredData:[
+		{"name": "email", "type": "emailAddress"}
+	]
+}
+Man{parent:Person, sex:male}
+{
+	parent:"Person",
+	name: "Man",
+	defaults:[
+		{"name": "sex", "value": "male"}
+	]
+}
+Woman
+{
+	parent:"Person",
+	name: "Woman",
+	defaults:[
+		{"name": "sex", "value": "female"}
+	]
+}
 Business{name, mainAddress(StreetAddress), branches[](StreetAddress), mainIndustry, }
+{
+	name:"Person",
+	category: "People",
+	requiredData:[
+		{"name": "firstName", "type": "text"},
+	],
+	optionalData:[
+		{"name": "lastName", type: text},
+		{"name": "birthdate", "relationshipType": "bornOn", "itemType":"CalendarDate"},
+		{"name": "deathDate", "relationshipType": "diedOn", "itemType":"CalendarDate"},
+		{"name": "family",  "relationshipType": "relatedTo", "itemType":"Person"},
+		{"name": "residence", "relationshipType": "resides", "itemTypes":["StreetAddress","City","State","Country"]},
+		{"name": "images",  "relationshipType": "imagesOf", "itemType":"Image" },
+		{"name": "sex", type="text" },
+		{"name": "email", "relationshipType": "emailAddress", "itemType":"EmailAddress" },
+		{"name": "comments", "relationshipType": "notes", "itemType":"Notes" },
+	]
+}
 StreetAddress{ address, address2, city, state, postalCode, country }
+{
+	"name":"StreetAddress",
+	"category": "Locations",
+	"requiredData":[
+		{"name": "address", "type": "text"},
+		{"name": "city", "type": "text"},
+		{"name": "state", "type": "text"},
+	],
+	"optionalData":[
+		{"name": "address2", "type": "text"},
+		{"name": "postalCode", "type": "text"},
+		{"name": "country", "type": "text"}
+	]
+}
 
 Track{category:Audio, title, artist(Person|Artist), producer(Person|Artist|Producer), audioClip(Audio), audioFile(Audio), credits(TrackCredits) }
 Artist{category:Audio, name, photos[]{Image), groupMembers[](GroupMember)}

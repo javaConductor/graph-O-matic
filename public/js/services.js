@@ -9,12 +9,84 @@ var Root, Item, Relationship, RelationshipTypes
 
 var services = angular.module('GraphOMaticServices', ['ngResource']);
 
+///
+/// We use the graph-o-matic REST API for persistence
+///
+
+var World = function World( persistence ){
+
+	return {
+
+		view: ViewPersistence(persistence),
+		allItems : persistence.allItems(),
+		createItem : presistence.createItem(item),
+		createRelationshipType: function(relationshipType ){
+		/*
+		 relationshipType -> {
+			 category:Professional,
+			 name:worksFor,
+			 dated:true,//relationships have sets of start and end dates.
+			 constraintFrom:[item.isInTypes([Person])],
+			 constraintTo:[item.isInTypes([Business])],
+			 upgrade: {
+			    relationshipType:
+			 }
+		 }
+		 relationshipType -> {
+			 category:Professional,
+			 name:worksFor,
+			 dated:true,//relationships have sets of start and end dates.
+			 constraintFrom:[item.isInTypes([Person])],
+			 constraintTo:[item.isInTypes([Business])],
+			 upgrade: {
+				 relationshipType: otherType,
+				 when: "itemTo == itemFrom" or function _$rtype$worksFor$upgrade$when(itemFrom, itemTo)
+			 }
+		 }
+		 */
+		}
+
+	}
+
+}
+
+var ViewPersistence = function ViewPersistence( persistence ) {
+
+
+	// returns a function that, given a viewId, will return a
+	// View Object representing that view
+	return function(viewId){
+		var theView = persistence.getView(viewId) // merges viewItems w/ Items
+
+		/// return the View object for viewId
+		return {
+			'name' : theView.name,
+			viewItems : function(){
+				return theView.items();
+			},//returns list of items for this view
+			createViewItem: function(item){
+				return persistence.createViewItem(item);//creates both Item&ViewItem - sweet!
+			},
+			itemMatchesRelationshipCriteria: function(item, criteria){},//bool
+			addItem : function(item){},
+			getPossibleNewRelationships: function(itemFrom, itemTo ){},
+			itemHasRelationship: function(item, relationshipTypeName ){ },
+			validRelationship: function(relationshipTypeName, itemFrom, itemTo){},
+			validToRelationship: function(relationshipTypeName, itemTo){},
+			validFromRelationship: function(relationshipTypeName, itemFrom){},
+			createRelationship: function(itemFrom, itemTo, relationshipTypeName){},
+			relationships: function(){},
+			findItemRelationships: function(item) {}
+		}
+	};
+
+}
 
 /**
  * This service is responsible for the drawing operations of GraphOMatic (c)
  *
  */
-services.factory('graph', ['$http', '$resource', function ($http, $resource) {
+services.factory('graph', ['$http', '$resource', 'persistence',function ($http, $resource, persistence) {
 	var prefix = 'http://'+neo4jHost+':'+neo4jPort;
 	Root = $resource(prefix+'/', {});
 	Item = $resource(prefix+'/node/:id', {id: '@id'});

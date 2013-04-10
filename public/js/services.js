@@ -8,48 +8,26 @@ var neo4jPort = 7474;
 var Root, Item, Relationship, RelationshipTypes
 
 var services = angular.module('GraphOMaticServices', ['ngResource']);
+/**
+ *
+ */
+
+var theWorld = function(){
+	persistence : null,
+
+
+		allItems : persistence.allItems(),
+		allRelationships : persistence.allRelationships(),
+
+
+
+
+}
 
 ///
 /// We use the graph-o-matic REST API for persistence
 ///
-
-var World = function World( persistence ){
-
-	return {
-
-		view: ViewPersistence(persistence),
-		allItems : persistence.allItems(),
-		createItem : presistence.createItem(item),
-		createRelationshipType: function(relationshipType ){
-		/*
-		 relationshipType -> {
-			 category:Professional,
-			 name:worksFor,
-			 dated:true,//relationships have sets of start and end dates.
-			 constraintFrom:[item.isInTypes([Person])],
-			 constraintTo:[item.isInTypes([Business])],
-			 upgrade: {
-			    relationshipType:
-			 }
-		 }
-		 relationshipType -> {
-			 category:Professional,
-			 name:worksFor,
-			 dated:true,//relationships have sets of start and end dates.
-			 constraintFrom:[item.isInTypes([Person])],
-			 constraintTo:[item.isInTypes([Business])],
-			 upgrade: {
-				 relationshipType: otherType,
-				 when: "itemTo == itemFrom" or function _$rtype$worksFor$upgrade$when(itemFrom, itemTo)
-			 }
-		 }
-		 */
-		}
-
-	}
-
-}
-
+// steps: send out the /directory to server
 var ViewPersistence = function ViewPersistence( persistence ) {
 
 
@@ -61,6 +39,10 @@ var ViewPersistence = function ViewPersistence( persistence ) {
 		/// return the View object for viewId
 		return {
 			'name' : theView.name,
+
+			/////////////////////////////////////////////////////////
+			// Items
+			/////////////////////////////////////////////////////////
 			viewItems : function(){
 				return theView.items();
 			},//returns list of items for this view
@@ -69,6 +51,9 @@ var ViewPersistence = function ViewPersistence( persistence ) {
 			},
 			itemMatchesRelationshipCriteria: function(item, criteria){},//bool
 			addItem : function(item){},
+			/////////////////////////////////////////////////////////
+			// Relationships
+			/////////////////////////////////////////////////////////
 			getPossibleNewRelationships: function(itemFrom, itemTo ){},
 			itemHasRelationship: function(item, relationshipTypeName ){ },
 			validRelationship: function(relationshipTypeName, itemFrom, itemTo){},
@@ -79,14 +64,13 @@ var ViewPersistence = function ViewPersistence( persistence ) {
 			findItemRelationships: function(item) {}
 		}
 	};
-
 }
 
 /**
  * This service is responsible for the drawing operations of GraphOMatic (c)
  *
  */
-services.factory('graph', ['$http', '$resource', 'persistence',function ($http, $resource, persistence) {
+services.factory('World', ['persistence',function ( persistence) {
 	var prefix = 'http://'+neo4jHost+':'+neo4jPort;
 	Root = $resource(prefix+'/', {});
 	Item = $resource(prefix+'/node/:id', {id: '@id'});
@@ -94,11 +78,36 @@ services.factory('graph', ['$http', '$resource', 'persistence',function ($http, 
 	RelationshipTypes = $resource(prefix+'/relationship/types');
 
 	return {
-		drawItem : function(element, item, viewItem){},
-		moveItem : function(element, viewItem, position){},
-		drawItems : function(element, itemsMap, viewItemsList){},
-		drawRelationship : function(element, relationship, relationshipView, startViewItem, endViewItem){}
-	}
+		allItems : persistence.allItems(),
+		allRelationships : persistence.allRelationships()
+		view: ViewPersistence(persistence),
+		createItem : persistence.createItem(item),
+		createRelationshipType: function(relationshipType ){
+			/*
+			 relationshipType -> {
+			 category:Professional,
+			 name:worksFor,
+			 dated:true,//relationships have sets of start and end dates.
+			 constraintFrom:[item.isInTypes([Person])],
+			 constraintTo:[item.isInTypes([Business])],
+			 upgrade: {
+			 relationshipType:
+			 }
+			 }
+			 relationshipType -> {
+			 category:Professional,
+			 name:worksFor,
+			 dated:true,//relationships have sets of start and end dates.
+			 constraintFrom:[item.isInTypes([Person])],
+			 constraintTo:[item.isInTypes([Business])],
+			 upgrade: {
+			 relationshipType: otherType,
+			 when: "itemTo == itemFrom" or function _$rtype$worksFor$upgrade$when(itemFrom, itemTo)
+			 }
+			 }
+			 */
+		}
+	};
 }]);
 
 /**
@@ -154,11 +163,6 @@ services.factory('persistence', ['$http', '$resource', function ($http, $resourc
 		saveView: function(theView, f){},
 
 		query : function(qry, f){
-
-
-		},
-		getRoot: function(f){
-
 		}
 
 	}}]);

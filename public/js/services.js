@@ -14,15 +14,26 @@ var services = angular.module('GraphOMaticServices', ['ngResource']);
 
 var theWorld = function(){
 	persistence : null,
-
-
-		allItems : persistence.allItems(),
-		allRelationships : persistence.allRelationships(),
-
-
-
+	allItems : persistence.allItems(),
+	allRelationships : persistence.allRelationships()
 
 }
+
+services.factory('Directory', ['$http', '$location', function ($http, $location)  {
+	/// send to server for the directory: Map(k.v)
+	var dirUrl = "http://" + $location.hostname + ":" +$location.port + "/directory";
+	var thiz = this;
+	this.directoryEntries = {}
+	$http({method:'JSONP', params:{callback:'JSON_CALLBACK'}, url:dirUrl}).
+		error(function (data, status, headers, config) {
+			return null;
+		}).success(function(data){
+			thiz.directoryEntries = data;
+		});
+	return {
+		entries : function(){ return thiz.directoryEntries; }
+	}
+}]);
 
 ///
 /// We use the graph-o-matic REST API for persistence
@@ -110,6 +121,15 @@ services.factory('World', ['persistence',function ( persistence) {
 	};
 }]);
 
+var directory = {
+	entries: {  },
+	getDirectory:  function(){
+
+
+
+	}
+};
+
 /**
  * This service is responsible for the persistence in GraphOMatic(c)
  *
@@ -157,12 +177,10 @@ services.factory('persistence', ['$http', '$resource', function ($http, $resourc
 		getRelationshipCategories: function(f){},
 		getView: function(viewId, f){},
 		removeViewItem: function(viewItem, f){},
-		saveViewItem: function(viewItem, f){},
 
 		removeView: function(viewId, f){},
-		saveView: function(theView, f){},
-
-		query : function(qry, f){
-		}
+		saveView: function(theView, f){   },
+		createViewItem: function(theViewItem, f){},
+		saveViewItem: function(viewItem, f){}
 
 	}}]);

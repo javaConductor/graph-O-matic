@@ -5,12 +5,24 @@
 var neo4jHost = "localhost";
 var neo4jPort = 7474;
 
-var Root, Item, Relationship, RelationshipTypes
+var Root, Item, ItemType, Relationship, RelationshipTypes;
 
 var services = angular.module('GraphOMaticServices', ['ngResource']);
 /**
  *
  */
+
+Item = function(itemObj){
+
+    return {
+        is: function(itemType){
+
+
+        }
+
+    };
+
+}
 
 var theWorld = function(){
 	persistence : null,
@@ -37,6 +49,17 @@ services.factory('Directory', ['$http', '$location', function ($http, $location)
 	}
 }]);
 
+var memberDadClubRelType = {
+    name: "memberOfDadsClub",
+    parent: "member",
+    category: "Social",
+    dated: true,
+    constraintTo: "item.is('DadsClub')",
+    // OR set _$rtype$memberOfDadsClub$constraintTo(itemFrom, itemTo) in World.extend({"entrypoint":function})
+    constraintFrom: "item.hasRelationship('Child')"
+    // OR set _$rtype$memberOfDadsClub$constraintFrom(itemFrom, itemTo)
+};
+var relCriteria = "item.hasRelationship('child')";
 ///
 /// We use the graph-o-matic REST API for persistence
 ///
@@ -87,38 +110,17 @@ services.factory('World', ['persistence',function ( persistence) {
 	var prefix = 'http://'+neo4jHost+':'+neo4jPort;
 	Root = $resource(prefix+'/', {});
 	Item = $resource(prefix+'/node/:id', {id: '@id'});
-	Relationship = $resource(prefix+'/relationship/:id', {id: '@id'});
+    ItemType = $resource(prefix+'/itemtype/:id', {id: '@id'});
+    Relationship = $resource(prefix+'/relationship/:id', {id: '@id'});
 	RelationshipTypes = $resource(prefix+'/relationship/types');
 
 	return {
 		allItems : persistence.allItems(),
-		allRelationships : persistence.allRelationships()
+		allRelationships : persistence.allRelationships(),
 		view: ViewPersistence(persistence),
 		createItem : persistence.createItem(item),
 		createRelationshipType: function(relationshipType ){
-			/*
-			 relationshipType -> {
-			 category:Professional,
-			 name:worksFor,
-			 dated:true,//relationships have sets of start and end dates.
-			 constraintFrom:[item.isInTypes([Person])],
-			 constraintTo:[item.isInTypes([Business])],
-			 upgrade: {
-			 relationshipType:
-			 }
-			 }
-			 relationshipType -> {
-			 category:Professional,
-			 name:worksFor,
-			 dated:true,//relationships have sets of start and end dates.
-			 constraintFrom:[item.isInTypes([Person])],
-			 constraintTo:[item.isInTypes([Business])],
-			 upgrade: {
-			 relationshipType: otherType,
-			 when: "itemTo == itemFrom" or function _$rtype$worksFor$upgrade$when(itemFrom, itemTo)
-			 }
-			 }
-			 */
+
 		}
 	};
 }]);
@@ -133,16 +135,16 @@ var directory = {
 };
 
 /**
- * This service is responsible for the persistence in GraphOMatic(c)
+ * This service is responsible for the persistence in graph-O-matic (c)
  *
  * Right now it should be using Neo4J but we should be  able to swap it out for  ANYTHING we want
  *
  */
 services.factory('persistence', ['$http', '$resource','Directory', function ($http, $resource, restDirectory) {
-	var prefix = 'http://'+restDirectory.prefixneo4jHost+':'+neo4jPort;
-	Root = $resource(prefix+'/', {});
-	Item = $resource(prefix+'/node/:id', {id: '@id'});
-	Relationship = $resource(prefix+'/relationship/:id', {id: '@id'});
+	var prefix = 'http://'+restDirectory.prefix;
+    Item = $resource(prefix+'/item/:id', {id: '@id'});
+    ItemType = $resource(prefix+'/item/:id', {id: '@id'});
+    Relationship = $resource(prefix+'/relationship/:id', {id: '@id'});
 	RelationshipTypes = $resource(prefix+'/relationship/types');
 
 	return {

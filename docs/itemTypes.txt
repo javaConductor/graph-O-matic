@@ -407,3 +407,39 @@ MediaFile{mimeType, fileURL}
 Audio{parent:MediaFile, mimeType:{mp3,wav,mp4a,wma}}
 Image{parent:MediaFile, mimeType:{gif,jpg,png,bmp}}
 RecordLabel{parent:Business,industry:Music }
+
+
+
+=================================================================================
+==  World Extensions
+==  Extension-Points for Items and Relationships
+=================================================================================
+
+Global Relationship Type Extension-points
+====================================
+extension-point: _$rtype$constraint
+signature: function(itemFrom, itemTo)
+This function is called check both to and from constraints at run-time.
+
+extension-point: _$rtype$constraintTo
+signature: function(itemTo)
+This function is called check the 'to' constraint at run-time.
+
+extension-point: _$rtype$constraintFrom
+signature: function(itemFrom)
+This function is called check the 'from' constraint at run-time.
+
+Dynamics relationships = to recalc all the time - return the proper relationship to reflect the current state of the items.
+Example: the relationship between two teams' rank as the season progresses is one that may fluctuate. At times,
+one team may be 'GamesAhead(3)' or that team may be 'GamesBehind(5)'
+Teams in different leagues may not have a relationship at all.
+
+extension-point: _$rtype$dynamic$<type-name>
+signature: function(world, itemFrom, itemTo)
+This function will return the real relationship between the to 2 items or null if there is no relationship.
+
+Global Item Type Extension-points
+====================================
+
+How to add extension-points:
+World.extend({"entrypoint":function})

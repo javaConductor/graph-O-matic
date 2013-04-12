@@ -21,7 +21,8 @@ var theWorld = function(){
 
 services.factory('Directory', ['$http', '$location', function ($http, $location)  {
 	/// send to server for the directory: Map(k.v)
-	var dirUrl = "http://" + $location.hostname + ":" +$location.port + "/directory";
+	var urlPrefix = "http://" + $location.hostname + ":" +$location.port + "/";
+	var dirUrl = urlPrefix + "directory";
 	var thiz = this;
 	this.directoryEntries = {}
 	$http({method:'JSONP', params:{callback:'JSON_CALLBACK'}, url:dirUrl}).
@@ -32,6 +33,7 @@ services.factory('Directory', ['$http', '$location', function ($http, $location)
 		});
 	return {
 		entries : function(){ return thiz.directoryEntries; }
+		prefix: function(){return urlPrefix;}
 	}
 }]);
 
@@ -136,8 +138,8 @@ var directory = {
  * Right now it should be using Neo4J but we should be  able to swap it out for  ANYTHING we want
  *
  */
-services.factory('persistence', ['$http', '$resource', function ($http, $resource) {
-	var prefix = 'http://'+neo4jHost+':'+neo4jPort;
+services.factory('persistence', ['$http', '$resource','Directory', function ($http, $resource, restDirectory) {
+	var prefix = 'http://'+restDirectory.prefixneo4jHost+':'+neo4jPort;
 	Root = $resource(prefix+'/', {});
 	Item = $resource(prefix+'/node/:id', {id: '@id'});
 	Relationship = $resource(prefix+'/relationship/:id', {id: '@id'});

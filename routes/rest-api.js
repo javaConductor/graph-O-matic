@@ -10,7 +10,9 @@
  var config = require("/config.js");
  var usrpswd = config.username + ":" + config.password;
 var db = require("mongojs")(usrpswd+"@"+config.dbHost+"/"+config.dbName, 
-	['Items','Relationship', '']);
+	['ItemTypes','RelationshipTypes',
+	'Items','Relationships', 
+	'ItemCategories','RelationshipCategories']);
 function Api(db)  {
 	var thiz = this;
 	return {

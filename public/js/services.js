@@ -8,6 +8,19 @@ var neo4jPort = 7474;
 var Root, Item, ItemType, Relationship, RelationshipTypes;
 
 var services = angular.module('GraphOMaticServices', ['ngResource']);
+
+var modelFactory = {
+
+    newItemType : function(){},
+    newItem : function(){},
+    newRelationshipType : function(){},
+    newRelationship : function(){},
+    newItem : function(){},
+    newItem : function(){},
+    newItem : function(){},
+    newItem : function(){},
+
+};
 /**
  *
  */

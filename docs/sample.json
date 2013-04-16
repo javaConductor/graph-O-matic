@@ -1,0 +1,83 @@
+{
+    "itemTypes" :[
+        {
+            "name": "Person",
+            "category": "People",
+            "requiredData": [
+                {"name": "firstName", "type": "text"}
+            ],
+            "optionalData": [
+                {"name": "lastName", "type": "text"},
+                {"name": "birthdate", "relationshipType": "hasBirthdate", "itemType": "CalendarDate"},
+                {"name": "deathDate", "relationshipType": "diedOn", "itemType": "CalendarDate"},
+                {"name": "family", "relationshipType": "relatedTo", "itemType": "Person"},
+                {"name": "residence", "relationshipType": "resides", "itemTypes": ["StreetAddress", "City", "State", "Country"]},
+            ]
+
+        },
+        {
+            "name": "Notes",
+            "category":  "Notes",
+            "requiredData":[
+                {"name": "date", "type": "date"},
+                {"name": "notes", "type": "text"}
+            ]
+        },
+        {   "name" : "EmailAddress",
+            "requiredData" : [
+                {"name": "email", "type": "emailAddress"}
+            ]
+        },
+        {
+            "parent":"Person",
+            "name": "Man",
+            "defaults": [
+                {"name": "sex", "value": "male"}
+            ]
+        },
+        {
+            "parent":"Person",
+            "name": "Woman",
+            "defaults": [
+                {"name": "sex", "value": "female"}
+            ]
+        },
+        {
+            "name": "Business",
+            "category": "Business",
+            "requiredData": [
+                {"name": "name", "type": "text"}
+
+            ],
+            "optionalData": [
+                {"name": "mainAddress", "relationshipType": "atAddress", "itemType": "StreetAddress"},
+                {"name": "branches", "relationshipType": "atAddress", "itemType": "BusinessLocation"},
+                {"name": "email", "relationshipType": "emailAddress", "itemType": "EmailAddress" },
+                {"name": "postalAddress", "relationshipType": "mailingAddress", "itemType": "StreetAddress" }
+            ]
+        }
+    ],
+    "items" : [{
+            "type":"Person",
+            "id": "132",
+            "data":{
+                "firstName": "Lee",
+                "birthdate": "777"
+            }
+        },{
+            "type":"CalendarDate",
+            "id": "456",
+            "data":{"date": "", "bc":true}
+        }
+    ],
+    "relationshipTypes": [
+    ],
+    "relationships": [{
+        "type":"hasBirthdate",
+        "id": "777",
+        "from":"132",
+        "to": "456"
+    }
+    ]
+
+}

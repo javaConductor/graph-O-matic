@@ -15,4 +15,11 @@ var db = require("mongojs")(usrpswd+"@"+config.dbHost+"/"+config.dbName,
 function Api(db)  {
 	var thiz = this;
 	return {
+	
+		allItems : function allItems(){
+		
+		},
+		
+	}
 
+]

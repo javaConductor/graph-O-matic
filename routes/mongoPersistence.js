@@ -62,6 +62,7 @@ var api = function Api(db)  {
 					        }
 				        });
 			        });
+			        view.itemIdList = null;
 					f(null, view);
 		        });
 

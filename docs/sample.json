@@ -78,28 +78,43 @@
         "to": "456"
     }
     ],
-	"views":[{
+	"viewsAsStored":[{
+		"id": "v1",
 		"name": "Main Presentation",
-		"items": [
-			{"itemId": "itm.a", "position": {"x":150,"y":50}, "style": { "background-color": "red"} },
-			{"itemId": "itm.b", "position": {"x":150,"y":250}  }
+		"items": [{
+			"itemId": "itm.a",
+				"position": {"x":150,"y":50},
+				"viewInfo": {
+					"style": {
+						"background-color": "red"
+					},
+					"texture": "/textures/img.001.jpg"
+				}
+			},
+			{
+			"itemId": "itm.b",
+			"position": {"x":150,"y":250}
+			}
 		],
 		"itemIdList":["itm.a","itm.b"]
 
 	}
 	],
 	"viewsAsReturnedFromRestAPI":[{
+		"id": "v1",
 		"name": "Main Presentation",
-		"items": [
-			{"itemId": "itm.a",
-				"position": {"x":150,"y":50},
-				"style": { "background-color": "red"},
-				"item":{ "id": "itm.a"} },
-			{"itemId": "itm.b",
-				"position": {"x":150,"y":250},
-				"item":{ "id": "itm.a"}  }
-		],
-		"itemIdList":["itm.a","itm.b"]
+		"items": [{
+			"itemRef": {
+				"$id" : "itm.a",
+				"$db" : "graph-o-matic",
+				"$ref":"Items"
+			},
+			"position": {"x":150,"y":50},
+			"viewInfo": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
+			"item": {
+				"id": "itm.a",
+				"name":"James McCosh Elementary School"}
+			}
 	]
 
 }

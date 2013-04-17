@@ -22,6 +22,34 @@ should turn into:
  </g>
 */
 
+var cx = 60, cy = 60;
+
+var testItem = {
+	"id": "i1",
+	"position" : {"x":50, "y":50},
+	item:{
+		"type":"Person",
+		"id": "132",
+		"data":{
+			"firstName": "Lee",
+			"birthdate": "777"
+		}
+	}
+};
+var test2Item = {
+	"type":"CalendarDate",
+	"id": "456",
+	"data":{"date": "", "bc":true}
+	};
+
+var createItemNode = function(element, viewItem){
+
+
+
+
+};
+
+
 var graphModule = angular.module('graphOmatic.directives', []);
 
 graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, $timeout) {

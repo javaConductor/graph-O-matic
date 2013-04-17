@@ -3,29 +3,26 @@
         {
             "name": "Person",
             "category": "People",
-            "requiredData": [
-                {"name": "firstName", "type": "text"}
-            ],
-            "optionalData": [
-                {"name": "lastName", "type": "text"},
+            "properties": [
+	            {"name": "firstName", "type": "text", "required":true},
+	            {"name": "lastName", "type": "text"},
                 {"name": "birthdate", "relationshipType": "hasBirthdate", "itemType": "CalendarDate"},
                 {"name": "deathDate", "relationshipType": "diedOn", "itemType": "CalendarDate"},
                 {"name": "family", "relationshipType": "relatedTo", "itemType": "Person"},
                 {"name": "residence", "relationshipType": "resides", "itemTypes": ["StreetAddress", "City", "State", "Country"]},
             ]
-
         },
         {
             "name": "Notes",
             "category":  "Notes",
-            "requiredData":[
-                {"name": "date", "type": "date"},
-                {"name": "notes", "type": "text"}
+            "properties":[
+                {"name": "date", "type": "date", "required":true},
+                {"name": "notes", "type": "text", "required":true}
             ]
         },
         {   "name" : "EmailAddress",
-            "requiredData" : [
-                {"name": "email", "type": "emailAddress"}
+            "properties" : [
+                {"name": "email", "type": "emailAddress", "required":true}
             ]
         },
         {
@@ -45,12 +42,9 @@
         {
             "name": "Business",
             "category": "Business",
-            "requiredData": [
-                {"name": "name", "type": "text"}
-
-            ],
-            "optionalData": [
-                {"name": "mainAddress", "relationshipType": "atAddress", "itemType": "StreetAddress"},
+            "properties": [
+	            {"name": "name", "type": "text"},
+	            {"name": "mainAddress", "relationshipType": "atAddress", "itemType": "StreetAddress"},
                 {"name": "branches", "relationshipType": "atAddress", "itemType": "BusinessLocation"},
                 {"name": "email", "relationshipType": "emailAddress", "itemType": "EmailAddress" },
                 {"name": "postalAddress", "relationshipType": "mailingAddress", "itemType": "StreetAddress" }
@@ -70,7 +64,12 @@
             "data":{"date": "", "bc":true}
         }
     ],
-    "relationshipTypes": [
+    "relationshipTypes": [{
+	    "category":"Literature",
+		"name":"writerOf",
+		"constraintFrom": "[item.isInTypes([Person,Writer])]",
+		"constraintTo": "item.isInTypes(['LiteraryWork'])"
+    }
     ],
     "relationships": [{
         "type":"hasBirthdate",
@@ -78,6 +77,29 @@
         "from":"132",
         "to": "456"
     }
-    ]
+    ],
+	"views":[{
+		"name": "Main Presentation",
+		"items": [
+			{"itemId": "itm.a", "position": {"x":150,"y":50}, "style": { "background-color": "red"} },
+			{"itemId": "itm.b", "position": {"x":150,"y":250}  }
+		],
+		"itemIdList":["itm.a","itm.b"]
+
+	}
+	],
+	"viewsAsReturnedFromRestAPI":[{
+		"name": "Main Presentation",
+		"items": [
+			{"itemId": "itm.a",
+				"position": {"x":150,"y":50},
+				"style": { "background-color": "red"},
+				"item":{ "id": "itm.a"} },
+			{"itemId": "itm.b",
+				"position": {"x":150,"y":250},
+				"item":{ "id": "itm.a"}  }
+		],
+		"itemIdList":["itm.a","itm.b"]
+	]
 
 }

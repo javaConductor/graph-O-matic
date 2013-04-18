@@ -82,39 +82,55 @@
 		"id": "v1",
 		"name": "Main Presentation",
 		"items": [{
-			"itemId": "itm.a",
-				"position": {"x":150,"y":50},
-				"viewInfo": {
-					"style": {
-						"background-color": "red"
-					},
-					"texture": "/textures/img.001.jpg"
+			"item": {
+				"$id" : "itm.a",
+				"$ref":"Items"
+			},
+			"position": {"x":150,"y":50},
+			"viewInfo": {
+				"style": {
+					"background-color": "red"
+				},
+				"texture": "/textures/img.001.jpg"
 				}
 			},
 			{
-			"itemId": "itm.b",
-			"position": {"x":150,"y":250}
+			"item": {
+				"$id" : "itm.b",
+				"$ref":"Items"
+			},
+			"position": {"x":150,"y":50},
+			"viewInfo": {
+				"style": {
+					"background-color": "red"
+				},
+				"texture": "/textures/img.001.jpg"
 			}
+
+		}
 		],
 		"itemIdList":["itm.a","itm.b"]
-
 	}
 	],
 	"viewsAsReturnedFromRestAPI":[{
 		"id": "v1",
 		"name": "Main Presentation",
 		"items": [{
-			"itemRef": {
-				"$id" : "itm.a",
-				"$db" : "graph-o-matic",
-				"$ref":"Items"
-			},
 			"position": {"x":150,"y":50},
 			"viewInfo": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
 			"item": {
 				"id": "itm.a",
-				"name":"James McCosh Elementary School"}
+				"name":"James McCosh Elementary School"
 			}
+		},{
+			"position": {"x":50,"y":50},
+			"viewInfo": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
+			"item": {
+				"id": "itm.b",
+				"name":"Paul Lawrence Dunbar Vocational High School"
+			}
+		}]
+	}
 	]
 
 }

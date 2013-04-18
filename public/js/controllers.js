@@ -84,13 +84,27 @@ function AppCtrl($scope, $http) {
 
 	}];
 
-	$scope.testItems = [
+	$scope.testItems = [{
+		"id": "v1",
+		"name": "Main Presentation",
+		"items": [{
+				"position": {"x":150,"y":50},
+				"viewInfo": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
+				"item": {
+					"id": "itm.a",
+					"name":"James McCosh Elementary School"
+			}
+			},{
+				"position": {"x":50,"y":50},
+				"viewInfo": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
+				"item": {
+					"id": "itm.b",
+					"name":"Paul Lawrence Dunbar Vocational High School"
+				}
+			}]
 
-			{id: 123, position: [50,50], viewItem : {color: '0000FF', texture: '/textures/XYZ.jpg' }, itemType: {category: 'cat123'} },
-			{id: 2123, position: [150,150], viewItem : {color: '00FF00', texture: '/textures/ABC.jpg' }, itemType: {category: 'cat345'} }
-		]
-
-}
+		}];
+	$scope.testItem = $scope.testItems[0];
             /*
 
              Itemtype.titleFunc: returns a function that can get the title for the items

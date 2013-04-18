@@ -13,7 +13,11 @@ should turn into:
 	    style="stroke:#006600; fill: #00cc00">    	</rect>
 	 <image x="20" y="5" width="80" height="80"
 	    xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
+ <foreignObject class="node" x="46" y="22" width="200" height="300">
+ <body xmlns="http://www.w3.org/1999/xhtml">
 
+ </body>
+ </foreignObject>
 	 <text y="100" style="stroke:#00ffff; fill: #00ffff">
 	 <tspan dy="25" y="50" x="15">tspan line 0</tspan>
 	 <tspan dy="25" y="70" x="15">tspan line 1</tspan>
@@ -21,8 +25,26 @@ should turn into:
 
  </g>
 */
-
 var cx = 60, cy = 60;
+var createItemNode = function(svgElement, viewItem){
+	var g = angular.element("<g></g>");
+	var r = angular.element("rect").
+		attr('x', viewItem.position.x ).
+		attr('y', viewItem.position.y).
+		attr('height', cy ).
+		attr('width', cx );
+
+	if()
+	var img = angular.element("image").
+		attr('x', viewItem.position.x ).
+		attr('y', viewItem.position.y).
+		attr('height', cy ).
+		attr('width', cx-20 );
+
+
+};
+
+
 
 var testItem = {
 	"id": "i1",
@@ -42,18 +64,13 @@ var test2Item = {
 	"data":{"date": "", "bc":true}
 	};
 
-var createItemNode = function(element, viewItem){
-
-
-
-
-};
-
 
 var graphModule = angular.module('graphOmatic.directives', []);
 
 graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, $timeout) {
 	console.log("creating directive graphItem");
+
+
 
 	return {
 		restrict:'E',

@@ -1,0 +1,74 @@
+Extension Points
+================
+
+------------------------------------------------------------------------------------------------------------------------
+View related
+------------------------------------------------------------------------------------------------------------------------
+GetItemViewInfo = function(itemType, item) { ..., return viewInfo;}
+_$itypes$<TheItemTypeName>$fViewInfo    -   Called to get the viewInfo related to an item with itemType named 'TheItemTypeName'.
+_$itypes$fViewInfo                      -   The default function for getting the viewInfo related to an item.
+
+------------------------------------------------------------------------------------------------------------------------
+GetItemTitle = function(itemType, item) { ..., return title;}
+_$itypes$<TheItemTypeName>$fTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
+_$itypes$fTitle                         -   The default function for getting the title related to an item.
+
+------------------------------------------------------------------------------------------------------------------------
+DrawItem = function(view, element, viewItem) { /* Draw the Item as  a child of element */ }
+_$itypes$TheItemTypeName$fDraw       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+_$itypes$fDraw                         -   The default - provided.
+This is called by the view to draw a viewItem
+
+
+------------------------------------------------------------------------------------------------------------------------
+Relationship related
+------------------------------------------------------------------------------------------------------------------------
+DrawRelationship = function(element,  // element that contains both viewItems
+        relationship,
+        viewElementFrom,
+        viewElementTo) { /* Draw the Relationship between
+    viewElementFrom and viewElementTo */ }
+_$itypes$TheItemTypeName$fDraw       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+_$itypes$fDraw                         -   The default - provided.
+This is called by the view to draw a viewItem
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+Dynamic Relationship related
+------------------------------------------------------------------------------------------------------------------------
+DetermineRelationships = function(world, itemType, item) { ..., return relationships; }
+_$itypes$dynamic$TheItemTypeName$fRelationships       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+_$itypes$fTitle                         -   The default - provided.
+This is called by dynamic relationships to determine the relationships that it would be replacing itself with
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------------------
+To access
+------------------------------------------------------------------------------------------------------------------------
+
+World.Extensions = {
+    itemTypes: {
+        "Person": {
+            "GetItemViewInfo" : eval( extensionPoint("_$itypes$Person$GetItemViewInfo"));
+            "GetItemTitle" : eval( extensionPoint("_$itypes$Person$GetItemTitle"));
+        }
+    }
+
+
+}
+Utility funcs:
+World.getItemTypeFunctions(itemTypeName);
+
+World.getItemTitle  = _$itypes$fTitle
+World.getItemViewInfo = _$itypes$fViewInfo
+
+
+ItemType.getItemTitle = _$itypes$<TheItemTypeName>$fTitle  where ItemType.name === 'TheItemTypeName'.
+ItemType.getViewInfo = _$itypes$<TheItemTypeName>$fViewInfo  where ItemType.name === 'TheItemTypeName'.
+

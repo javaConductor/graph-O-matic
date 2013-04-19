@@ -9,8 +9,13 @@
                 {"name": "birthdate", "relationshipType": "hasBirthdate", "itemType": "CalendarDate"},
                 {"name": "deathDate", "relationshipType": "diedOn", "itemType": "CalendarDate"},
                 {"name": "family", "relationshipType": "relatedTo", "itemType": "Person"},
-                {"name": "residence", "relationshipType": "resides", "itemTypes": ["StreetAddress", "City", "State", "Country"]},
-            ]
+                {"name": "residence", "relationshipType": "resides", "itemTypes": ["StreetAddress", "City", "State", "Country"]}
+            ],
+            "viewInfo" : {
+                "icon": "/images/Person.jpg",
+                "fTitle": "function(item){ return item.name; }",// this function is eval'd and stored in _$types$Person$fTitle
+                "fViewInfo": "function(item){ return item.itemType.viewInfo; }"// this function is eval'd and stored in _$types$Person$fViewInfo
+            }
         },
         {
             "name": "Notes",

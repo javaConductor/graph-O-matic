@@ -15,7 +15,10 @@ should turn into:
 	    xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
  <foreignObject class="node" x="46" y="22" width="200" height="300">
  <body xmlns="http://www.w3.org/1999/xhtml">
+<table>
+<thead><tr><th cols="2" >{{itemType.name}}</th></tr></thead>
 
+</table>
  </body>
  </foreignObject>
 	 <text y="100" style="stroke:#00ffff; fill: #00ffff">

@@ -45,9 +45,6 @@ _$itypes$fTitle                         -   The default - provided.
 This is called by dynamic relationships to determine the relationships that it would be replacing itself with
 
 
-
-
-
 ------------------------------------------------------------------------------------------------------------------------
 To access
 ------------------------------------------------------------------------------------------------------------------------
@@ -60,15 +57,16 @@ World.Extensions = {
         }
     }
 
-
 }
+
 Utility funcs:
 World.getItemTypeFunctions(itemTypeName);
 
 World.getItemTitle  = _$itypes$fTitle
 World.getItemViewInfo = _$itypes$fViewInfo
 
-
 ItemType.getItemTitle = _$itypes$<TheItemTypeName>$fTitle  where ItemType.name === 'TheItemTypeName'.
 ItemType.getViewInfo = _$itypes$<TheItemTypeName>$fViewInfo  where ItemType.name === 'TheItemTypeName'.
+
+
 

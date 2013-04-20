@@ -11,10 +11,10 @@
                 {"name": "family", "relationshipType": "relatedTo", "itemType": "Person"},
                 {"name": "residence", "relationshipType": "resides", "itemTypes": ["StreetAddress", "City", "State", "Country"]}
             ],
-            "viewInfo" : {
+            "viewStyle" : {
                 "icon": "/images/Person.jpg",
                 "fTitle": "function(item){ return item.name; }",// this function is eval'd and stored in _$types$Person$fTitle
-                "fViewInfo": "function(item){ return item.itemType.viewInfo; }"// this function is eval'd and stored in _$types$Person$fViewInfo
+                "fViewStyle": "function(item){ return item.itemType.viewStyle; }"// this function is eval'd and stored in _$types$Person$fViewStyle
             }
         },
         {
@@ -92,7 +92,7 @@
 				"$ref":"Items"
 			},
 			"position": {"x":150,"y":50},
-			"viewInfo": {
+			"viewStyle": {
 				"style": {
 					"background-color": "red"
 				},
@@ -105,7 +105,7 @@
 				"$ref":"Items"
 			},
 			"position": {"x":150,"y":50},
-			"viewInfo": {
+			"viewStyle": {
 				"style": {
 					"background-color": "red"
 				},
@@ -122,14 +122,14 @@
 		"name": "Main Presentation",
 		"items": [{
 			"position": {"x":150,"y":50},
-			"viewInfo": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
+			"viewStyle": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
 			"item": {
 				"id": "itm.a",
 				"name":"James McCosh Elementary School"
 			}
 		},{
 			"position": {"x":50,"y":50},
-			"viewInfo": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
+			"viewStyle": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
 			"item": {
 				"id": "itm.b",
 				"name":"Paul Lawrence Dunbar Vocational High School"

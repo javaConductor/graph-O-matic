@@ -13,7 +13,7 @@ var modelFactory = {
 
     newItemType: function () {
     },
-    newItem: function () {
+    newItem: function (itemType) {
     },
     newRelationshipType: function () {
     },
@@ -45,7 +45,68 @@ Item = function (itemObj) {
 
 }
 
-var theWorld = function () {
+var View = function View(world, viewData) {
+    var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
+    var newItems = [];
+    viewData.items.forEach(function(vitem){
+        newItems.push(this.initViewItem(vitem));
+    });
+    viewData.items = newItems;
+    // returns a function that, given a viewId, will return a
+    // View Object representing that view
+        /// return the View object for viewId
+        return {
+            'name': viewData.name,
+            "world": world,
+            initialize: function(f){
+                f(this);
+
+
+
+            },
+            /////////////////////////////////////////////////////////
+            // Items
+            /////////////////////////////////////////////////////////
+            viewItems: function () {
+                return viewData.items();
+            },//returns list of items for this view
+            createViewItem: function (item, f) {
+                return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
+            },
+            initViewItem:function(viewItem){
+
+                viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+                viewItem.properties = world.initProperties(viewItem.itemType);
+                return viewItem;
+            },
+            itemMatchesRelationshipCriteria: function (item, criteria) {
+            },//bool
+            addItem: function (item) {
+                this.createViewItem(item)
+            },
+            /////////////////////////////////////////////////////////
+            // Relationships
+            /////////////////////////////////////////////////////////
+            getPossibleNewRelationships: function (itemFrom, itemTo) {
+            },
+            itemHasRelationship: function (item, relationshipTypeName) {
+            },
+            validRelationship: function (relationshipTypeName, itemFrom, itemTo) {
+            },
+            validToRelationship: function (relationshipTypeName, itemTo) {
+                validFromRelationship: function (relationshipTypeName, itemFrom) {
+                },
+                createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
+                },
+                relationships: function () {
+                },
+                findItemRelationships: function (item) {
+                }
+            }
+        };
+    }
+};
+var theWorld = function (persistence) {
 
     var copy = function (destination, source) {
         if (!destination)
@@ -68,20 +129,40 @@ var theWorld = function () {
         return destination;
     };
 
-    var mergeViewInfo = function(destViewInfo, srcViewInfo){
-      return copy(destViewInfo, srcViewInfo);
+    var mergeViewStyle = function(destViewStyle, srcViewStyle){
+      return copy(destViewStyle, srcViewStyle);
     };
 
-    return {
-        persistence: null,
-        allItems: persistence.allItems(),
-        allRelationships: persistence.allRelationships(),
+    var extensionPoints = {
 
+
+    };
+    return {
+        persistence: persistence,
+        allItems: persistence.allItems,
+        allItemTypes: persistence.allItemTypes,
+        allRelationships: persistence.allRelationships,
+        extensionTable : {},
         initialize: function(f){
+
+            extensionPoints["_$itypes$Person$titleFunction"] = function(item){return item.data.name};
+            extensionPoints["_$itypes$City$titleFunction"] = function(item){return item.data.city + (item.data.state.name ? (", "+ item.data.state.name ): "")};
 
             f(this);
 
+            this.extensionTable=buildExtensionTable(extensionPoints)
 
+        },
+        applyExtensions: function(world, extensionTable){
+
+
+        },
+        applyItemTypeExtensions: function(itemType, extensionTable){},
+        applyItemExtensions: function(itemType, extensionTable){},
+        applyRelationshipExtensions: function(relationshipType, extensionTable){},
+
+        extend: function(extensionPoint, funktion){
+            extensionPoints[extensionPoint] = funktion;
         },
 
         initProperties: function (itemType, defaultProps) {
@@ -89,28 +170,37 @@ var theWorld = function () {
                 ? copy(this.initProperties(itemType.parent, defaultProps), mapBy("name", itemType.properties))
                 : copy(defaultProps, mapBy("name", itemType.properties))
         },
-        getCategoryViewInfo: function (category, defaultViewInfo) {
+
+        getCategoryViewStyle: function (category, defaultViewStyle) {
             return (category.parent)
-                ? mergeViewInfo(getCategoryViewInfo(category.parent, defaultViewInfo), category.viewInfo)
-                : mergeViewInfo(defaultViewInfo, category.viewInfo);
+                ? mergeViewStyle(getCategoryViewStyle(category.parent, defaultViewStyle), category.viewStyle)
+                : mergeViewStyle(defaultViewStyle, category.viewStyle);
         },
-        getItemTypeViewInfo: function(itemType, defaultViewInfo){
+        getItemTypeViewStyle: function(itemType, defaultViewStyle){
             return (itemType.parent)
-                ? mergeViewInfo(getItemTypeViewInfo(itemType, defaultViewInfo),mergeViewInfo(itemType.viewInfo, getCategoryViewInfo(itemType.category)))
-                : mergeViewInfo(defaultViewInfo, mergeViewInfo(itemType.viewInfo, getCategoryViewInfo(itemType.category)));
+                ? mergeViewStyle(getItemTypeViewStyle(itemType, defaultViewStyle),mergeViewStyle(itemType.viewStyle, getCategoryViewStyle(itemType.category)))
+                : mergeViewStyle(defaultViewStyle, mergeViewStyle(itemType.viewStyle, getCategoryViewStyle(itemType.category)));
         },
 
-        views: function(){
+        views: function(f){
             // an object key=view name, value=view id
         },
 
-        view: function(viewId){
+        view: function(viewId, f){
             // a view or null
+            this.persistence.getView(viewId, function(e,v){
+                if(e) return f(e, null);
+                v = v || modelFactory.newView();
+                f(null, new View(this,v));
+
+            })
 
         },
-        createView: function(viewName){
+        createView: function(viewName, f){
             // an empty view
-        }
+        },
+
+
 
 
     }
@@ -153,75 +243,15 @@ var relCriteria = "item.hasRelationship('child')";
 /// We use the graph-o-matic REST API for persistence
 ///
 // steps: send out the /directory to server
-var View = function View(world) {
-
-
-    // returns a function that, given a viewId, will return a
-    // View Object representing that view
-    return function (viewId) {
-        var theView = world.getView(viewId) // merges viewItems w/ Items
-
-        /// return the View object for viewId
-        return {
-            'name': theView.name,
-
-            /////////////////////////////////////////////////////////
-            // Items
-            /////////////////////////////////////////////////////////
-            viewItems: function () {
-                return theView.items();
-            },//returns list of items for this view
-            createViewItem: function (item) {
-                return world.createViewItem(item);//creates both Item&ViewItem - sweet!
-            },
-            itemMatchesRelationshipCriteria: function (item, criteria) {
-            },//bool
-            addItem: function (item) {
-            },
-            /////////////////////////////////////////////////////////
-            // Relationships
-            /////////////////////////////////////////////////////////
-            getPossibleNewRelationships: function (itemFrom, itemTo) {
-            },
-            itemHasRelationship: function (item, relationshipTypeName) {
-            },
-            validRelationship: function (relationshipTypeName, itemFrom, itemTo) {
-            },
-            validToRelationship: function (relationshipTypeName, itemTo) {
-            },
-            validFromRelationship: function (relationshipTypeName, itemFrom) {
-            },
-            createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
-            },
-            relationships: function () {
-            },
-            findItemRelationships: function (item) {
-            }
-        }
-    };
-}
 
 /**
  * This service is responsible for the drawing operations of GraphOMatic (c)
  *
  */
 services.factory('World', ['persistence', function (persistence) {
-    var prefix = 'http://' + neo4jHost + ':' + neo4jPort;
-    Root = $resource(prefix + '/', {});
-    Item = $resource(prefix + '/node/:id', {id: '@id'});
-    ItemType = $resource(prefix + '/itemtype/:id', {id: '@id'});
-    Relationship = $resource(prefix + '/relationship/:id', {id: '@id'});
-    RelationshipTypes = $resource(prefix + '/relationship/types');
 
-    return {
-        allItems: persistence.allItems(),
-        allRelationships: persistence.allRelationships(),
-        view: ViewPersistence(persistence),
-        createItem: persistence.createItem(item),
-        createRelationshipType: function (relationshipType) {
+    return theWorld(persistence);
 
-        }
-    };
 }]);
 
 var directory = {
@@ -249,7 +279,6 @@ services.factory('persistence', ['$http', '$resource', 'Directory', function ($h
         getItem: function (itemId, f) {
             Item.get({}, {id: itemId}, function (item) {
                 f(null, item);
-
             }, function (err) {
                 f('Could not get Item:' + err, null);
             })
@@ -289,7 +318,7 @@ services.factory('persistence', ['$http', '$resource', 'Directory', function ($h
 
         removeView: function (viewId, f) {
         },
-        saveView: function (theView, f) {
+        saveView: function (viewData, f) {
         },
         createViewItem: function (theViewItem, f) {
         },

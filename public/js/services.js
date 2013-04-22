@@ -138,6 +138,7 @@ var theWorld = function (persistence) {
 
     };
     return {
+        self: this,
         persistence: persistence,
         allItems: persistence.allItems,
         allItemTypes: persistence.allItemTypes,
@@ -160,10 +161,6 @@ var theWorld = function (persistence) {
         applyItemTypeExtensions: function(itemType, extensionTable){},
         applyItemExtensions: function(itemType, extensionTable){},
         applyRelationshipExtensions: function(relationshipType, extensionTable){},
-
-        extend: function(extensionPoint, funktion){
-            extensionPoints[extensionPoint] = funktion;
-        },
 
         initProperties: function (itemType, defaultProps) {
             return (itemType.parent)
@@ -199,6 +196,156 @@ var theWorld = function (persistence) {
         createView: function(viewName, f){
             // an empty view
         },
+        extend: function(extensionPoint, funktion){
+            extensionPoints[extensionPoint] = funktion;
+        },
+
+        buildExtensionTable: function (extensions) {
+
+
+            var Examples = {
+                "GetItemViewInfo": {
+                    f: function (item) {
+                        return viewInfo;
+                    },
+                    previous: function (item) {
+                        return viewInfo;
+                    }
+                },
+                "DrawItem": {
+                    f: function (view, element, viewItem) {
+                    },
+                    previous: function (view, element, viewItem) {
+                    }
+                },
+                "DrawRelationship": {
+                    f: function (element, relationship, viewElementFrom, viewElementTo) {
+                    },
+                    previous: function (element, relationship, viewElementFrom, viewElementTo) {
+                    }
+                },
+                "views": {
+                    "44ac-143d-33fa-b3aa": {
+                        "items": {
+                            "aaac-143d-33fa-678c-b34c": {
+                                "GetItemViewInfo": {
+                                    f: function (item) {
+                                        return viewInfo;
+                                    },
+                                    previous: function (item) {
+                                        return viewInfo;
+                                    }
+                                },
+                                "GetItemTitle": {
+                                    f: function (item) {
+                                        return title;
+                                    },
+                                    previous: function (item) {
+                                        return item.name;
+                                    }
+                                },
+                                "GetItemRelationships": {
+                                    f: function (item) {
+                                        return viewInfo;
+                                    },
+                                    previous: function (item) {
+                                        return relationships;
+                                    }// To and From???
+                                }
+                            }
+
+                        },
+                        "relationships": {
+                            "678c-aaac-143d-33fa-b34c": {
+                                "GetRelationshipViewInfo": {
+                                    f: function (relationship) {
+                                        return viewInfo;
+                                    },
+                                    previous: function (relationship) {
+                                        return viewInfo;
+                                    }
+                                },
+                                "DrawRelationship": {
+                                    f: function (element, relationship, viewElementFrom, viewElementTo) {
+                                    },
+                                    previous: function (element, relationship, viewElementFrom, viewElementTo) {
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "itemTypes": {
+                    "678c-cccc-143d-b34c-33fa": {
+                        "GetItemViewInfo": {
+                            f: function (item) {
+                                return viewInfo;
+                            },
+                            previous: function (item) {
+                                return viewInfo;
+                            }
+                        },
+                        "GetItemTitle": {
+                            f: function (item) {
+                                return viewInfo;
+                            },
+                            previous: function (item) {
+                                return viewInfo;
+                            }
+                        },
+                        "GetItemRelationships": {
+                            f: function (item) {
+                                return viewInfo;
+                            },
+                            previous: function (item) {
+                                return relationships;
+                            }// To and From???
+                        }
+                    }
+                },
+                "relationshipTypes": {
+                    "143d-b34c-33fa-3482-dd7a": {
+                        "GetRelationshipViewInfo": {
+                            f: function (relationship) {
+                                return viewInfo;
+                            },
+                            previous: function (relationship) {
+                                return viewInfo;
+                            }
+                        },
+                        "GetRelationshipText": {
+                            f: function (element, relationship, viewElementFrom, viewElementTo) {
+                            },
+                            previous: function (element, relationship, viewElementFrom, viewElementTo) {
+                            }
+                        },
+
+                        "DrawRelationship": {
+                            f: function (element, relationship, viewElementFrom, viewElementTo) {
+                            },
+                            previous: function (element, relationship, viewElementFrom, viewElementTo) {
+                            }
+                        }
+                    }
+                }
+            };
+            var extensionTable = {
+
+            };
+
+            for(var extensionPoint in extensions){
+
+                self.addExtensionPointToTable( extensionPoint, extensions[extensionPoint], extensionTable );
+
+            }
+
+
+        },
+        addExtensionPointToTable : function(extensionPoint, f, extensionTable){
+
+
+
+        }
 
 
 

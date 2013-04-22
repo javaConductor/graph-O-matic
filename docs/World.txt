@@ -5,18 +5,18 @@ Extension Points
 View related
 ------------------------------------------------------------------------------------------------------------------------
 GetItemViewInfo = function(itemType, item) { ..., return viewInfo;}
-_$itypes$<TheItemTypeName>$fViewInfo    -   Called to get the viewInfo related to an item with itemType named 'TheItemTypeName'.
-_$itypes$fViewInfo                      -   The default function for getting the viewInfo related to an item.
+itemTypes.<TheItemTypeId>.GetItemViewInfo    -   Called to get the viewInfo related to an item with itemType named 'TheItemTypeName'.
+GetItemViewInfo                      -   The default function for getting the viewInfo related to an item.
 
 ------------------------------------------------------------------------------------------------------------------------
 GetItemTitle = function(itemType, item) { ..., return title;}
-_$itypes$<TheItemTypeName>$fTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
-_$itypes$fTitle                         -   The default function for getting the title related to an item.
+itemTypes.TheItemTypeId.GetItemTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
+GetItemTitle                         -   The default function for getting the title related to an item.
 
 ------------------------------------------------------------------------------------------------------------------------
 DrawItem = function(view, element, viewItem) { /* Draw the Item as  a child of element */ }
-_$itypes$TheItemTypeName$fDraw       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-_$itypes$fDraw                         -   The default - provided.
+itemTypes.TheItemTypeId.DrawItem       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+DrawItem       -                  The default - provided.
 This is called by the view to draw a viewItem
 
 
@@ -28,8 +28,8 @@ DrawRelationship = function(element,  // element that contains both viewItems
         viewElementFrom,
         viewElementTo) { /* Draw the Relationship between
     viewElementFrom and viewElementTo */ }
-_$itypes$TheItemTypeName$fDraw       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-_$itypes$fDraw                         -   The default - provided.
+itemTypes.TheItemTypeId.DrawRelationship       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+DrawRelationship                         -   The default - provided.
 This is called by the view to draw a viewItem
 
 
@@ -40,33 +40,97 @@ This is called by the view to draw a viewItem
 Dynamic Relationship related
 ------------------------------------------------------------------------------------------------------------------------
 DetermineRelationships = function(world, itemType, item) { ..., return relationships; }
-_$itypes$dynamic$TheItemTypeName$fRelationships       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-_$itypes$fTitle                         -   The default - provided.
+itemTypes.<TheItemTypeId>.DetermineRelationships       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+DetermineRelationships                         -   The default - provided.
 This is called by dynamic relationships to determine the relationships that it would be replacing itself with
 
 
 ------------------------------------------------------------------------------------------------------------------------
 To access
 ------------------------------------------------------------------------------------------------------------------------
+Extension functions are passed the original function.
 
 World.Extensions = {
-    itemTypes: {
-        "Person": {
-            "GetItemViewInfo" : eval( extensionPoint("_$itypes$Person$GetItemViewInfo"));
-            "GetItemTitle" : eval( extensionPoint("_$itypes$Person$GetItemTitle"));
+    "GetItemViewInfo" : {
+                            f: function(item) { ..., return viewInfo;},
+                            previous: function(item) { ..., return viewInfo;}
+                         },
+    "DrawItem": {
+                    f: function(view, element, viewItem){},
+                    previous: function(view, element, viewItem){}
+                 },
+    "DrawRelationship": {
+                  f: function(element, relationship, viewElementFrom, viewElementTo){},
+                  previous: function(element, relationship, viewElementFrom, viewElementTo){}
+          },
+    "views": {
+        "44ac-143d-33fa-b3aa" : {
+             "items":{
+                 "aaac-143d-33fa-678c-b34c":{
+                     "GetItemViewInfo" : {
+                        f: function(item) { ..., return viewInfo;},
+                        previous: function(item) { ..., return viewInfo;}
+                     },
+                     "GetItemTitle" : {
+                          f: function(item) { ..., return title;},
+                          previous: function(item) { ..., return item.name;}
+                   },
+                    "GetItemRelationships": {
+                        f: function(item) { ..., return viewInfo;},
+                        previous: function(item) { ..., return relationships;}// To and From???
+                    }
+                 }
+
+             },
+              "relationships":{
+                  "678c-aaac-143d-33fa-b34c":{
+                      "GetRelationshipViewInfo" : {
+                        f: function(relationship) { ..., return viewInfo;},
+                        previous: function(relationship) { ..., return viewInfo;}
+                        },
+                      "DrawRelationship": {
+                              f: function(element, relationship, viewElementFrom, viewElementTo){},
+                              previous: function(element, relationship, viewElementFrom, viewElementTo){}
+                      }
+                  }
+              }
+        }
+    },
+    "itemTypes": {
+        "678c-cccc-143d-b34c-33fa": {
+            "GetItemViewInfo" : {
+                f: function(item) { ..., return viewInfo;},
+                previous: function(item) { ..., return viewInfo;}
+             },
+            "GetItemTitle" : {
+                 f: function(item) { ..., return viewInfo;},
+                 previous: function(item) { ..., return viewInfo;}
+              },
+            "GetItemRelationships": {
+                f: function(item) { ..., return viewInfo;},
+                previous: function(item) { ..., return relationships;}// To and From???
+            }
+        }
+    },
+    "relationshipTypes": {
+        "143d-b34c-33fa-3482-dd7a": {
+            "GetRelationshipViewInfo" : {
+                f: function(relationship) { ..., return viewInfo;},
+                previous: function(relationship) { ..., return viewInfo;}
+                },
+              "GetRelationshipText" : {
+                f: function(element, relationship, viewElementFrom, viewElementTo){},
+                previous: function(element, relationship, viewElementFrom, viewElementTo){}
+                },
+
+              "DrawRelationship": {
+                  f: function(element, relationship, viewElementFrom, viewElementTo){},
+                  previous: function(element, relationship, viewElementFrom, viewElementTo){}
+                }
         }
     }
-
 }
 
 Utility funcs:
-World.getItemTypeFunctions(itemTypeName);
-
-World.getItemTitle  = _$itypes$fTitle
-World.getItemViewInfo = _$itypes$fViewInfo
-
-ItemType.getItemTitle = _$itypes$<TheItemTypeName>$fTitle  where ItemType.name === 'TheItemTypeName'.
-ItemType.getViewInfo = _$itypes$<TheItemTypeName>$fViewInfo  where ItemType.name === 'TheItemTypeName'.
-
-
-
+World.getItemFunctions(viewId, itemTypeId, itemId);
+World.getRelationshipFunctions(viewId, relationshipTypeId, relationshipId);

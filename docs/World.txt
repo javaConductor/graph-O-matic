@@ -10,12 +10,12 @@ GetItemViewInfo                      -   The default function for getting the vi
 
 ------------------------------------------------------------------------------------------------------------------------
 GetItemTitle = function(itemType, item) { ..., return title;}
-itemTypes.TheItemTypeId.GetItemTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
+itemTypes.<TheItemTypeId>.GetItemTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
 GetItemTitle                         -   The default function for getting the title related to an item.
 
 ------------------------------------------------------------------------------------------------------------------------
 DrawItem = function(view, element, viewItem) { /* Draw the Item as  a child of element */ }
-itemTypes.TheItemTypeId.DrawItem       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+itemTypes.<TheItemTypeId>.DrawItem       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
 DrawItem       -                  The default - provided.
 This is called by the view to draw a viewItem
 
@@ -28,12 +28,9 @@ DrawRelationship = function(element,  // element that contains both viewItems
         viewElementFrom,
         viewElementTo) { /* Draw the Relationship between
     viewElementFrom and viewElementTo */ }
-itemTypes.TheItemTypeId.DrawRelationship       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
+itemTypes.<TheItemTypeId>.DrawRelationship       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
 DrawRelationship                         -   The default - provided.
 This is called by the view to draw a viewItem
-
-
-
 
 
 ------------------------------------------------------------------------------------------------------------------------

@@ -3,8 +3,9 @@
 /* Model Service */
 
 (function(services){
-	services.factory('Model', ['$http', '$location','persistence', function ($http, $location, persistence) {
+	services.factory('Model', ['persistence', function (persistence) {
 		var thisf = this;
+		var applyProperties = function()
 		var types = {
 			"ItemType":  {
 			create : function(initProperties){

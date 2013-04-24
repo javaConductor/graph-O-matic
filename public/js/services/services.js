@@ -15,7 +15,7 @@ var modelFactory = {
 			name: name
 		}
 	},
-	newItem: function (itemType, name ) {
+	newItem: function (itemType, name) {
 		return {
 
 		}
@@ -45,27 +45,27 @@ Item = function (itemObj) {
 
 /*
  "viewsAsReturnedFromRestAPI":[{
-		"id": "v1",
-		"name": "Main Presentation",
-		itemIdList: ["itm.a","itm.b"],
-		"items": [{
-			"position": {"x":150,"y":50},
-		    "viewStyle": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
-			"item": {
-				"type": "$ref{ $id: 'school'} ",
-				"id": "itm.a",
-				"name":"James McCosh Elementary School"
-		    }
-            },{
-			"position": {"x":50,"y":50},
-			"viewStyle": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
-			"item": {
-				"type": "$ref{ $id: 'school'} ",
-				"id": "itm.b",
-				"name":"Paul Lawrence Dunbar Vocational High School"
-		    }
-	    }]
-	 }
+ "id": "v1",
+ "name": "Main Presentation",
+ itemIdList: ["itm.a","itm.b"],
+ "items": [{
+ "position": {"x":150,"y":50},
+ "viewStyle": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
+ "item": {
+ "type": "$ref{ $id: 'school'} ",
+ "id": "itm.a",
+ "name":"James McCosh Elementary School"
+ }
+ },{
+ "position": {"x":50,"y":50},
+ "viewStyle": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
+ "item": {
+ "type": "$ref{ $id: 'school'} ",
+ "id": "itm.b",
+ "name":"Paul Lawrence Dunbar Vocational High School"
+ }
+ }]
+ }
  ]
  */
 
@@ -73,11 +73,7 @@ Item = function (itemObj) {
 var View = function View(world, viewData) {
 
 
-	var initViewItem = function(vItem, itemTypesById){
-
-
-
-
+	var initViewItem = function (vItem, itemTypesById) {
 
 
 	};
@@ -103,15 +99,7 @@ var View = function View(world, viewData) {
 		viewItems: function () {
 			return viewData.items();
 		},//returns list of items for this view
-		createViewItem: function (item, f) {
-			return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
-		},
-		initViewItem: function (viewItem) {
 
-			viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
-			viewItem.properties = world.initProperties(viewItem.itemType);
-			return viewItem;
-		},
 		itemMatchesRelationshipCriteria: function (item, criteria) {
 		},//bool
 		addItem: function (item) {
@@ -127,23 +115,22 @@ var View = function View(world, viewData) {
 		validRelationship: function (relationshipTypeName, itemFrom, itemTo) {
 		},
 		validToRelationship: function (relationshipTypeName, itemTo) {
-			validFromRelationship: function (relationshipTypeName, itemFrom) {
-			}
-			,
-			createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
-			}
-			,
-			relationships: function () {
-			}
-			,
-			findItemRelationships: function (item) {
-			}
+		},
+		validFromRelationship: function (relationshipTypeName, itemFrom) {
+		},
+		createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
+		},
+		relationships: function () {
+		},
+		findItemRelationships: function (item) {
 		}
-	};
-
-	return theObject;
-
+	}
 };
+
+return theObject;
+
+}
+;
 
 
 services.factory('Directory', ['$http', '$location', function ($http, $location) {
@@ -180,7 +167,7 @@ var memberDadClubRelType = {
 };
 var relCriteria = "item.hasRelationship('child')";
 ///
-/// We use the graph-o-matic REST API for persistence
+/// We use the graph-o-matic REST API for persistence.js
 ///
 // steps: send out the /directory to server
 
@@ -199,7 +186,7 @@ var directory = {
 };
 
 /**
- * This service is responsible for the persistence in graph-O-matic (c)
+ * This service is responsible for the persistence.js in graph-O-matic (c)
  *
  * Right now it should be using Neo4J but we should be  able to swap it out for  ANYTHING we want
  *

@@ -2,18 +2,57 @@
 
 /* World Services */
 
+
+
 (function(services){
+
+	var extensionMgr = function(extensionTable){
+
+		return {
+			getViewFunctions: function(viewId){
+				/// look for views.<viewId>.items
+				/// look for views.<viewId>.relationships
+				///
+				var fList = util.getOrCreateObjectFromPath(extensionTable, "views."+viewId+".items", {});
+				fList = copy(fList, util.getOrCreateObjectFromPath(extensionTable, "views."+viewId+".relationships", {}));
+				return fList;
+			},
+			getItemTypeFunctions: function(itemTypeId){
+				/// look for itemTypes.<itemTypeId>.itemTypes
+				var fList = util.getOrCreateObjectFromPath(extensionTable, "itemTypes."+itemTypeId, {});
+				return fList;
+
+			},
+			getRelationshipTypeFunctions: function(relationshipTypeId){
+				/// look for itemTypes.<itemTypeId>.itemTypes
+				/// look for itemTypes.<itemTypeId>.relationshipTypes
+				var fList = util.getOrCreateObjectFromPath(extensionTable, "relationshipTypes."+relationshipTypeId, {});
+				return fList;
+			},
+			getItemFunctions: function(itemId){
+				/// look for itemTypes.<itemTypeId>.itemTypes
+				/// look for itemTypes.<itemTypeId>.relationshipTypes
+
+			},
+			getGeneralFunctions: function(){
+				/// look for itemTypes
+				/// look for relationshipTypes
+
+			}
+		}
+	};
+
 	services.factory('World', ['persistence', 'utilFunctions', 'contextService',
 		function (persistence, util, ctxtSvc) {
 		/// return the util funcs
 
+			var thisf = this;
 			var mergeViewStyle = function (destViewStyle, srcViewStyle) {
 				return util.copy(destViewStyle, srcViewStyle);
 			};
 			///////////////////////////////////////////////////////////////////////////
 			/// Extension functions
 			///////////////////////////////////////////////////////////////////////////
-			var thisf = this;
 			var extensionPoints = {
 			};
 			thisf.extensionTable= {};
@@ -22,14 +61,7 @@
 			var relationshipTypes = [];
 			var itemCategories = [];
 			var relationshipCategories = [];
-			var findOrCreateObjectFromPath = function findOrCreateObjectFromPath(theObject, path) {
-				var objAtPath = eval("theObject." + path);
-				if (!objAtPath) {
-					eval("theObject." + path + " = {}");
-					objAtPath = eval("theObject." + path);
-				}
-				return objAtPath;
-			};
+			var findOrCreateObjectFromPath = util.getOrCreateObjectFromPath;
 
 			var addExtensionPointToTable = function (extensionTable, extensionPoint, f) {
 				/// get the location
@@ -62,7 +94,9 @@
 					thisf.extensionTable = buildExtensionTable(extensionPoints);
 					return self;
 				},
-				initContexts: function (itemCategories, relationshipCategories, itemTypes, relationshipTypes, extensionPoints) {
+				initContexts: function (itemCategories, relationshipCategories,
+				                        itemTypes, relationshipTypes,
+				                        extensionPoints) {
 
 					var ctxtList = [contextService.basicReality].concat(contextService.loadContexts());
 
@@ -94,8 +128,20 @@
 				applyItemTypeExtensions: function (itemType, extensionTable) {
 				},
 				applyItemExtensions: function (item, extensionTable) {
-					item.properties = this.initProperties(item.itemType,{});
+					item.properties
 					return item;
+				},
+				getExtensions: function(viewId, itemId, itemTypeId){
+					/// look for pattern extensionTable[viewId]
+					/// in order:
+					//      if viewId present
+					//          get extensions {views.*}
+					//      if (itemType present) itemType
+					//
+					getOrCreateObjectFromPath()
+
+
+
 				},
 				applyRelationshipExtensions: function (relationshipType, extensionTable) {
 				},

@@ -1,6 +1,6 @@
 (function (services) {
 	/**
-	 * This service is responsible for the persistence in graph-O-matic (c)
+	 * This service is responsible for the persistence.js in graph-O-matic (c)
 	 *
 	 * Right now it should be using Neo4J but we should be  able to swap it out for  ANYTHING we want
 	 *

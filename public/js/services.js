@@ -7,7 +7,7 @@ var neo4jPort = 7474;
 
 var Root, Item, ItemType, Relationship, RelationshipTypes;
 
-var services = angular.module('GraphOMaticServices', ['ngResource']);
+var services = angular.module('GraphOMaticServices', ['ngResource', 'UtilityFunctions']);
 
 var modelFactory = {
 	newItemType: function (name) {
@@ -43,24 +43,57 @@ Item = function (itemObj) {
 
 }
 
+/*
+ "viewsAsReturnedFromRestAPI":[{
+		"id": "v1",
+		"name": "Main Presentation",
+		itemIdList: ["itm.a","itm.b"],
+		"items": [{
+			"position": {"x":150,"y":50},
+		    "viewStyle": {"style": { "background-color": "red"}, "texture": "/textures/img.001.jpg"},
+			"item": {
+				"type": "$ref{ $id: 'school'} ",
+				"id": "itm.a",
+				"name":"James McCosh Elementary School"
+		    }
+            },{
+			"position": {"x":50,"y":50},
+			"viewStyle": {"style": { "foreground-color": "blue"}, "texture": "/textures/img.001.jpg"},
+			"item": {
+				"type": "$ref{ $id: 'school'} ",
+				"id": "itm.b",
+				"name":"Paul Lawrence Dunbar Vocational High School"
+		    }
+	    }]
+	 }
+ ]
+ */
+
+
 var View = function View(world, viewData) {
+
+
+	var initViewItem = function(vItem, itemTypesById){
+
+
+
+	};
+	/// all initialization done here before we return object
+
+	/// add the types to the items
+
 	var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
+	var itemTypesById = mapBy("id", theItemTypes);
 	var newItems = [];
 	viewData.items.forEach(function (vitem) {
-		newItems.push(this.initViewItem(vitem));
+		newItems.push(this.initViewItem(vitem, itemTypesById));
 	});
 	viewData.items = newItems;
-	// returns a function that, given a viewId, will return a
-	// View Object representing that view
-	/// return the View object for viewId
-	return {
+
+
+	var theObject = {
 		'name': viewData.name,
 		"world": world,
-		initialize: function (f) {
-			f(this);
-
-
-		},
 		/////////////////////////////////////////////////////////
 		// Items
 		/////////////////////////////////////////////////////////
@@ -104,6 +137,9 @@ var View = function View(world, viewData) {
 			}
 		}
 	};
+
+	return theObject;
+
 };
 
 var theWorld = function (persistence, contextService) {
@@ -119,15 +155,6 @@ var theWorld = function (persistence, contextService) {
 			}
 			return destination;
 		};
-		var mapBy = function (key, objectArray) {
-			var destination = {};
-			if (objectArray)
-				for (var idx in objectArray) {
-					if (objectArray[idx][key])
-						destination[objectArray[idx][key]] = objectArray[idx];
-				}
-			return destination;
-		};
 
 		var mergeViewStyle = function (destViewStyle, srcViewStyle) {
 			return copy(destViewStyle, srcViewStyle);
@@ -135,16 +162,14 @@ var theWorld = function (persistence, contextService) {
 		///////////////////////////////////////////////////////////////////////////
 		/// Extension functions
 		///////////////////////////////////////////////////////////////////////////
-
+		var thisf = this;
 		var extensionPoints = {
 		};
 
-		var itemTypes = {};
-		var itemTypesByName = {};
-
-		var relationshipTypes = {};
-		var relationshipTypesByName = {};
-
+		var itemTypes = [];
+		var relationshipTypes = [];
+		var itemCategories = [];
+		var relationshipCategories = [];
 		var findOrCreateObjectFromPath = function findOrCreateObjectFromPath(theObject, path) {
 			var objAtPath = eval("theObject." + path);
 			if (!objAtPath) {
@@ -183,33 +208,35 @@ var theWorld = function (persistence, contextService) {
 					return item.data.city + (item.data.state.name ? (", " + item.data.state.name ) : "")
 				};
 
+				initContexts(itemCategories, relationshipCategories, itemTypes, relationshipTypes, extensionPoints);
+
 				f(this);
 
 				this.extensionTable = buildExtensionTable(extensionPoints);
+				return self;
 			},
-			initContexts: function (itemTypes, relationshipTypes, extensionTable) {
+			initContexts: function (itemCategories, relationshipCategories, itemTypes, relationshipTypes, extensionPoints) {
 
 				var ctxtList = [contextService.basicReality].concat(contextService.loadContexts());
 
 				ctxtList.forEach(function(ctxt){
 					ctxt.updateItemCategories(itemCategories, function(updatedItemCategories){
-
+						itemCategories = updatedItemCategories;
 
 					});
 					ctxt.updateRelationshipCategories(relationshipCategories, function(updatedRelationshipCategories){
-
+						relationshipCategories = updatedRelationshipCategories;
 
 					});
 					ctxt.updateItemTypes(itemTypes, function(updatedItemTypes){
-
+						itemTypes = updatedItemTypes;
 
 					});
 					ctxt.updateRelationshipTypes(relationshipTypes, function(updatedRelationshipTypes){
-
-
+						relationshipTypes = updatedRelationshipTypes;
 					});
-					ctxt.updateExtensionTable(extensionTable, function(updatedExtensionTable){
-
+					ctxt.updateExtensionPoints(extensionPoints, function(updatedExtensionPoints){
+						extensionPoints = updatedExtensionPoints;
 
 					});
 				});
@@ -219,7 +246,11 @@ var theWorld = function (persistence, contextService) {
 			},
 			applyItemTypeExtensions: function (itemType, extensionTable) {
 			},
-			applyItemExtensions: function (itemType, extensionTable) {
+			applyItemExtensions: function (item, extensionTable) {
+
+				item.properties = this.initProperties(item.itemType,{});
+
+				return item;
 			},
 			applyRelationshipExtensions: function (relationshipType, extensionTable) {
 			},

@@ -6,7 +6,7 @@
 	services.factory('Model', ['persistence', function (persistence) {
 		var thisf = this;
         var Validator = require('../../lib/jsonschema/validator');
-		var applyProperties = function()
+		//var applyProperties = function();
 		var types = {
 			"ItemType":  {
 			create : function(initProperties){

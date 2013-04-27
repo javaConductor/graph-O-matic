@@ -1,0 +1,36 @@
+
+Features
+    Relationship constraints
+        For now just do a basic itemType list
+        We will institute a robust constraint syntax
+        v2.0
+
+    Item Animation
+        v2.0
+
+    Relationship Animation
+        v2.0
+
+    Extensions
+        v1.2
+
+    Cascading properties
+        v1.0
+
+    Cascading viewInfo
+        v1.0
+
+    Contexts
+        BasicReality
+            v1.0
+
+        Software Development
+            v1.2
+
+    Third-Party Contexts
+        v2.0
+
+
+    3D Views
+        v3.0
+

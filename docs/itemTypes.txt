@@ -74,7 +74,6 @@ use case 3: Load the view
 ======================================================================
 Get all items in a view and all relationships between these views.
 
-
 1 - get list of items
 	get the static list
 	then if view has dynamic criteria then do a full scan of all items against the view criteria
@@ -129,6 +128,26 @@ RelationshipType{category:Professional,
 	constraintFrom:[item.isInTypes([Person])], 
 	constraintTo:[item.isInTypes([Business])]
 }
+
+what other vars and/or functions should be passed to the constraint func??
+
+constraintFunc( relationship, item, relationshipsByName, itemTypesByName, constraintString){
+
+relationshipList = FindRelationships(item, "relationshipName", F|T|B);
+relationshipList = FindRelationshipsBetweenItems(item, item2, "relationshipName", F|T|B);
+
+//if people have the same mother
+
+RelList = FindRelationships(item, "Mother", 'T' );// result will contain 'From Items', 'To Items', or Both
+RelList.To().
+
+item.relationships( to: item2 )
+matchItems()
+
+eval();
+
+}
+
 
 produces:
 

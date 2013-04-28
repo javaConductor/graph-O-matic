@@ -28,13 +28,23 @@ function GraphOMaticCtrl($scope, World) {
 			{ title:"Some Info page", content:"Info!" }
 		];
 
+    var viewTemplate =
+        "<graphItem ng-repeat='item in viewData.items' id='item.id' ng-model='item' data-item-id='{{item.id}}' >" +
+        "</graphItem>" +
+        "<graphRelationship ng-repeat='relationship in viewData.relationships'  ng-model='relationship' data-item-id='{{relationship.id}}' >" +
+        "</graphItem>";
 
 	$scope.open = function(viewId){
 
 		World.getView(viewId, function(err, viewData){
-			var pane = {viewId:viewData, title:viewData.name, templateUrl:"view.html"}
 			//// add pane to viewTabList after making sure its not there already
-		});
+            var pane = findViewTab(viewId);
+            if( !pane ){
+                pane = {viewData:viewData, title:viewData.name, content:viewTemplate};
+                $scope.viewTabList.push(pane);
+            }
+
+        });
 	}
 
 }

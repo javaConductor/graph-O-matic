@@ -29,6 +29,15 @@
  */
 var cx = 60, cy = 60;
 var createItemNode = function(svgElement, viewItem){
+
+    var position = viewItem.position();
+    var image = viewItem.image();
+    var data = viewItem.data();
+    var title = viewItem.title();
+    var style = viewItem.style();
+    var properties = viewItem.properties();
+    var extraProperties = viewItem.extraItemsOk();
+
     var g = angular.element("<g></g>");
     var r = angular.element("rect").
         attr('x', viewItem.position.x ).
@@ -57,7 +66,7 @@ graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, 
         replace:true,
         scope:true,
         'require':'?ngModel',
-        template: '<svg><rect cx="50" cy="50" x="100" y="100" color="black" ></rect></svg>',
+        templateLooksLike: '<g><rect cx="50" cy="50" x="100" y="100" color="black" ></rect></svg>',
         link : function(scope, element, attrs, model){
             /// Can we use this to update the screen for each item ???
             model.$render = function () {

@@ -5,7 +5,8 @@ graphModule.directive('graphView', ['$compile', '$timeout', function ($compile, 
     return {
         restrict:'E',
         replace:true,
-        scope:true,
+        controller: "GraphItemController",
+        scope:{localModel: "="},
         'require':'?ngModel',
         link:function (scope, element, attrs, model) {
             if (!model)
@@ -29,18 +30,17 @@ graphModule.directive('graphView', ['$compile', '$timeout', function ($compile, 
                 }
             };
             /// get ViewData from the parent scope
-
+            var modelVar = attrs.ngModel;
+            var viewData = scope.$parent.$eval(modelVar);
             /// add it to the scope in a bidirectional way.
-
-
-
+            scope.viewData = viewData;
             //determine template
-            var t = "<div>"
+            var t = '<svg><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="450">'+
                 "   <graph-item ng-repeat='item in viewData.items' id='item.id' ng-model='item' data-id='{{item.id}}' >" +
                 "   </graph-item>" +
                 "   <graph-relationship ng-repeat='relationship in viewData.relationships'  ng-model='relationship' data-id='{{relationship.id}}' >" +
                 "   </graph-relationship>" +
-                "</div>";
+                "</svg>";
             //template meets data
             element.html($compile(t)(scope));
             //listen to changes in the text box

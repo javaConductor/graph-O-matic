@@ -7,12 +7,16 @@
  * ime: 12:08 AM
  */
 (function (services) {
+
+    var viewStyleToCSSStyle = function(viewStyle){
+        return viewStyle.style;
+
+    };
 	var View = function View(world, viewData) {
 		/// all initialization done here before we return object
 
 
 		/// add the types to the items
-
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
 		var itemTypesById = mapBy("id", theItemTypes);
 		var newItems = [];
@@ -35,7 +39,11 @@
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
 			initViewItem: function (viewItem) {
+                // must add run-time functions:position(), image(), title(), style(),
+                // properties(), extraPropertiesOk(), data()
 				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+                viewItem.image = (function(){ return viewItem.});
+
 				viewItem.properties = world.initProperties(viewItem.itemType);
 				viewItem = this.world.applyExtensions(viewItem);
 				return viewItem;
@@ -69,12 +77,5 @@
 			}
 		};
 		return theObject;
-	services.factory('View', ['world', '$resource', 'Directory', function ($http, $resource, restDirectory) {
-		/// return a function -> f(viewData):View object
-
-		return function(vData){
-			return View(world, vData);
-		}
-	}]);
 
 	})(angular.module('GraphOMaticServices'));

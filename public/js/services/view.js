@@ -41,8 +41,11 @@
 			initViewItem: function (viewItem) {
                 // must add run-time functions:position(), image(), title(), style(),
                 // properties(), extraPropertiesOk(), data()
-				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
-                viewItem.image = (function(){ return viewItem.});
+
+				viewItem.viewPosition = function(){ return }
+				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.viewSyle);
+
+                viewItem.image = (function(){ return });
 
 				viewItem.properties = world.initProperties(viewItem.itemType);
 				viewItem = this.world.applyExtensions(viewItem);

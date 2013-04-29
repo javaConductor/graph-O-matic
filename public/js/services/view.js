@@ -42,6 +42,9 @@
                 // must add run-time functions:position(), image(), title(), style(),
                 // properties(), extraPropertiesOk(), data()
 
+
+
+
 				viewItem.viewPosition = function(){ return }
 				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.viewSyle);
 

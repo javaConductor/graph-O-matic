@@ -14,8 +14,6 @@
     };
 	var View = function View(world, viewData) {
 		/// all initialization done here before we return object
-
-
 		/// add the types to the items
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
 		var itemTypesById = mapBy("id", theItemTypes);
@@ -39,19 +37,20 @@
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
 			initViewItem: function (viewItem) {
-                // must add run-time functions:position(), image(), title(), style(),
-                // properties(), extraPropertiesOk(), data()
 
-
-
-
+				var decorators = world.decorator();
 				viewItem.viewPosition = function(){ return }
 				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.viewSyle);
 
                 viewItem.image = (function(){ return });
+				viewItem = decorators.decorateItem(viewItem );
 
-				viewItem.properties = world.initProperties(viewItem.itemType);
-				viewItem = this.world.applyExtensions(viewItem);
+				// must add run-time functions:position(), image(), title(), style(),
+				// properties(), extraPropertiesOk(), data()
+				viewItem.properties = function(){ return world.initProperties(viewItem.itemType);};
+				viewItem.image = function(){ return world.resolveItemImage(); };//returns
+				viewItem.title = function
+
 				return viewItem;
 			},
 			itemMatchesRelationshipCriteria: function (item, criteria) {
@@ -69,19 +68,17 @@
 			validRelationship: function (relationshipTypeName, itemFrom, itemTo) {
 			},
 			validToRelationship: function (relationshipTypeName, itemTo) {},
-				validFromRelationship: function (relationshipTypeName, itemFrom) {
-				}
-				,
-				createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
-				}
-				,
-				relationships: function () {
-				}
-				,
-				findItemRelationships: function (item) {
-				}
+			validFromRelationship: function (relationshipTypeName, itemFrom) {
+				},
+			createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
+				},
+			relationships: function () {
+				},
+			findItemRelationships: function (item) {
 			}
+
 		};
 		return theObject;
+	};
 
 	})(angular.module('GraphOMaticServices'));

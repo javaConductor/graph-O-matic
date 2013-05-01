@@ -21,7 +21,6 @@
 				/// look for itemTypes.<itemTypeId>.itemTypes
 				var fList = util.getOrCreateObjectFromPath(extensionTable, "itemTypes."+itemTypeId, {});
 				return fList;
-
 			},
 			getRelationshipTypeFunctions: function(relationshipTypeId){
 				/// look for itemTypes.<itemTypeId>.itemTypes
@@ -44,7 +43,6 @@
 
 	services.factory('World', ['persistence', 'utilFunctions', 'contextService',
 		function (persistence, util, ctxtSvc) {
-		/// return the util funcs
 
 			var thisf = this;
 			var mergeViewStyle = function (destViewStyle, srcViewStyle) {
@@ -122,14 +120,33 @@
 						});
 					});
 				},
-				applyExtensions: function (world, extensionTable) {
-
+				applyRelationshipExtensions: function (relationshipType, extensionTable) {
+					return relationshipType;
 				},
 				applyItemTypeExtensions: function (itemType, extensionTable) {
+					return itemType;
 				},
 				applyItemExtensions: function (item, extensionTable) {
-					item.properties
 					return item;
+				},
+				applyViewExtensions: function (view, extensionTable) {
+					return view;
+				},
+				decorator: function(){
+					return {
+						decorateView: function(view){
+							return this.applyViewExtensions(view, thisf.extensionTable);
+						},
+						decorateItemType: function(itemType){
+							return this.applyItemTypeExtensions(itemType, thisf.extensionTable)
+						},
+						decorateItem: function(viewItem){
+							return this.applyItemExtensions(item, thisf.extensionTable);
+						},
+						decorateRelationship: function(relationship){
+							return this.applyRelationshipExtensions(relationship, thisf.extensionTable);
+						}
+					};
 				},
 				getExtensions: function(viewId, itemId, itemTypeId){
 					/// look for pattern extensionTable[viewId]
@@ -138,12 +155,7 @@
 					//          get extensions {views.*}
 					//      if (itemType present) itemType
 					//
-					getOrCreateObjectFromPath()
-
-
-
-				},
-				applyRelationshipExtensions: function (relationshipType, extensionTable) {
+					util.getOrCreateObjectFromPath();
 				},
 
 				initProperties: function (itemType, defaultProps) {

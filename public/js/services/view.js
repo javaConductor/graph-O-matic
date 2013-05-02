@@ -53,7 +53,6 @@
 			newItems.push(this.initViewItem(vitem, itemTypesById));
 		});
 		viewData.items = newItems;
-        //
 
 		//// REFACTOR: move all non-public methods out of object
 		var theObject = {
@@ -66,38 +65,27 @@
 				return viewData.items();
 			},//returns list of items for this view
 			createViewItem: function (item, f) {
-                world.createItem(item)
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
-            decorateViewItem: function(viewItem){
-                viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
-                viewItem.properties = world.initProperties(viewItem.itemType);
-                viewItem.item = this.world.applyItemExtensions(viewItem.item);
-                viewItem.item.itemType = this.world.applyItemTypeExtensions(viewItem.item.itemType);
-                return viewItem;
-            },
 			initViewItem: function (viewItem) {
-                viewItem = this.decorateViewItem(viewItem);
-                return ViewItemObject(this.world, this, viewItem)
+                // must add run-time functions:position(), image(), title(), style(),
+                // properties(), extraPropertiesOk(), data()
+				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+                viewItem.image = (function(){ return viewItem.});
+
+				viewItem.properties = world.initProperties(viewItem.itemType);
+				viewItem = this.world.applyExtensions(viewItem);
+				return viewItem;
 			},
-            wrapItem:  function(item){
-                var vitem = {
-                    item: item,
-                    itemType: itemTypesById[item.itemTypeId]
-                };
-                return this.initViewItem(vitem);
-            },
 			itemMatchesRelationshipCriteria: function (item, criteria) {
-                return true;//TODO do the test
 			},//bool
 			addItem: function (item) {
-				return this.createViewItem(this.wrapItem(item));
+				this.createViewItem(item)
 			},
 			/////////////////////////////////////////////////////////
 			// Relationships
 			/////////////////////////////////////////////////////////
 			getPossibleNewRelationships: function (itemFrom, itemTo) {
-                return this.world.getPossibleNewRelationshipTypes(itemFrom, itemTo);
 			},
 			itemHasRelationship: function (item, relationshipTypeName) {
 			},
@@ -114,7 +102,6 @@
 				}
 				,
 				findItemRelationships: function (item) {
-                    world.
 				}
 			}
 		};

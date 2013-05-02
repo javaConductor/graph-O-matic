@@ -53,6 +53,9 @@
 			},
 			getRelationshipCategories: function (f) {
 			},
+            getPossibleNewRelationshipTypes: function(itemFrom, itemTo){
+
+            },
 			removeViewItem: function (viewItem, f) {
 			},
 			removeView: function (viewId, f) {

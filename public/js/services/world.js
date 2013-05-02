@@ -2,8 +2,6 @@
 
 /* World Services */
 
-
-
 (function(services){
 
 	var extensionMgr = function(extensionTable){
@@ -21,25 +19,89 @@
 				/// look for itemTypes.<itemTypeId>.itemTypes
 				var fList = util.getOrCreateObjectFromPath(extensionTable, "itemTypes."+itemTypeId, {});
 				return fList;
-
 			},
 			getRelationshipTypeFunctions: function(relationshipTypeId){
 				/// look for itemTypes.<itemTypeId>.itemTypes
 				/// look for itemTypes.<itemTypeId>.relationshipTypes
-				var fList = util.getOrCreateObjectFromPath(extensionTable, "relationshipTypes."+relationshipTypeId, {});
-				return fList;
+				//var fList = util.getOrCreateObjectFromPath(extensionTable, "relationshipTypes."+relationshipTypeId, {});
+				//return fList;
+                return {};//TODO DO THIS LATER
 			},
 			getItemFunctions: function(itemId){
 				/// look for itemTypes.<itemTypeId>.itemTypes
 				/// look for itemTypes.<itemTypeId>.relationshipTypes
-
+                var fList = util.getOrCreateObjectFromPath(extensionTable, "relationshipTypes."+relationshipTypeId, {});
+                return fList;
 			},
-			getGeneralFunctions: function(){
-				/// look for itemTypes
-				/// look for relationshipTypes
+            getGeneralItemTypeFunctions: function(){
+                /// look for itemTypes
+                /// look for relationshipTypes
+                var fList = util.getOrCreateObjectFromPath(extensionTable, "general.itemTypes", {});
+                fList = util.getOrCreateObjectFromPath(extensionTable, "general.itemTypes", {});
+                return fList;
+            },
 
-			}
-		}
+            getGeneralRelationshipTypeFunctions: function(){
+                /// look for relationshipTypes
+                var fList = util.getOrCreateObjectFromPath(extensionTable, "general.relationshipTypes", {});
+                fList = util.getOrCreateObjectFromPath(extensionTable, "general.relationshipTypes", {});
+                return fList;
+            },
+
+            applyItemTypeExtensions: function (itemType, extensionTable) {
+                var funks = this.getExtensions(null,null,itemType);
+                funks.forEach(function(value, key){
+                    itemType[key] = value;
+
+                });
+                return itemType;
+            },
+            applyRelationshipTypeExtensions: function (relationshipType, extensionTable) {
+                var funks = this.getRelationshipExtensions(relationshipType);
+                funks.forEach(function(value, key){
+                    relationshipType[key] = value;
+                });
+                return relationshipType;
+
+            },
+            applyItemExtensions: function (item, extensionTable) {
+                var funks = this.getExtensions(null,item.id,itemTypeId);
+                funks.forEach(function(value, key){
+                    item[key] = value;
+
+                });
+                return item;
+            },
+            getExtensions: function(viewId, itemId, itemTypeId){
+                /// look for pattern extensionTable[viewId]
+                /// in order:
+                //      if viewId present
+                //          get extensions {views.*}
+                //      if (itemType present) itemType
+                //
+
+                var ret = {};
+                ret=util.copy(ret, this.getGeneralItemTypeFunctions());
+                if ( viewId ){
+                    ret= util.copy(ret, this.getViewFunctions(viewId));
+                }
+                if (itemTypeId)
+                    ret=util.copy(ret, this.getItemTypeFunctions(itemTypeId));
+                if (itemId)
+                    ret=util.copy(ret, this.getItemFunctions(itemId));
+
+                return ret;
+            },
+            getRelationshipExtensions:function(relationshipTypeId){
+                var ret = {};
+                ret=util.copy(ret, this.getGeneralRelationshipTypeFunctions(relationshipTypeId));
+                return ret;
+            },
+            applyRelationshipExtensions: function (relationshipType, extensionTable) {
+                return relationshipType;//TODO do this properly
+            }
+
+        }
 	};
 
 	services.factory('World', ['persistence', 'utilFunctions', 'contextService',
@@ -65,7 +127,7 @@
 
 			var addExtensionPointToTable = function (extensionTable, extensionPoint, f) {
 				/// get the location
-				var insertLocation = self.findOrCreateObjectFromPath(extensionTable, extensionPoint);
+				var insertLocation = util.getOrCreateObjectFromPath(extensionTable, extensionPoint);
 				// see if any thing is there
 				if (insertLocation.f) {
 					// if so, its now the previous one
@@ -78,11 +140,12 @@
 			return {
 				self: this,
 				persistence: persistence,
+                /// steal some functions from persistence for convenience
 				allItems: persistence.allItems,
 				allItemTypes: persistence.allItemTypes,
 				allRelationships: persistence.allRelationships,
-
-				initialize: function (f) {
+                createItem: this.persistence.createItem,
+                initialize: function (f) {
 					thisf.extensionPoints[""] = function (item) {
 						return item.data.name
 					};
@@ -122,34 +185,11 @@
 						});
 					});
 				},
-				applyExtensions: function (world, extensionTable) {
-
-				},
-				applyItemTypeExtensions: function (itemType, extensionTable) {
-				},
-				applyItemExtensions: function (item, extensionTable) {
-					item.properties
-					return item;
-				},
-				getExtensions: function(viewId, itemId, itemTypeId){
-					/// look for pattern extensionTable[viewId]
-					/// in order:
-					//      if viewId present
-					//          get extensions {views.*}
-					//      if (itemType present) itemType
-					//
-					getOrCreateObjectFromPath()
-
-
-
-				},
-				applyRelationshipExtensions: function (relationshipType, extensionTable) {
-				},
 
 				initProperties: function (itemType, defaultProps) {
 					return (itemType.parent)
-						? util.copy(this.initProperties(itemType.parent, defaultProps), mapBy("name", itemType.properties))
-						: util.copy(defaultProps, mapBy("name", itemType.properties))
+						? util.copy(this.initProperties(itemType.parent, defaultProps), util.mapBy("name", itemType.properties))
+						: util.copy(defaultProps, util.mapBy("name", itemType.properties))
 				},
 
 				getCategoryViewStyle: function (category, defaultViewStyle) {
@@ -183,20 +223,22 @@
 
 				buildExtensionTable: function (extensions) {
 					var Examples = {
-						"GetItemViewInfo": {
-							f: function (item) {
+                        "general":{
+						    "GetItemViewStyle": {
+							    f: function (item) {
 								return viewInfo;
-							},
-							previous: function (item) {
-								return viewInfo;
-							}
-						},
-						"DrawItem": {
-							f: function (view, element, viewItem) {
-							},
-							previous: function (view, element, viewItem) {
-							}
-						},
+							    },
+							    previous: function (item) {
+								    return viewInfo;
+							    }
+						    },
+						    "DrawItem": {
+							    f: function (view, element, viewItem) {
+							    },
+							    previous: function (view, element, viewItem) {
+							    }
+						    }
+                        },
 						"DrawRelationship": {
 							f: function (element, relationship, viewElementFrom, viewElementTo) {
 							},
@@ -316,7 +358,17 @@
 						extensionTable = self.addExtensionPointToTable(extensionPoint, extensions[extensionPoint], extensionTable);
 					}
 					return extensionTable;
-				}
+				},
+                getPossibleNewRelationshipTypes: function(itemFrom, itemTo){
+                    return this.persistence.getPossibleNewRelationshipTypes(itemFrom, itemTo);
+
+                },
+                findItemRelationships: function(item, f){
+
+
+                }
+
+
 			}
 		}]);
 

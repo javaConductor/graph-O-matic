@@ -30,19 +30,6 @@ var modelFactory = {
 /**
  *
  */
-
-Item = function (itemObj) {
-
-	return {
-		is: function (itemType) {
-
-
-		}
-
-	};
-
-}
-
 /*
  "viewsAsReturnedFromRestAPI":[{
  "id": "v1",

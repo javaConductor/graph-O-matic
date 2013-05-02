@@ -10,9 +10,38 @@
 
     var viewStyleToCSSStyle = function(viewStyle){
         return viewStyle.style;
-
     };
-	var View = function View(world, viewData) {
+    var ViewItemObject = function(world, view, decoratedViewItem )
+    {
+            return {
+                is: function (itemType) {
+
+                },
+                position:function(){
+                    return decoratedViewItem.viewPosition;
+                },
+                image: function(){
+                    /// for now we use the default from the itemType
+                    viewItem.image = world.findRelatedImages(viewItem.item, function(imgItems){
+                    });
+                },
+                title: function(){
+                    return decoratedViewItem.data()['title'];
+                },
+                style: function(){
+                    return decoratedViewItem.viewStyle;
+                },
+                properties:function(){
+                    return decoratedViewItem.item.itemType.properties;
+                },
+                data: function(){
+                    return decoratedViewItem.item.data;
+                }
+            };
+
+        }
+
+    var View = function View(world, viewData) {
 		/// all initialization done here before we return object
 
 
@@ -24,6 +53,7 @@
 			newItems.push(this.initViewItem(vitem, itemTypesById));
 		});
 		viewData.items = newItems;
+        //
 
 		//// REFACTOR: move all non-public methods out of object
 		var theObject = {
@@ -38,16 +68,20 @@
 			createViewItem: function (item, f) {
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
+            decorateViewItem: function(viewItem){
+                viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+                viewItem.properties = world.initProperties(viewItem.itemType);
+                viewItem = this.world.applyExtensions(viewItem);
+                return viewItem;
+            },
 			initViewItem: function (viewItem) {
-                // must add run-time functions:position(), image(), title(), style(),
-                // properties(), extraPropertiesOk(), data()
-				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
-                viewItem.image = (function(){ return viewItem.});
-
-				viewItem.properties = world.initProperties(viewItem.itemType);
-				viewItem = this.world.applyExtensions(viewItem);
-				return viewItem;
+                viewItem = this.decorateViewItem(viewItem);
+                return ViewItemObject(viewItem)
 			},
+            wrapItem:  function(item){
+
+
+            },
 			itemMatchesRelationshipCriteria: function (item, criteria) {
 			},//bool
 			addItem: function (item) {

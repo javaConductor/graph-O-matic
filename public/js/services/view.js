@@ -22,7 +22,7 @@
                 },
                 image: function(){
                     /// for now we use the default from the itemType
-                    viewItem.image = world.findRelatedImages(viewItem.item, function(imgItems){
+                    decoratedViewItem.image = world.findRelatedImages(decoratedViewItem.item, function(imgItems){
                     });
                 },
                 title: function(){

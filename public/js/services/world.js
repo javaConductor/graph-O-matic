@@ -195,37 +195,29 @@
 					item.properties
 					return item;
 				},
-				getExtensions: function(viewId, itemId, itemTypeId){
-					/// look for pattern extensionTable[viewId]
-					/// in order:
-					//      if viewId present
-					//          get extensions {views.*}
-					//      if (itemType present) itemType
-					//
-					getOrCreateObjectFromPath()
 
-
-
-				},
 				applyRelationshipExtensions: function (relationshipType, extensionTable) {
 				},
 
 				initProperties: function (itemType, defaultProps) {
 					return (itemType.parent)
-						? util.copy(this.initProperties(itemType.parent, defaultProps), mapBy("name", itemType.properties))
-						: util.copy(defaultProps, mapBy("name", itemType.properties))
+						? util.copy(this.initProperties(itemType.parent, defaultProps), util.mapBy("name", itemType.properties))
+						: util.copy(defaultProps, util.mapBy("name", itemType.properties))
 				},
 
 				getCategoryViewStyle: function (category, defaultViewStyle) {
 					return (category.parent)
-						? mergeViewStyle(getCategoryViewStyle(category.parent, defaultViewStyle), category.viewStyle)
+						? mergeViewStyle(this.getCategoryViewStyle(category.parent, defaultViewStyle), category.viewStyle)
 						: mergeViewStyle(defaultViewStyle, category.viewStyle);
 				},
 				getItemTypeViewStyle: function (itemType, defaultViewStyle) {
 					return (itemType.parent)
-						? mergeViewStyle(getItemTypeViewStyle(itemType, defaultViewStyle), mergeViewStyle(itemType.viewStyle, getCategoryViewStyle(itemType.category)))
-						: mergeViewStyle(defaultViewStyle, mergeViewStyle(itemType.viewStyle, getCategoryViewStyle(itemType.category)));
+						? mergeViewStyle(this.getItemTypeViewStyle(itemType, defaultViewStyle), mergeViewStyle(itemType.viewStyle, this.getCategoryViewStyle(itemType.category)))
+						: mergeViewStyle(defaultViewStyle, mergeViewStyle(itemType.viewStyle, this.getCategoryViewStyle(itemType.category)));
 				},
+                itemTypesForItems: function(itemIdList){
+
+                },
 
 				views: function (f) {
 					// an object key=view name, value=view id

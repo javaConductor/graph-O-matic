@@ -14,6 +14,7 @@
     var ViewItemObject = function(world, view, decoratedViewItem )
     {
             return {
+	            item: decoratedViewItem,
                 is: function (itemType) {
 
                 },
@@ -47,13 +48,14 @@
 
 		/// add the types to the items
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
-		var itemTypesById = mapBy("id", theItemTypes);
+		var itemTypesById = util.mapBy("id", theItemTypes);
 		var newItems = [];
+
 		viewData.items.forEach(function (vitem) {
 			newItems.push(this.initViewItem(vitem, itemTypesById));
 		});
 		viewData.items = newItems;
-
+	    var decorators = world.decorator();
 		//// REFACTOR: move all non-public methods out of object
 		var theObject = {
 			'name': viewData.name,
@@ -68,14 +70,18 @@
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
 			initViewItem: function (viewItem) {
-                // must add run-time functions:position(), image(), title(), style(),
-                // properties(), extraPropertiesOk(), data()
-				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
-                viewItem.image = (function(){ return viewItem.});
 
+
+				viewItem.viewPosition = function(){ return }
+				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.viewSyle);
 				viewItem.properties = world.initProperties(viewItem.itemType);
-				viewItem = this.world.applyExtensions(viewItem);
-				return viewItem;
+
+				viewItem.image = (function(){ return {};});
+				viewItem = decorators.decorateViewItem(viewItem );
+				viewItem = this.decorateViewItem(viewItem);
+				return ViewItemObject(world, this, viewItem);
+                //viewItem.image = (function(){ return viewItem.mainImage});
+				//TODO fix this
 			},
 			itemMatchesRelationshipCriteria: function (item, criteria) {
 			},//bool
@@ -91,18 +97,13 @@
 			},
 			validRelationship: function (relationshipTypeName, itemFrom, itemTo) {
 			},
-			validToRelationship: function (relationshipTypeName, itemTo) {},
-				validFromRelationship: function (relationshipTypeName, itemFrom) {
-				}
-				,
-				createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
-				}
-				,
-				relationships: function () {
-				}
-				,
-				findItemRelationships: function (item) {
-				}
+
+			createRelationship: function (itemFrom, itemTo, relationshipTypeName) {
+			},
+			relationships: function () {
+			},
+			findItemRelationships: function (item) {
+			}
 			}
 		};
 		return theObject;

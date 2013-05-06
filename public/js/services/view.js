@@ -69,7 +69,26 @@
 			createViewItem: function (item, f) {
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
+			decorateViewItem: function(viewItem){
+				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+				viewItem.properties = world.initProperties(viewItem.itemType);
+				viewItem.item.itemType = decorators.decorateItemType(viewItem.item.itemType);
+				viewItem = decorators.decorateViewItem(viewItem);
+				return viewItem;
+			},
 			initViewItem: function (viewItem) {
+				viewItem = this.decorateViewItem(viewItem);
+				viewItem = decorators.decorateViewItem(viewItem );
+				return ViewItemObject(this.world, this, viewItem)
+			},
+			wrapItem:  function(item){
+				var vitem = {
+					item: item,
+					itemType: itemTypesById[item.itemTypeId]
+				};
+				return this.initViewItem(vitem);
+			},
+			vinitViewItem: function (viewItem) {
 
 
 				viewItem.viewPosition = function(){ return }
@@ -77,7 +96,6 @@
 				viewItem.properties = world.initProperties(viewItem.itemType);
 
 				viewItem.image = (function(){ return {};});
-				viewItem = decorators.decorateViewItem(viewItem );
 				viewItem = this.decorateViewItem(viewItem);
 				return ViewItemObject(world, this, viewItem);
                 //viewItem.image = (function(){ return viewItem.mainImage});

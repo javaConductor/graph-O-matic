@@ -36,20 +36,46 @@ var createItemNode = function(svgElement, viewItem){
     var title = viewItem.title();
     var style = viewItem.style();
     var properties = viewItem.properties();
-    var extraProperties = viewItem.extraItemsOk();
+	var marginSize = 20;
+	var cRadius = 10;
+	var w = 150;
+	var c1 = {x: position.x + w -10, y: position.y + h/2 };
+	var c2 = {x: position.x + w/2, y: position.y + 10};
+	var c3 = {x: position.x + w/2, y: position.y + 10};
+	var c4 = {x: position.x + 10, y: position.y + h/2};
 
-    var g = angular.element("<g></g>");
+/*     <text x="200" y="150" fill="blue" >
+ You are
+ <tspan font-weight="bold" fill="red" >not</tspan>
+ a banana.
+ </text>*/
+	var titleElement = angular.element("text").
+		attr('x', position.x+20 ).
+		attr('y', position.y+20).
+		attr('height', 15 ).
+		attr('width', w).text(title);
+
+	var g = angular.element("<g></g>");
+	svgElement.add(g);
+	g.attr("draggable","true");
     var r = angular.element("rect").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
+        attr('x', position.x ).
+        attr('y', position.y).
         attr('height', cy ).
         attr('width', cx );
+	g.add(r);
+	g.add(titleElement);
 
     var img = angular.element("image").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
+        attr('x', position.x ).
+        attr('y', position.y).
         attr('height', cy ).
         attr('width', cx-20 );
+
+
+	var fo = angular.element("<foriegnObject></foriegnObject>")
+
+
 
 
 };
@@ -60,13 +86,11 @@ graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, 
     console.log("creating directive graphItem");
 
 
-
     return {
         restrict:'E',
         replace:true,
         scope:true,
         'require':'?ngModel',
-        templateLooksLike: '<g><rect cx="50" cy="50" x="100" y="100" color="black" ></rect></svg>',
         link : function(scope, element, attrs, model){
             /// Can we use this to update the screen for each item ???
             model.$render = function () {
@@ -87,10 +111,3 @@ graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, 
 
     };
 }]);
-/**
- * Created with JetBrains WebStorm.
- * User: lcollins
- * Date: 4/28/13
- * Time: 4:00 PM
- * To change this template use File | Settings | File Templates.
- */

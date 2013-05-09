@@ -37,28 +37,13 @@
 <h1><%= title %></h1>
 
 <p>Welcome to <%= title %></p>
-
-
-<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-	<g>
-		<rect height="100" width="100"
-			  style="stroke:#006600; fill: #00cc00">
-		</rect>
-	</g>
-</svg>
-Hello World!
-
-
-<div id="div1" ondrop="drop(event)"
-	 ondragover="allowDrop(event)"></div>
-
-<img id="drag1" src="img_logo.gif" draggable="true"
-	 ondragstart="drag(event)" width="336" height="69">
-
+Mouse Position: <label id='position'></label>
 <script>
 	var dnd = {
-		diffX: 0,
-		diffY: 0,
+		lastX: 0,
+		lastY: 0,
+		beforeLastX: 0,
+		beforeLastY: 0,
 		initX: 0,
 		initY: 0,
 		initTop: 0,
@@ -67,6 +52,7 @@ Hello World!
 		dragStart: function (evt) {
 			console.log('dragStartEvent ' +
 				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
 			var el = angular.element(evt.currentTarget);
@@ -76,6 +62,9 @@ Hello World!
 			var off = el.offset();
 			this.initTop = off.top;
 			this.initLeft = off.left;
+			console.log('dragStartEvent ' +
+					'element pos -> x:' + this.initLeft + " y:" + this.initTop);
+
 			return evt;
 
 		},
@@ -83,31 +72,75 @@ Hello World!
 		drag: function (evt) {
 			console.log('dragEvent ' +
 				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			//var el = angular.element(evt.currentTarget);
-			//el.css("left", evt.clientX - diffX);
-			//el.css("top", evt.clientY - diffY);
+
+			this.beforeLastX = this.lastX;
+			this.beforeLastY = this.lastY;
+
+			this.lastX = evt.pageX;
+			this.lastY = evt.pageY;
+			return evt;
+		},
+
+		dragOver: function (evt) {
+
+			console.log('dragOverEvent ' +
+				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			if(evt.preventDefault)
+				evt.preventDefault();
+			evt.dataTransfer.dropEffect = 'move';
 			return evt;
 		},
 
 		drop: function (evt) {
 			console.log('dropEvent ' +
-				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+				//'client -> x:'+evt.clientX + " y:"+evt.clientY
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 			var el = angular.element(evt.currentTarget);
-			var x = (evt.pageX - this.initX) + this.initLeft;
-			var y = (evt.pageY - this.initY) + this.initTop;
-			el.offset({"left": x, "top": y});
-			return evt;
-		}
+			var x = (this.beforeLastX - this.initX) + this.initLeft;
+			var y = (this.beforeLastY - this.initY) + this.initTop;
+			console.log('dropEvent ' +
+					' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
+					' new pos -> x:' + x + " y:" + y);
+			el.offset({"left": evt.offsetX, "top": evt.offsetY});
+			if(evt.preventDefault)
+				evt.preventDefault();
+			return evt;},
+
+			dragEnd: function (evt) {
+				console.log('dragEndEvent ' +
+					//'client -> x:'+evt.clientX + " y:"+evt.clientY
+						' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+						' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
+						' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+				var el = angular.element(evt.currentTarget);
+				var x = (this.beforeLastX - this.initX) + this.initLeft;
+				var y = (this.beforeLastY - this.initY) + this.initTop;
+				console.log('dropEvent ' +
+						' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
+						' new pos -> x:' + x + " y:" + y);
+				el.offset({"left": x, "top": y});
+				if(evt.preventDefault)
+					evt.preventDefault();
+				return evt;
+			}
 	};
 </script>
 
 <div draggable='true' id='theDiv'
 	 ondragstart="dnd.dragStart(event)"
 	 ondrag="dnd.drag(event)"
+	 ondragover="dnd.dragOver(event)"
 	 ondrop="dnd.drop(event)"
-	 ondragend="dnd.drop(event)">
+	 ondragend="dnd.dragEnd(event)"
+	style='position:absolute;width:100px;height:100px'
+		>
 	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
 		<g class='draggable' draggable=true>
 
@@ -116,7 +149,7 @@ Hello World!
 			<image x="20" y="5" width="80" height="80"
 				   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png"/>
 
-			<text y="100" style="stroke:#00ffff; fill: #00ffff">
+			<text id="svgTxt" y="100" style="stroke:#00ffff; fill: #00ffff">
 				<tspan dy="25" y="50" x="15">tspan line 0</tspan>
 				<tspan dy="25" y="70" x="15">tspan line 1</tspan>
 			</text>
@@ -129,6 +162,18 @@ Hello World!
 		var dragging = false;
 		var isOver = false;
 
+
+		$('#theDiv').offset({'left': 0, 'top': 0 });
+
+		$('#theDiv').mousemove(function(evt){
+			var el = angular.element(evt.currentTarget);
+			var off = el.offset();
+			$('#svgTxt').text(off.left + ', ' + off.top);
+		});
+
+		$('body').mousemove(function(evt){
+			$('#position').text(evt.pageX + ', ' + evt.pageY);
+		});
 
 	})();
 </script>

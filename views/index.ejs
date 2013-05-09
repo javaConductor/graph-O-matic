@@ -1,50 +1,136 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
+<head>
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css'/>
+
+	<script src="js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
+	<script src="js/lib/angular/angular.js" type='text/javascript'></script>
+	<script src="js/lib/angular/angular-resource.js" type='text/javascript'></script>
+
+	<script src="js/services/services.js" type='text/javascript'></script>
+	<script src="js/services/persistence.js" type='text/javascript'></script>
+	<script src="js/services/utilSvc.js" type='text/javascript'></script>
+	<script src="js/services/model.js" type='text/javascript'></script>
+	<script src="js/services/world.js" type='text/javascript'></script>
+	<script src="js/services/view.js" type='text/javascript'></script>
+	<script src="js/services/contextService.js" type='text/javascript'></script>
+	<script src="js/services/view.js" type='text/javascript'></script>
+	<script src="js/filters.js" type='text/javascript'></script>
+	<script src="js/directives/directives.js" type='text/javascript'></script>
+	<script src="js/directives/graphItem.js" type='text/javascript'></script>
+	<script src="js/directives/graphRelationship.js" type='text/javascript'></script>
+	<script src="js/directives/graphView.js" type='text/javascript'></script>
+	<script src="js/controllers.js" type='text/javascript'></script>
+	<script src="js/app.js" type='text/javascript'></script>
+
+	<script src="http://loadr.aws.af.cm/load?packages=angular https://raw.github.com/btford/angular-dragon-drop/master/dragon-drop.js"></script>
+
+	<style>
+		.draggable {
+			cursor: move;
+			position: absolute;
+		}
+	</style>
+</head>
+<body>
+<h1><%= title %></h1>
+
+<p>Welcome to <%= title %></p>
 
 
-	  <script src="js/lib/angular/angular.js"            type='text/javascript'></script>
-	  <script src="js/lib/angular/angular-resource.js"   type='text/javascript'></script>
+<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+	<g>
+		<rect height="100" width="100"
+			  style="stroke:#006600; fill: #00cc00">
+		</rect>
+	</g>
+</svg>
+Hello World!
 
-	  <script src="js/services/services.js"   type='text/javascript'></script>
-	  <script src="js/services/persistence.js"   type='text/javascript'></script>
-	  <script src="js/services/utilSvc.js"   type='text/javascript'></script>
-	  <script src="js/services/model.js"   type='text/javascript'></script>
-	  <script src="js/services/world.js"   type='text/javascript'></script>
-	  <script src="js/services/contextService.js"   type='text/javascript'></script>
-	  <script src="js/services/view.js"   type='text/javascript'></script>
-	  <script src="js/filters.js"   	type='text/javascript'></script>
-	  <script src="js/directives/directives.js"  type='text/javascript'></script>
-	  <script src="js/controllers.js" type='text/javascript'></script>
-	  <script src="js/app.js"   		type='text/javascript'></script>
-	  <style>
-		  .draggable {
-			  cursor: move;
-		  }
-	  </style>
-  </head>
-  <body ng-controller='AppCtrl'>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-	<graph-item ng-model="" />
 
+<div id="div1" ondrop="drop(event)"
+	 ondragover="allowDrop(event)"></div>
+
+<img id="drag1" src="img_logo.gif" draggable="true"
+	 ondragstart="drag(event)" width="336" height="69">
+
+<script>
+	var dnd = {
+		diffX: 0,
+		diffY: 0,
+		initX: 0,
+		initY: 0,
+		initTop: 0,
+		initLeft: 0,
+
+		dragStart: function (evt) {
+			console.log('dragStartEvent ' +
+				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+
+			var el = angular.element(evt.currentTarget);
+			//store the difference in top/left and where the mouse is
+			this.initX = evt.pageX;
+			this.initY = evt.pageY;
+			var off = el.offset();
+			this.initTop = off.top;
+			this.initLeft = off.left;
+			return evt;
+
+		},
+
+		drag: function (evt) {
+			console.log('dragEvent ' +
+				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			//var el = angular.element(evt.currentTarget);
+			//el.css("left", evt.clientX - diffX);
+			//el.css("top", evt.clientY - diffY);
+			return evt;
+		},
+
+		drop: function (evt) {
+			console.log('dropEvent ' +
+				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			var el = angular.element(evt.currentTarget);
+			var x = (evt.pageX - this.initX) + this.initLeft;
+			var y = (evt.pageY - this.initY) + this.initTop;
+			el.offset({"left": x, "top": y});
+			return evt;
+		}
+	};
+</script>
+
+<div draggable='true' id='theDiv'
+	 ondragstart="dnd.dragStart(event)"
+	 ondrag="dnd.drag(event)"
+	 ondrop="dnd.drop(event)"
+	 ondragend="dnd.drop(event)">
 	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
-		<g class="draggable">
+		<g class='draggable' draggable=true>
 
-		<rect x="10" y="10" height="100" width="100"
-			  style="stroke:#006600; fill: #00cc00">    	</rect>
-		<image x="20" y="5" width="80" height="80"
-			   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
+			<rect x="10" y="10" height="100" width="100"
+				  style="stroke:#006600; fill: #00cc00"></rect>
+			<image x="20" y="5" width="80" height="80"
+				   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png"/>
 
-		<text y="100" style="stroke:#00ffff; fill: #00ffff">
+			<text y="100" style="stroke:#00ffff; fill: #00ffff">
 				<tspan dy="25" y="50" x="15">tspan line 0</tspan>
 				<tspan dy="25" y="70" x="15">tspan line 1</tspan>
 			</text>
-
 		</g>
-  	</svg>
+	</svg>
+</div>
 
-  </body>
+<script>
+	(function () {
+		var dragging = false;
+		var isOver = false;
+
+
+	})();
+</script>
+</body>
 </html>

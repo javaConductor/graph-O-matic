@@ -11,6 +11,7 @@
     var viewStyleToCSSStyle = function(viewStyle){
         return viewStyle.style;
     };
+
     var ViewItemObject = function(world, view, decoratedViewItem )
     {
             return {
@@ -44,8 +45,6 @@
 
     var View = function View(world, viewData) {
 		/// all initialization done here before we return object
-
-
 		/// add the types to the items
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
 		var itemTypesById = util.mapBy("id", theItemTypes);
@@ -123,7 +122,7 @@
 			findItemRelationships: function (item) {
 			}
 			}
-		};
-		return theObject;
 
+		return theObject;
+        };
 	})(angular.module('GraphOMaticServices'));

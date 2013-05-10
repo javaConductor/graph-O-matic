@@ -155,18 +155,23 @@ Mouse Position: <label id='position'></label>
 	 ondragover="dnd.dragOver(event)"
 	 ondrop="dnd.drop(event)"
 	 ondragend="dnd.dragEnd(event)"
-	 style='position:absolute;width:100px;height:100px'
+	 style='position:absolute;width:201px;height:201px'
 		>
-	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+		 style='pointer-events: none;'>
 		<g class='draggable' draggable=true>
-			<rect x="10" y="10" height="100" width="100"
+			<image x="0" y="0" height="200" width="200" xlink:href="/images/stickmanface.jpeg"></image>
+			<rect x="0" y="0" height="200" width="200"
+				  style="stroke:#3333ff; fill: #00ccff"></rect>
+			<rect x="20" y="20" height="160" width="160"
 				  style="stroke:#006600; fill: #00cc00"></rect>
-			<image x="20" y="5" width="80" height="80"
-				   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png"></image>
-			<text id="svgTxt" y="100" style="stroke:#00ffff; fill: #00ffff">
-				<tspan dy="25" y="50" x="15">tspan line 0</tspan>
-				<tspan dy="25" y="70" x="15">tspan line 1</tspan>
+			<text id="svgTxt" x="25" y="25" width="150" style="pointer-events: auto;text-justify: distribute;text-align: center;margin-left: auto;margin-right: auto;stroke:#4444ff; fill: #00ffff">
+				Lee Collins
 			</text>
+			<image x="20" y="50" width="60" height="80"
+				   xlink:href="/images/stickmanface.jpeg">
+			</image>
+
 		</g>
 	</svg>
 </div>
@@ -182,7 +187,7 @@ Mouse Position: <label id='position'></label>
 		$('#theDiv').mousemove(function(evt){
 			var el = angular.element(evt.currentTarget);
 			var off = el.offset();
-			$('#svgTxt').text(off.left + ', ' + off.top);
+		//	$('#svgTxt').text(off.left + ', ' + off.top);
 		});
 
 		$('body').mousemove(function(evt){

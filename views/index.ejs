@@ -48,10 +48,10 @@ Mouse Position: <label id='position'></label>
 		initY: 0,
 		initTop: 0,
 		initLeft: 0,
-
 		dragStart: function (evt) {
+
 			console.log('dragStartEvent ' +
-				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					'client -> x:'+evt.clientX + " y:"+evt.clientY+
 					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
@@ -62,16 +62,17 @@ Mouse Position: <label id='position'></label>
 			var off = el.offset();
 			this.initTop = off.top;
 			this.initLeft = off.left;
+			this.beforeLastX = this.lastX = off.left;
+			this.beforeLastY = this.lastY = off.top;
 			console.log('dragStartEvent ' +
-					'element pos -> x:' + this.initLeft + " y:" + this.initTop);
-
-			return evt;
-
+				'element pos -> x:' + this.initLeft + " y:" + this.initTop);
 		},
 
 		drag: function (evt) {
+			if(evt.preventDefault)
+				evt.preventDefault();
 			console.log('dragEvent ' +
-				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY+
 					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
 					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
@@ -81,7 +82,18 @@ Mouse Position: <label id='position'></label>
 
 			this.lastX = evt.pageX;
 			this.lastY = evt.pageY;
-			return evt;
+			var ofs = angular.element(evt.currentTarget).offset();
+
+			$('#position').text( ofs.left  + ', ' + ofs.top );
+
+			var el = angular.element(evt.currentTarget);
+			var x = (this.beforeLastX - this.initX) + this.initLeft;
+			var y = (this.beforeLastY - this.initY) + this.initTop;
+			console.log('dragEndEvent ' +
+					' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
+					' new pos -> x:' + x + " y:" + y);
+			el.offset({"left": x, "top": y});
+
 		},
 
 		dragOver: function (evt) {
@@ -93,45 +105,49 @@ Mouse Position: <label id='position'></label>
 			if(evt.preventDefault)
 				evt.preventDefault();
 			evt.dataTransfer.dropEffect = 'move';
+			var el = angular.element(evt.currentTarget);
+			//el.offset({"left": this.lastX, "top": this.lastY});
 			return evt;
 		},
 
 		drop: function (evt) {
+			if(evt.preventDefault)
+				evt.preventDefault();
 			console.log('dropEvent ' +
-				//'client -> x:'+evt.clientX + " y:"+evt.clientY
+				' client   -> x:' + evt.clientX + " y:" + evt.clientY+
+				' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+				' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
+				' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+
+		},
+
+		dragEnd: function (evt) {
+			if(evt.preventDefault)
+				evt.preventDefault();
+			console.log('dragEndEvent ' +
+				' client   -> x:' + evt.clientX + " y:" + evt.clientY+
+				' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+				' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
+				' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			return evt;
+		},
+		dropped: function(evt, node){
+			console.log('droppedEvent ' +
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY+
 					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
 					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			var el = angular.element(evt.currentTarget);
-			var x = (this.beforeLastX - this.initX) + this.initLeft;
-			var y = (this.beforeLastY - this.initY) + this.initTop;
-			console.log('dropEvent ' +
-					' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
-					' new pos -> x:' + x + " y:" + y);
-			el.offset({"left": evt.offsetX, "top": evt.offsetY});
-			if(evt.preventDefault)
-				evt.preventDefault();
-			return evt;},
-
-			dragEnd: function (evt) {
-				console.log('dragEndEvent ' +
-					//'client -> x:'+evt.clientX + " y:"+evt.clientY
-						' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
-						' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
-						' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-				var el = angular.element(evt.currentTarget);
-				var x = (this.beforeLastX - this.initX) + this.initLeft;
-				var y = (this.beforeLastY - this.initY) + this.initTop;
-				console.log('dropEvent ' +
-						' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
-						' new pos -> x:' + x + " y:" + y);
-				el.offset({"left": x, "top": y});
-				if(evt.preventDefault)
-					evt.preventDefault();
-				return evt;
 			}
+
 	};
 </script>
+
+<div dropzone="move"
+	 id="dropZone"
+	 style='background-color: cornflowerblue;border-width:2px;width:1000px;height:800px'
+	 ondrop="dnd.dropped(event, this)" >
+
+</div>
 
 <div draggable='true' id='theDiv'
 	 ondragstart="dnd.dragStart(event)"
@@ -139,16 +155,14 @@ Mouse Position: <label id='position'></label>
 	 ondragover="dnd.dragOver(event)"
 	 ondrop="dnd.drop(event)"
 	 ondragend="dnd.dragEnd(event)"
-	style='position:absolute;width:100px;height:100px'
+	 style='position:absolute;width:100px;height:100px'
 		>
 	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
 		<g class='draggable' draggable=true>
-
 			<rect x="10" y="10" height="100" width="100"
 				  style="stroke:#006600; fill: #00cc00"></rect>
 			<image x="20" y="5" width="80" height="80"
-				   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png"/>
-
+				   xlink:href="http://jenkov.com/images/layout/top-bar-logo.png"></image>
 			<text id="svgTxt" y="100" style="stroke:#00ffff; fill: #00ffff">
 				<tspan dy="25" y="50" x="15">tspan line 0</tspan>
 				<tspan dy="25" y="70" x="15">tspan line 1</tspan>
@@ -172,7 +186,8 @@ Mouse Position: <label id='position'></label>
 		});
 
 		$('body').mousemove(function(evt){
-			$('#position').text(evt.pageX + ', ' + evt.pageY);
+			var offset = $('#theDiv').offset();
+			$('#position').text( offset.left + ', ' + offset.top );
 		});
 
 	})();

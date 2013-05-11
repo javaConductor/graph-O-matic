@@ -31,6 +31,10 @@
 			cursor: move;
 			position: absolute;
 		}
+		.viewItem {
+		background: url("/images/gold_textured_background_hd_picture_3_169654.jpg");
+		background-size: cover;
+		}
 	</style>
 </head>
 <body>
@@ -52,7 +56,6 @@ Mouse Position: <label id='position'></label>
 
 			console.log('dragStartEvent ' +
 					'client -> x:'+evt.clientX + " y:"+evt.clientY+
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
 			var el = angular.element(evt.currentTarget);
@@ -66,6 +69,7 @@ Mouse Position: <label id='position'></label>
 			this.beforeLastY = this.lastY = off.top;
 			console.log('dragStartEvent ' +
 				'element pos -> x:' + this.initLeft + " y:" + this.initTop);
+			return evt;
 		},
 
 		drag: function (evt) {
@@ -155,22 +159,40 @@ Mouse Position: <label id='position'></label>
 	 ondragover="dnd.dragOver(event)"
 	 ondrop="dnd.drop(event)"
 	 ondragend="dnd.dragEnd(event)"
+	 class="draggable viewItem"
 	 style='position:absolute;width:201px;height:201px'
 		>
 	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
-		 style='pointer-events: none;'>
-		<g class='draggable' draggable=true>
-			<image x="0" y="0" height="200" width="200" xlink:href="/images/stickmanface.jpeg"></image>
-			<rect x="0" y="0" height="200" width="200"
-				  style="stroke:#3333ff; fill: #00ccff"></rect>
-			<rect x="20" y="20" height="160" width="160"
-				  style="stroke:#006600; fill: #00cc00"></rect>
-			<text id="svgTxt" x="25" y="25" width="150" style="pointer-events: auto;text-justify: distribute;text-align: center;margin-left: auto;margin-right: auto;stroke:#4444ff; fill: #00ffff">
-				Lee Collins
-			</text>
-			<image x="20" y="50" width="60" height="80"
+		 >
+		<g>
+			<foreignObject  class="node" x="20" y="30" width="100%" height="300">
+				<label id='title'>Lee Collins </label>
+			</foreignObject>
+			<image  x="20" y="50" width="160" height="80"
 				   xlink:href="/images/stickmanface.jpeg">
 			</image>
+			<foreignObject  class="node" x="20" y="140" width="160" height="300">
+
+			<table style="font-size: 9px">
+				<tr >
+					<td style="text-align: center"  cols="2">Details</td>
+				</tr>
+				<tr>
+					<td style="text-align: right" >First name:</td>
+					<td>Lee</td>
+				</tr>
+				<tr>
+					<td style="text-align: right" >Last name:</td>
+					<td>Collins</td>
+				</tr>
+				<tr>
+					<td style="text-align: right" >Email:</td>
+					<td>yoyo@smalltalk.com</td>
+				</tr>
+
+			</table>
+
+			</foreignObject>
 
 		</g>
 	</svg>

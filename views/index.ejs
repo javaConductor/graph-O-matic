@@ -31,9 +31,15 @@
 			cursor: move;
 			position: absolute;
 		}
+
 		.viewItem {
-		background: url("/images/gold_textured_background_hd_picture_3_169654.jpg");
-		background-size: cover;
+			background: url("/images/gold_textured_background_hd_picture_3_169654.jpg");
+			background-size: cover;
+			background-clip: padding-box;
+		}
+
+		body {
+			background-color: goldenrod;
 		}
 	</style>
 </head>
@@ -55,7 +61,7 @@ Mouse Position: <label id='position'></label>
 		dragStart: function (evt) {
 
 			console.log('dragStartEvent ' +
-					'client -> x:'+evt.clientX + " y:"+evt.clientY+
+					'client -> x:' + evt.clientX + " y:" + evt.clientY +
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
 			var el = angular.element(evt.currentTarget);
@@ -68,17 +74,17 @@ Mouse Position: <label id='position'></label>
 			this.beforeLastX = this.lastX = off.left;
 			this.beforeLastY = this.lastY = off.top;
 			console.log('dragStartEvent ' +
-				'element pos -> x:' + this.initLeft + " y:" + this.initTop);
+					'element pos -> x:' + this.initLeft + " y:" + this.initTop);
 			return evt;
 		},
 
 		drag: function (evt) {
-			if(evt.preventDefault)
+			if (evt.preventDefault)
 				evt.preventDefault();
 			console.log('dragEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY+
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
 			this.beforeLastX = this.lastX;
@@ -88,13 +94,13 @@ Mouse Position: <label id='position'></label>
 			this.lastY = evt.pageY;
 			var ofs = angular.element(evt.currentTarget).offset();
 
-			$('#position').text( ofs.left  + ', ' + ofs.top );
+			$('#position').text(ofs.left + ', ' + ofs.top);
 
 			var el = angular.element(evt.currentTarget);
 			var x = (this.beforeLastX - this.initX) + this.initLeft;
 			var y = (this.beforeLastY - this.initY) + this.initTop;
 			console.log('dragEndEvent ' +
-					' last -> x:'+this.beforeLastX + " y:"+this.beforeLastY+
+					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
 					' new pos -> x:' + x + " y:" + y);
 			el.offset({"left": x, "top": y});
 
@@ -104,9 +110,9 @@ Mouse Position: <label id='position'></label>
 
 			console.log('dragOverEvent ' +
 				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			if(evt.preventDefault)
+			if (evt.preventDefault)
 				evt.preventDefault();
 			evt.dataTransfer.dropEffect = 'move';
 			var el = angular.element(evt.currentTarget);
@@ -115,42 +121,41 @@ Mouse Position: <label id='position'></label>
 		},
 
 		drop: function (evt) {
-			if(evt.preventDefault)
+			if (evt.preventDefault)
 				evt.preventDefault();
 			console.log('dropEvent ' +
-				' client   -> x:' + evt.clientX + " y:" + evt.clientY+
-				' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
-				' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
-				' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
 		},
 
 		dragEnd: function (evt) {
-			if(evt.preventDefault)
+			if (evt.preventDefault)
 				evt.preventDefault();
 			console.log('dragEndEvent ' +
-				' client   -> x:' + evt.clientX + " y:" + evt.clientY+
-				' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
-				' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
-				' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 			return evt;
 		},
-		dropped: function(evt, node){
+		dropped: function (evt, node) {
 			console.log('droppedEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY+
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY+
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY+
+					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			}
+		}
 
 	};
 </script>
 
 <div dropzone="move"
 	 id="dropZone"
-	 style='background-color: cornflowerblue;border-width:2px;width:1000px;height:800px'
-	 ondrop="dnd.dropped(event, this)" >
-
+	 style='background-color: gold;border-width:2px;width:1000px;height:800px'
+	 ondrop="dnd.dropped(event, this)">
 </div>
 
 <div draggable='true' id='theDiv'
@@ -160,42 +165,50 @@ Mouse Position: <label id='position'></label>
 	 ondrop="dnd.drop(event)"
 	 ondragend="dnd.dragEnd(event)"
 	 class="draggable viewItem"
-	 style='position:absolute;width:201px;height:201px'
+
 		>
-	<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
-		 >
-		<g>
-			<foreignObject  class="node" x="20" y="30" width="100%" height="300">
-				<label id='title'>Lee Collins </label>
+	<div  style='float:left;position:relative;width:201px;height:201px'>
+		<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
+				>
+			<g>
+				<foreignObject class="node" x="20" y="30" width="100%" height="300">
+					<label id='title'>Lee Collins </label>
+				</foreignObject>
+				<image x="20" y="50" width="160" height="80"
+					   xlink:href="/images/stickmanface.jpeg">
+				</image>
+
+			</g>
+		</svg>
+	</div>
+	<div  style='float:right;position:relative;left:201;width:201px;height:201px'>
+		<svg>
+			<g>
+			<foreignObject class="node" x="0" y="0" width="160" height="300">
+					<table style="font-size: 9px">
+						<tr>
+							<td style="text-align: center" cols="2">Details</td>
+						</tr>
+						<tr>
+							<td style="text-align: right">First name:</td>
+							<td>Lee</td>
+						</tr>
+						<tr>
+							<td style="text-align: right">Last name:</td>
+							<td>Collins</td>
+						</tr>
+						<tr>
+							<td style="text-align: right">Email:</td>
+							<td>yoyo@smalltalk.com</td>
+						</tr>
+
+					</table>
+
 			</foreignObject>
-			<image  x="20" y="50" width="160" height="80"
-				   xlink:href="/images/stickmanface.jpeg">
-			</image>
-			<foreignObject  class="node" x="20" y="140" width="160" height="300">
+			</g>
+		</svg>
 
-			<table style="font-size: 9px">
-				<tr >
-					<td style="text-align: center"  cols="2">Details</td>
-				</tr>
-				<tr>
-					<td style="text-align: right" >First name:</td>
-					<td>Lee</td>
-				</tr>
-				<tr>
-					<td style="text-align: right" >Last name:</td>
-					<td>Collins</td>
-				</tr>
-				<tr>
-					<td style="text-align: right" >Email:</td>
-					<td>yoyo@smalltalk.com</td>
-				</tr>
-
-			</table>
-
-			</foreignObject>
-
-		</g>
-	</svg>
+	</div>
 </div>
 
 <script>
@@ -206,15 +219,15 @@ Mouse Position: <label id='position'></label>
 
 		$('#theDiv').offset({'left': 0, 'top': 0 });
 
-		$('#theDiv').mousemove(function(evt){
+		$('#theDiv').mousemove(function (evt) {
 			var el = angular.element(evt.currentTarget);
 			var off = el.offset();
-		//	$('#svgTxt').text(off.left + ', ' + off.top);
+			//	$('#svgTxt').text(off.left + ', ' + off.top);
 		});
 
-		$('body').mousemove(function(evt){
+		$('body').mousemove(function (evt) {
 			var offset = $('#theDiv').offset();
-			$('#position').text( offset.left + ', ' + offset.top );
+			$('#position').text(offset.left + ', ' + offset.top);
 		});
 
 	})();

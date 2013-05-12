@@ -36,10 +36,47 @@
 			background: url("/images/gold_textured_background_hd_picture_3_169654.jpg");
 			background-size: cover;
 			background-clip: padding-box;
+			width: 410px;
 		}
 
 		body {
 			background-color: goldenrod;
+		}
+
+		.detailTable{
+			border-style: groove;
+			border-bottom-color: gold;
+			border-left-color: goldenrod;
+			border-top-color: goldenrod;
+			border-right-color: gold;
+
+		}
+		.detailHeader{
+			text-align: center;
+			font-size: 12px;
+			font-weight: bold;
+		}
+		.detailName{
+			font-size: 10px;
+			text-align: right;
+			font-weight: bold;
+		}
+		.detailValue{
+			font-size: 10px;
+			text-align: left;
+			font-weight: normal;
+		}
+		.details{
+			float:right;
+			position:relative;
+			left:0px;
+			top:20px;
+			width:201px;
+			height:201px;
+		}
+		.summary{
+
+			float:left;position:relative;width:201px;height:201px;
 		}
 	</style>
 </head>
@@ -167,7 +204,7 @@ Mouse Position: <label id='position'></label>
 	 class="draggable viewItem"
 
 		>
-	<div  style='float:left;position:relative;width:201px;height:201px'>
+	<div  class="summary">
 		<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
 				>
 			<g>
@@ -181,25 +218,25 @@ Mouse Position: <label id='position'></label>
 			</g>
 		</svg>
 	</div>
-	<div  style='float:right;position:relative;left:201;width:201px;height:201px'>
+	<div  class="details" >
 		<svg>
 			<g>
-			<foreignObject class="node" x="0" y="0" width="160" height="300">
-					<table style="font-size: 9px">
+			<foreignObject class="node" x="0" y="0" width="100%" height="300">
+					<table class="detailTable" >
 						<tr>
-							<td style="text-align: center" cols="2">Details</td>
+							<th class="detailHeader" cols="2">Details</th>
 						</tr>
 						<tr>
-							<td style="text-align: right">First name:</td>
-							<td>Lee</td>
+							<td class="detailName" >First&nbsp;name:</td>
+							<td class="detailValue" >Lee</td>
 						</tr>
 						<tr>
-							<td style="text-align: right">Last name:</td>
-							<td>Collins</td>
+							<td class="detailName" >Last name:</td>
+							<td class="detailValue">Collins</td>
 						</tr>
 						<tr>
-							<td style="text-align: right">Email:</td>
-							<td>yoyo@smalltalk.com</td>
+							<td  class="detailName" >Email:</td>
+							<td class="detailValue" >yoyo@smalltalk.com</td>
 						</tr>
 
 					</table>

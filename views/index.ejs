@@ -22,9 +22,9 @@
 	<script src="js/directives/graphRelationship.js" type='text/javascript'></script>
 	<script src="js/directives/graphView.js" type='text/javascript'></script>
 	<script src="js/controllers.js" type='text/javascript'></script>
-	<script src="js/app.js" type='text/javascript'></script>
+	<script src="js/itemCtrl.js" type='text/javascript'></script>
 
-	<script src="http://loadr.aws.af.cm/load?packages=angular https://raw.github.com/btford/angular-dragon-drop/master/dragon-drop.js"></script>
+	<script src="js/app.js" type='text/javascript'></script>
 
 	<style>
 		.draggable {
@@ -37,54 +37,71 @@
 			background-size: cover;
 			background-clip: padding-box;
 			width: 410px;
+			left: 150px;
+			top: 200px;
 		}
 
 		body {
 			background-color: goldenrod;
+			background-image:  url("/images/backgroundImage.jpg");
+			background-size: 100%;
+
 		}
 
-		.detailTable{
+		.detailTable {
 			border-style: groove;
-			border-bottom-color: gold;
-			border-left-color: goldenrod;
-			border-top-color: goldenrod;
-			border-right-color: gold;
+			border-bottom-color: goldenrod;
+			border-left-color: lightgoldenrodyellow;
+			border-top-color: gold;
+			border-right-color: goldenrod;
+			width: 100%;
+			height: 160px;
 
 		}
-		.detailHeader{
+
+		.detailHeader {
 			text-align: center;
 			font-size: 12px;
 			font-weight: bold;
 		}
-		.detailName{
+
+		.detailName {
 			font-size: 10px;
 			text-align: right;
 			font-weight: bold;
 		}
-		.detailValue{
+
+		.detailValue {
 			font-size: 10px;
 			text-align: left;
 			font-weight: normal;
 		}
-		.details{
-			float:right;
-			position:relative;
-			left:0px;
-			top:20px;
-			width:201px;
-			height:201px;
-		}
-		.summary{
 
-			float:left;position:relative;width:201px;height:201px;
+		.detailBody {
+			width: 100%;
+			overflow: auto;
+		}
+
+		.details {
+			float: right;
+			position: relative;
+			left: 0px;
+			top: 20px;
+			width: 201px;
+			height: 160px;
+		}
+
+		.summary {
+			float: left;
+			position: relative;
+			width: 201px;
+			height: 201px;
 		}
 	</style>
 </head>
-<body>
-<h1><%= title %></h1>
+<body ng-app >
 
-<p>Welcome to <%= title %></p>
-Mouse Position: <label id='position'></label>
+Item Position: <label style="color: white" id='position'></label>
 <script>
 	var dnd = {
 		lastX: 0,
@@ -118,14 +135,14 @@ Mouse Position: <label id='position'></label>
 		drag: function (evt) {
 			if (evt.preventDefault)
 				evt.preventDefault();
-			console.log('dragEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+//			console.log('dragEvent ' +
+//					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+//					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+//					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+//					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
-			this.beforeLastX = this.lastX;
-			this.beforeLastY = this.lastY;
+			this.beforeLastX = this.lastX ===0 ? evt.pageX : this.lastX;
+			this.beforeLastY = this.lastY ===0 ? evt.pageY : this.lastY;
 
 			this.lastX = evt.pageX;
 			this.lastY = evt.pageY;
@@ -136,9 +153,9 @@ Mouse Position: <label id='position'></label>
 			var el = angular.element(evt.currentTarget);
 			var x = (this.beforeLastX - this.initX) + this.initLeft;
 			var y = (this.beforeLastY - this.initY) + this.initTop;
-			console.log('dragEndEvent ' +
-					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
-					' new pos -> x:' + x + " y:" + y);
+//			console.log('dragEndEvent ' +
+//					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
+//					' new pos -> x:' + x + " y:" + y);
 			el.offset({"left": x, "top": y});
 
 		},
@@ -153,7 +170,6 @@ Mouse Position: <label id='position'></label>
 				evt.preventDefault();
 			evt.dataTransfer.dropEffect = 'move';
 			var el = angular.element(evt.currentTarget);
-			//el.offset({"left": this.lastX, "top": this.lastY});
 			return evt;
 		},
 
@@ -171,11 +187,16 @@ Mouse Position: <label id='position'></label>
 		dragEnd: function (evt) {
 			if (evt.preventDefault)
 				evt.preventDefault();
+			var el = angular.element(evt.currentTarget);
+			var off = el.offset();
 			console.log('dragEndEvent ' +
 					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
 					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+					' moverOffset   -> x:' + off.left + " y:" + off.top +
 					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
 					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			// broadcast the move
+			alert("item moved to:  x:" + off.left + " y:" + off.top);
 			return evt;
 		},
 		dropped: function (evt, node) {
@@ -189,12 +210,6 @@ Mouse Position: <label id='position'></label>
 	};
 </script>
 
-<div dropzone="move"
-	 id="dropZone"
-	 style='background-color: gold;border-width:2px;width:1000px;height:800px'
-	 ondrop="dnd.dropped(event, this)">
-</div>
-
 <div draggable='true' id='theDiv'
 	 ondragstart="dnd.dragStart(event)"
 	 ondrag="dnd.drag(event)"
@@ -202,70 +217,53 @@ Mouse Position: <label id='position'></label>
 	 ondrop="dnd.drop(event)"
 	 ondragend="dnd.dragEnd(event)"
 	 class="draggable viewItem"
-
+	 ng-controller="ViewItemCtrl"
 		>
-	<div  class="summary">
-		<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink"
-				>
-			<g>
-				<foreignObject class="node" x="20" y="30" width="100%" height="300">
-					<label id='title'>Lee Collins </label>
-				</foreignObject>
-				<image x="20" y="50" width="160" height="80"
-					   xlink:href="/images/stickmanface.jpeg">
-				</image>
-
-			</g>
-		</svg>
-	</div>
-	<div  class="details" >
-		<svg>
-			<g>
-			<foreignObject class="node" x="0" y="0" width="100%" height="300">
-					<table class="detailTable" >
-						<tr>
-							<th class="detailHeader" cols="2">Details</th>
+			<div class="summary">
+				<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+					<g>
+						<foreignObject class="node" x="20" y="30" width="100%" height="300">
+							<label id='title'>{{testViewItem.title()}}</label>
+						</foreignObject>
+						<image x="20" y="50" width="160" height="80"
+							   xlink:href="{{testViewItem.image()}}">
+						</image>
+					</g>
+				</svg>
+			</div>
+			<div class="details">
+				<table class="detailTable">
+					<thead>
+					<tr>
+						<th class="detailHeader" colspan="2">Details</th>
+					</tr>
+					</thead>
+				</table>
+				<div style="border-style: groove; overflow: auto;height: 140px;" >
+					<table class="detailBody" >
+						<tbody>
+						<tr
+							ng-repeat='(name, value) in testViewItem.data()'>
+							<td width='50%' class="detailName">{{name}}</td>
+							<td class="detailValue">{{value}}</td>
 						</tr>
-						<tr>
-							<td class="detailName" >First&nbsp;name:</td>
-							<td class="detailValue" >Lee</td>
-						</tr>
-						<tr>
-							<td class="detailName" >Last name:</td>
-							<td class="detailValue">Collins</td>
-						</tr>
-						<tr>
-							<td  class="detailName" >Email:</td>
-							<td class="detailValue" >yoyo@smalltalk.com</td>
-						</tr>
-
+						</tbody>
 					</table>
-
-			</foreignObject>
-			</g>
-		</svg>
-
-	</div>
+				</div>
+			</div>
 </div>
 
 <script>
 	(function () {
 		var dragging = false;
 		var isOver = false;
-
-
-		$('#theDiv').offset({'left': 0, 'top': 0 });
-
-		$('#theDiv').mousemove(function (evt) {
-			var el = angular.element(evt.currentTarget);
-			var off = el.offset();
-			//	$('#svgTxt').text(off.left + ', ' + off.top);
-		});
-
+		$('#theDiv').offset({'left': 100, 'top': 100 });
 		$('body').mousemove(function (evt) {
 			var offset = $('#theDiv').offset();
 			$('#position').text(offset.left + ', ' + offset.top);
 		});
+
+
 
 	})();
 </script>

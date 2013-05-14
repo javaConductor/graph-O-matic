@@ -223,10 +223,10 @@ Item Position: <label style="color: white" id='position'></label>
 				<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
 					<g>
 						<foreignObject class="node" x="20" y="30" width="100%" height="300">
-							<label id='title'>{{testViewItem.title()}}</label>
+							<label id='title'>{{viewItem.title()}}</label>
 						</foreignObject>
 						<image x="20" y="50" width="160" height="80"
-							   xlink:href="{{testViewItem.image()}}">
+							   xlink:href="{{viewItem.image()}}">
 						</image>
 					</g>
 				</svg>
@@ -243,9 +243,9 @@ Item Position: <label style="color: white" id='position'></label>
 					<table class="detailBody" >
 						<tbody>
 						<tr
-							ng-repeat='(name, value) in testViewItem.data()'>
-							<td width='50%' class="detailName">{{name}}</td>
-							<td class="detailValue">{{value}}</td>
+							ng-repeat='row in viewItem.data()'>
+							<td width='50%' class="detailName">{{row.name}}</td>
+							<td class="detailValue">{{row.value}}</td>
 						</tr>
 						</tbody>
 					</table>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title><%= title %></title>
+	<link rel='stylesheet' href='/stylesheets/style.css'/>
+	<link rel='stylesheet' href='/stylesheets/itemView.css'/>
+
+	<script src="js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
+	<script src="js/lib/angular/angular.js" type='text/javascript'></script>
+	<script src="js/lib/angular/angular-resource.js" type='text/javascript'></script>
+
+	<script src="js/services/services.js" type='text/javascript'></script>
+	<script src="js/services/persistence.js" type='text/javascript'></script>
+	<script src="js/services/utilSvc.js" type='text/javascript'></script>
+	<script src="js/services/model.js" type='text/javascript'></script>
+	<script src="js/services/world.js" type='text/javascript'></script>
+	<script src="js/services/view.js" type='text/javascript'></script>
+	<script src="js/services/contextService.js" type='text/javascript'></script>
+	<script src="js/services/view.js" type='text/javascript'></script>
+	<script src="js/filters.js" type='text/javascript'></script>
+	<script src="js/directives/directives.js" type='text/javascript'></script>
+	<script src="js/directives/graphItem.js" type='text/javascript'></script>
+	<script src="js/controllers.js" type='text/javascript'></script>
+	<script src="js/itemCtrl.js" type='text/javascript'></script>
+	<script src="js/app.js" type='text/javascript'></script>
+
+<body ng-app="graphOmatic" >
+
+<span>{{viewItem}}</span><p></p>
+<div ng-controller="ViewItemCtrl">
+	<graph-item ng-model="viewItem" ></graph-item>
+	<graph-item ng-model="viewItem2" ></graph-item>
+</div>
+<span>AFTER</span><p></p>
+
+</body>
+</html>

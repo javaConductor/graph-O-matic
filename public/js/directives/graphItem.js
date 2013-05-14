@@ -125,7 +125,7 @@
 		return this;
 	};
 
-	graphModule.directive('graphItem', ['$compile', '$timeout', '$parse', function ($compile, $timeout, $parse) {
+	graphModule.directive('graphItem', ['$compile', '$parse', function ($compile, $parse) {
 		console.log("creating directive graphItem");
 
 		return {
@@ -153,13 +153,6 @@
 				element.css("left", pos.x);
 				element.css("top", pos.y);
 
-				/*
-				 element.ondragstart= scope.dnd.dragStart;
-				 element.ondrag = scope.dnd.drag;
-				 element.ondragover = scope.dnd.dragOver;
-				 element.ondragend = scope.dnd.dragEnd;
-				 element.ondrop = scope.dnd.drop;
-				 */
 				model.$render = function () {
 					/// redisplay the item inside the view
 					console.log('$render');

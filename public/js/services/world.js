@@ -1,8 +1,6 @@
 'use strict';
 
-/* World Services */
-
-
+/* World Service */
 (function (services) {
 
 	var extensionMgr = function (extensionTable) {
@@ -93,10 +91,8 @@
 		}
 	};
 
-	services.factory('World', ['persistence', 'utilFunctions', 'contextService',
+	services.factory('World', ['persistence', 'UtilityFunctions', 'ContextService',
 		function (persistence, util, ctxtSvc) {
-			/// return the util funcs
-
 			var thisf = this;
 			var mergeViewStyle = function (destViewStyle, srcViewStyle) {
 				return util.copy(destViewStyle, srcViewStyle);

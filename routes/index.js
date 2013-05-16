@@ -8,5 +8,9 @@ exports.index = function(req, res){
 };
 
 exports.testViewItem = function(req, res){
-	res.render('testViewItem', { title: 'Graph-O-Matic' });
+	res.render('testViewItem', { title: 'Graph-O-Matic Item Test Page' });
+};
+
+exports.testView = function(req, res){
+	res.render('testView', { title: 'Graph-O-Matic View Test Page' });
 };

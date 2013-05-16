@@ -7,14 +7,14 @@ var neo4jPort = 7474;
 
 var Root, Item, ItemType, Relationship, RelationshipTypes;
 
-var services = angular.module('GraphOMaticServices', ['ngResource', 'UtilityFunctions']);
+var services = angular.module('GraphOMaticServices', ['ngResource']);
 
 services.factory('Directory', ['$http', '$location', function ($http, $location) {
 	/// send to server for the directory: Map(k.v)
 	var urlPrefix = "http://" + $location.hostname + ":" + $location.port + "/";
 	var dirUrl = urlPrefix + "directory";
 	var thiz = this;
-	this.directoryEntries = {}
+	this.directoryEntries = {};
 	$http({method: 'JSONP', params: {callback: 'JSON_CALLBACK'}, url: dirUrl}).
 		error(function (data, status, headers, config) {
 			return null;

@@ -4,8 +4,10 @@
  * Date: 5/12/13
  * Time: 5:09 PM
  */
-
-function ViewItemCtrl($scope){
+/*
+<graph-view ng-model="sampleView"  />
+ */
+function ViewCtrl($scope, view){
 
 	$scope.itemMoved = function(item, x, y){
 		console.log("itemMoved");
@@ -38,9 +40,9 @@ function ViewItemCtrl($scope){
 		_showDetails : true,
 		showDetails: function(){
 			if (arguments.length > 0){
-				//$scope.$apply(function(){
+				$scope.$apply(function(){
 					this._showDetails =  ! ! arguments[0];// make bool
-				//});
+				});
 			}
 			return this._showDetails;
 		},
@@ -85,9 +87,9 @@ function ViewItemCtrl($scope){
 		_showDetails : true,
 		showDetails: function(){
 			if (arguments.length > 0){
-				//$scope.$apply(function(){
+				$scope.$apply(function(){
 					this._showDetails =  ! ! arguments[0];// make bool
-				//});
+				});
 			}
 			return this._showDetails;
 		},
@@ -123,6 +125,13 @@ function ViewItemCtrl($scope){
 			];
 		}
 	};
+	$scope.view = {
+		name:"Test View",
+		id:"testview1",
+		items:[$scope.viewItem, $scope.viewItem2],
+		relationships:[],
+		currentView: $scope.viewItem2
+	}
 }
 
-ViewItemCtrl.$inject  = ["$scope"];
+ViewCtrl.$inject = [ "$scope", "View" ];

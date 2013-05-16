@@ -28,7 +28,7 @@
 
 	};
 
-	services.factory('Context', ['$resource', '$location', function ($resource, $location) {
+	services.factory('ContextService', ['$resource', '$location', function ($resource, $location) {
 		return {
 			basicReality: fContext(basicRealityCtxt),
 			loadContexts: function () {

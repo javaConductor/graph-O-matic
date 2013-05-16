@@ -2,9 +2,8 @@
  * Created with JetBrains WebStorm.
  * User: lee
  * Date: 4/24/13
- * T
  *
- * ime: 12:08 AM
+ * Time: 12:08 AM
  */
 (function (services) {
 
@@ -43,7 +42,7 @@
 
         }
 
-    var View = function View(world, viewData) {
+    var ViewObject = function View(world, viewData) {
 		/// all initialization done here before we return object
 		/// add the types to the items
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
@@ -125,4 +124,11 @@
 
 		return theObject;
         };
-	})(angular.module('GraphOMaticServices'));
+	services.factory('View', ['persistence', 'UtilityFunctions', 'World',
+		function ( persistence, util, theWorld ) {
+			return function(viewData){
+				return new ViewObject( theWorld, viewData);
+			}
+		}]);
+
+})(angular.module('GraphOMaticServices'));

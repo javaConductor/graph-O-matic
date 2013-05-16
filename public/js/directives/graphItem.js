@@ -133,15 +133,15 @@
 			replace: true,
 			scope: true,
 			'require': '?ngModel',
-			templateUrl: 'viewItem.ejs',
+			templateUrl: 'templates/viewItem.ejs',
 			link: function (scope, element, attrs, model, ctrl) {
 
 				if (!model)
 					return;
 
 				var mdl = $parse(attrs.ngModel);
-				scope.viewItem = mdl(scope);
-				scope.dnd = new DndHandlerNu(scope.viewItem, itemMoved);
+				var viewItem = mdl( scope.$parent );
+				scope.dnd = new DndHandlerNu(viewItem, itemMoved);
 
 				element.bind('drag', scope.dnd.drag);
 				element.bind('dragend', scope.dnd.dragEnd);
@@ -149,7 +149,7 @@
 				element.bind('dragover', scope.dnd.dragOver);
 				element.bind('drop', scope.dnd.drop);
 
-				var pos = scope.viewItem.position();
+				var pos = viewItem.position();
 				element.css("left", pos.x);
 				element.css("top", pos.y);
 

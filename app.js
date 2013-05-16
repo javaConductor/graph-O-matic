@@ -28,6 +28,8 @@ app.configure('development', function(){
 });
 
 app.get('/', routes.index);
+app.get('/testViewItem', routes.testViewItem);
+app.get('/testView', routes.testView);
 app.get('/users', user.list);
 
 http.createServer(app).listen(app.get('port'), function(){

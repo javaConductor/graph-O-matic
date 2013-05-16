@@ -1,0 +1,44 @@
+<LINK rel="stylesheet" type="text/css" href="/sytlesheets/itemView.css">
+
+<div draggable='true' id='theDiv'
+	 ondragstart="dnd.dragStart(event)"
+	 ondrag="dnd.drag(event)"
+	 ondragover="dnd.dragOver(event)"
+	 ondrop="dnd.drop(event)"
+	 ondragend="dnd.dragEnd(event)"
+	 class="draggable viewItem"
+	 ng-controller="ViewItemCtrl"
+		>
+	<div class="summary">
+		<svg xmlns="http://www.w3.org/2000/svg" xlink="http://www.w3.org/1999/xlink">
+			<g>
+				<foreignObject class="node" x="20" y="30" width="100%" height="300">
+					<label id='title'>{{viewItem.title()}}</label>
+				</foreignObject>
+				<image x="20" y="50" width="160" height="80"
+					   xlink:href="{{viewItem.image()}}">
+				</image>
+			</g>
+		</svg>
+	</div>
+	<div class="details">
+		<table class="detailTable">
+			<thead>
+			<tr>
+				<th class="detailHeader" colspan="2">Details</th>
+			</tr>
+			</thead>
+		</table>
+		<div style="border-style: groove; overflow: auto;height: 140px;" >
+			<table class="detailBody" >
+				<tbody>
+				<tr
+						ng-repeat='row in viewItem.data()'>
+					<td width='50%' class="detailName">{{row.name}}</td>
+					<td class="detailValue">{{row.value}}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>

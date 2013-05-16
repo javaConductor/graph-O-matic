@@ -2,15 +2,15 @@
  * Created with JetBrains WebStorm.
  * User: lee
  * Date: 4/24/13
- * T
  *
- * ime: 12:08 AM
+ * Time: 12:08 AM
  */
 (function (services) {
 
     var viewStyleToCSSStyle = function(viewStyle){
         return viewStyle.style;
     };
+
     var ViewItemObject = function(world, view, decoratedViewItem )
     {
             return {
@@ -42,10 +42,8 @@
 
         }
 
-    var View = function View(world, viewData) {
+    var ViewObject = function View(world, viewData) {
 		/// all initialization done here before we return object
-
-
 		/// add the types to the items
 		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
 		var itemTypesById = util.mapBy("id", theItemTypes);
@@ -69,7 +67,26 @@
 			createViewItem: function (item, f) {
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
+			decorateViewItem: function(viewItem){
+				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
+				viewItem.properties = world.initProperties(viewItem.itemType);
+				viewItem.item.itemType = decorators.decorateItemType(viewItem.item.itemType);
+				viewItem = decorators.decorateViewItem(viewItem);
+				return viewItem;
+			},
 			initViewItem: function (viewItem) {
+				viewItem = this.decorateViewItem(viewItem);
+				viewItem = decorators.decorateViewItem(viewItem );
+				return ViewItemObject(this.world, this, viewItem)
+			},
+			wrapItem:  function(item){
+				var vitem = {
+					item: item,
+					itemType: itemTypesById[item.itemTypeId]
+				};
+				return this.initViewItem(vitem);
+			},
+			vinitViewItem: function (viewItem) {
 
 
 				viewItem.viewPosition = function(){ return }
@@ -77,7 +94,6 @@
 				viewItem.properties = world.initProperties(viewItem.itemType);
 
 				viewItem.image = (function(){ return {};});
-				viewItem = decorators.decorateViewItem(viewItem );
 				viewItem = this.decorateViewItem(viewItem);
 				return ViewItemObject(world, this, viewItem);
                 //viewItem.image = (function(){ return viewItem.mainImage});
@@ -105,7 +121,14 @@
 			findItemRelationships: function (item) {
 			}
 			}
-		};
-		return theObject;
 
-	})(angular.module('GraphOMaticServices'));
+		return theObject;
+        };
+	services.factory('View', ['persistence', 'UtilityFunctions', 'World',
+		function ( persistence, util, theWorld ) {
+			return function(viewData){
+				return new ViewObject( theWorld, viewData);
+			}
+		}]);
+
+})(angular.module('GraphOMaticServices'));

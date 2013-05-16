@@ -1,0 +1,72 @@
+
+.draggable {
+    cursor: move;
+    position: absolute;
+}
+
+.viewItem {
+    background: url("/images/gold_textured_background_hd_picture_3_169654.jpg");
+    background-size: cover;
+    background-clip: padding-box;
+    width: 410px;
+    height: 260px;
+}
+
+body {
+    background-color: goldenrod;
+    background-image:  url("/images/backgroundImage.jpg");
+    background-size: 100%;
+
+}
+
+.detailTable {
+    border-style: groove;
+    border-bottom-color: goldenrod;
+    border-left-color: lightgoldenrodyellow;
+    border-top-color: gold;
+    border-right-color: goldenrod;
+    width: 100%;
+    height: 160px;
+
+}
+
+.detailHeader {
+    text-align: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.detailName {
+    font-size: 10px;
+    text-align: right;
+    font-weight: bold;
+    margin: 15px;
+}
+
+.detailValue {
+    font-size: 10px;
+    text-align: left;
+    font-weight: normal;
+    margin-left: 15px;
+}
+
+.detailBody {
+    width: 100%;
+    overflow: auto;
+}
+
+.details {
+    float: right;
+    position: relative;
+    left: 0px;
+    top: 20px;
+    width: 201px;
+    height: 160px;
+}
+
+.summary {
+    float: left;
+    position: relative;
+    width: 201px;
+    height: 201px;
+}

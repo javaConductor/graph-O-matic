@@ -1,96 +1,172 @@
-
-
 /*
  Should look like this:
- <graphView  ng-model='A1234Z'  height='500' width='800' />
+ <graphItem  ng-model='viewItem'  x='500' y='800' />
+*/
 
- should turn into:
+(function(graphModule){
+	var itemMoved = function (viewItem, x, y) {
+		console.log("ViewItem(" + viewItem.id + ") moved to " + x + ", " + y);
+	};
 
- <g class="draggable">
+	function DndHandlerNu (theViewItem, fItemMoved) {
+		if (!theViewItem) return null;
 
- <rect x="10" y="10" height="100" width="100"
- style="stroke:#006600; fill: #00cc00">    	</rect>
- <image x="20" y="5" width="80" height="80"
- xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
- <foreignObject class="node" x="46" y="22" width="200" height="300">
- <body xmlns="http://www.w3.org/1999/xhtml">
- <table>
- <thead><tr><th cols="2" >{{itemType.name}}</th></tr></thead>
+		this.viewItem = theViewItem;
+		this.lastX = 0;
+		this.lastY = 0;
+		this.beforeLastX = 0;
+		this.beforeLastY = 0;
+		this.initX = 0;
+		this.initY = 0;
+		this.initTop = 0;
+		this.initLeft = 0;
 
- </table>
- </body>
- </foreignObject>
- <text y="100" style="stroke:#00ffff; fill: #00ffff">
- <tspan dy="25" y="50" x="15">tspan line 0</tspan>
- <tspan dy="25" y="70" x="15">tspan line 1</tspan>
- </text>
+		this.dragStart = $.proxy( function(event) {
+			var evt = event.originalEvent;
+			console.log('dragStartEvent ' +
+			  'client -> x:' + evt.clientX + " y:" + evt.clientY +
+			  ' page  -> x:' + evt.pageX + " y:" + evt.pageY);
 
- </g>
- */
-var cx = 60, cy = 60;
-var createItemNode = function(svgElement, viewItem){
+			var el = angular.element(evt.currentTarget);
+			//store the difference in top/left and where the mouse is
+			this.initX = evt.pageX;
+			this.initY = evt.pageY;
+			var off = el.offset();
+			this.initTop = off.top;
+			this.initLeft = off.left;
+			this.beforeLastX = this.lastX = off.left;
+			this.beforeLastY = this.lastY = off.top;
+			console.log('dragStartEvent ' +
+			  'element pos -> x:' + this.initLeft + " y:" + this.initTop);
+			return evt;
+		}, this);
 
-    var position = viewItem.position();
-    var image = viewItem.image();
-    var data = viewItem.data();
-    var title = viewItem.title();
-    var style = viewItem.style();
-    var properties = viewItem.properties();
-    var extraProperties = viewItem.extraItemsOk();
+		this.drag = $.proxy(function(event) {
+			var evt = event.originalEvent;
+			if (evt.preventDefault)
+				evt.preventDefault();
+//			console.log('dragEvent ' +
+//					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+//					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+//					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+//					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
-    var g = angular.element("<g></g>");
-    var r = angular.element("rect").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
-        attr('height', cy ).
-        attr('width', cx );
+			this.beforeLastX = this.lastX === 0 ? evt.pageX : this.lastX;
+			this.beforeLastY = this.lastY === 0 ? evt.pageY : this.lastY;
 
-    var img = angular.element("image").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
-        attr('height', cy ).
-        attr('width', cx-20 );
+			this.lastX = evt.pageX;
+			this.lastY = evt.pageY;
+			var ofs = angular.element(evt.currentTarget).offset();
 
+			$('#position').text(ofs.left + ', ' + ofs.top);
 
-};
+			var el = angular.element(evt.currentTarget);
+			var x = (this.beforeLastX - this.initX) + this.initLeft;
+			var y = (this.beforeLastY - this.initY) + this.initTop;
+//			console.log('dragEndEvent ' +
+//					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
+//					' new pos -> x:' + x + " y:" + y);
+			el.offset({"left": x, "top": y});
 
-var graphModule = angular.module('graphOmatic.directives');
+		},this);
 
-graphModule.directive('graphItem', ['$compile', '$timeout', function ($compile, $timeout) {
-    console.log("creating directive graphItem");
+		this.dragOver = $.proxy(function(event) {
+			var evt = event.originalEvent;
 
+//		console.log('dragOverEvent ' +
+//			//'client -> x:'+evt.clientX + " y:"+evt.clientY+
+//		  ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+//		  ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			if (evt.preventDefault)
+				evt.preventDefault();
+			var el = angular.element(evt.currentTarget);
+			return evt;
+		},this);
 
+		this.drop = $.proxy(function(event) {
+			var evt = event.originalEvent;
 
-    return {
-        restrict:'E',
-        replace:true,
-        scope:true,
-        'require':'?ngModel',
-        templateLooksLike: '<g><rect cx="50" cy="50" x="100" y="100" color="black" ></rect></svg>',
-        link : function(scope, element, attrs, model){
-            /// Can we use this to update the screen for each item ???
-            model.$render = function () {
-                /// redisplay the item inside the view
-                console.log('$render');
-                console.dir(this.$modelValue);
-                if ( this.$modelValue ){
-                    var graphOptions = this.$modelValue;
-                    //var jsonObj = angular.fromJson( jsonText );
-                    if ( graphOptions ){
-                        var nuElem = angular.element("<div></div>");
-                        addItems(jsonObj, graphOptions);
-                        element.html(nuElem);
-                    }
-                }
-            }
-        }
+			if (evt.preventDefault)
+				evt.preventDefault();
+			console.log('dropEvent ' +
+			  ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+			  ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+			  ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+			  ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
 
-    };
-}]);
-/**
- * Created with JetBrains WebStorm.
- * User: lcollins
- * Date: 4/28/13
- * Time: 4:00 PM
- * To change this template use File | Settings | File Templates.
- */
+		},this);
+
+		this.dragEnd = $.proxy(function(event) {
+			var evt = event.originalEvent;
+			if (evt.preventDefault)
+				evt.preventDefault();
+			var el = angular.element(evt.currentTarget);
+			var off = el.offset();
+			console.log('dragEndEvent ' +
+			  ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+			  ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+			  ' moverOffset   -> x:' + off.left + " y:" + off.top +
+			  ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+			  ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+			// broadcast the move
+			fItemMoved(this.viewItem, off.left, off.top);
+			return evt;
+		},this);
+		this.dropped = $.proxy(function(event, node) {
+			var evt = event.originalEvent;
+
+			console.log('droppedEvent ' +
+			  ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
+			  ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
+			  ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
+			  ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+		},this);
+
+		return this;
+	};
+
+	graphModule.directive('graphItem', ['$compile', '$parse', function ($compile, $parse) {
+		console.log("creating directive graphItem");
+
+		return {
+			restrict: 'E',
+			replace: true,
+			scope: true,
+			'require': '?ngModel',
+			templateUrl: 'templates/viewItem.ejs',
+			link: function (scope, element, attrs, model, ctrl) {
+
+				if (!model)
+					return;
+
+				var mdl = $parse(attrs.ngModel);
+				var viewItem = mdl( scope.$parent );
+				scope.dnd = new DndHandlerNu(viewItem, itemMoved);
+
+				element.bind('drag', scope.dnd.drag);
+				element.bind('dragend', scope.dnd.dragEnd);
+				element.bind('dragstart', scope.dnd.dragStart);
+				element.bind('dragover', scope.dnd.dragOver);
+				element.bind('drop', scope.dnd.drop);
+
+				var pos = viewItem.position();
+				element.css("left", pos.x);
+				element.css("top", pos.y);
+
+				model.$render = function () {
+					/// redisplay the item inside the view
+					console.log('$render');
+					console.dir(this.$modelValue);
+					if (this.$modelValue) {
+						var vitem = this.$modelValue;
+						//var jsonObj = angular.fromJson( jsonText );
+						if (vitem) {
+							//scope.viewItem = vitem;
+						}
+					}
+				}
+			}
+		};
+	}]);
+
+})( angular.module('graphOmatic.directives'));

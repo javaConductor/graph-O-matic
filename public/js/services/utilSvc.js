@@ -2,7 +2,7 @@
 
 (function (services) {
 
-    services.factory('utilityFunctions', ['$http', '$location', function ($http, $location) {
+    services.factory('UtilityFunctions', ['$http', '$location', function ($http, $location) {
         /// return the util funcs
         return {
 

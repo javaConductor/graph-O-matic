@@ -1,59 +1,58 @@
-var graphModule = angular.module('graphOmatic.directives');
-graphModule.directive('graphView', ['$compile', '$timeout', function ($compile, $timeout) {
-    console.log("creating directive graphView");
+//var graphModule = ;
+(function(graphModule){
 
-    return {
-        restrict:'E',
-        replace:true,
-        controller: "GraphItemController",
-        scope:{localModel: "="},
-        'require':'?ngModel',
-        link:function (scope, element, attrs, model) {
-            if (!model)
-                return;
-            element = angular.element(element);
 
-            // called when data value changes(like a watch)
-            var textPromise;
-            // called when data value changes(like a watch)
-            model.$render = function () {
-                console.log('$render');
-                console.dir(this.$modelValue);
-                if(this.$modelValue){
-                    var graphOptions = this.$modelValue;
-                    //var jsonObj = angular.fromJson( jsonText );
-                    if(graphOptions){
-                        var nuElem = angular.element("<div></div>");
-                        addItems(jsonObj, graphOptions);
-                        element.html(nuElem);
-                    }
-                }
-            };
-            /// get ViewData from the parent scope
-            var modelVar = attrs.ngModel;
-            var viewData = scope.$parent.$eval(modelVar);
-            /// add it to the scope in a bidirectional way.
-            scope.viewData = viewData;
-            //determine template
-            var t = '<svg><svg xmlns="http://www.w3.org/2000/svg" version="1.1" height="400" width="450">'+
-                "   <graph-item ng-repeat='item in viewData.items' id='item.id' ng-model='item' data-id='{{item.id}}' >" +
-                "   </graph-item>" +
-                "   <graph-relationship ng-repeat='relationship in viewData.relationships'  ng-model='relationship' data-id='{{relationship.id}}' >" +
-                "   </graph-relationship>" +
-                "</svg>";
-            //template meets data
-            element.html($compile(t)(scope));
-            //listen to changes in the text box
-            (element).find('.verseSpec').bind('keyup change', function (e) {
-                updateVerseSpec(e.target.value);
-            });
-        }
-    };
-}]);
-/**
- * Created with JetBrains WebStorm.
- * User: lcollins
- * Date: 4/28/13
- * Time: 3:10 PM
- * To change this template use File | Settings | File Templates.
- */
+	graphModule.directive('graphView', ['$compile', '$parse', function ($compile, $parse) {
+		console.log("creating directive graphView");
+
+		var itemElementMap = {};
+		function addItems(parentElement, viewItems, f){
+			viewItems.forEach(function(vitem){
+				var el = angular.element("<graph-item></graph-item>");
+				el.attr( 'id', vitem.id );
+				el.attr("ng-model", "vi"+vitem.id );
+				itemElementMap[vitem.id] = el;
+				el = f(el, vitem);
+				parentElement.append(el);
+			});
+		};
+
+		return {
+			restrict: 'E',
+			replace: true,
+			//controller: "GraphViewController",
+			scope: true,
+			'require':'?ngModel',
+			link:function (scope, element, attrs, model) {
+				if (!model)
+					return;
+				/// find our view in the scope
+				var mdl = $parse(attrs.ngModel);
+				scope.view = mdl(scope);
+				//
+				addItems(element, scope.view.items, function(nuElem, viewItem){
+					scope["vi"+viewItem.id] = viewItem;
+					return nuElem;
+				});
+
+				// called when data value changes(like a watch)
+				model.$render = function () {
+					console.log('$render');
+					console.dir(this.$modelValue);
+					if(this.$modelValue){
+						var viewData = this.$modelValue;
+						if(viewData){
+							var nuElem = angular.element("<div></div>");
+							addItems(nuElem, viewData.items, function(el, viewItem){
+								scope["vi"+viewItem.id] = viewItem;
+								return (el);
+							});
+
+							element.html($compile(nuElem)(scope));
+						}
+					}
+				};
+			}
+		};
+	}]);
+})(angular.module('graphOmatic.directives'));

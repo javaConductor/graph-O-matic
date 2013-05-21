@@ -161,7 +161,7 @@
 						var vitem = this.$modelValue;
 						//var jsonObj = angular.fromJson( jsonText );
 						if (vitem) {
-							//scope.viewItem = vitem;
+							scope.viewItem = vitem;
 						}
 					}
 				}

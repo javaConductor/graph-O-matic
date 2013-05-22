@@ -28,7 +28,7 @@ function ViewCtrl($scope, view){
 		return {width: viewItem.width(), height: viewItem.height() };
 	};
 
-	$scope.viewItem = {
+	var  viewItem = {
 		item : {id: "item1", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem1",
 		width: function(){
@@ -75,7 +75,8 @@ function ViewCtrl($scope, view){
 			];
 		}
 	};
-	$scope.viewItem2 = {
+
+	var viewItem2 = {
 		item : {id: "item2", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem2",
 		width: function(){
@@ -125,12 +126,60 @@ function ViewCtrl($scope, view){
 			];
 		}
 	};
+	var viewItem3 = {
+		item : {id: "item3", itemType:{ id: "it2", name:"Person"} },
+		id: "vitem3",
+		width: function(){
+			return this.showDetails() ? $scope._fullWidth : $scope._width;
+		},
+		height: function(){
+			return this.showDetails() ? $scope._fullHeight : $scope._height;
+		},
+		_showDetails : true,
+		showDetails: function(){
+			if (arguments.length > 0){
+				$scope.$apply(function(){
+					this._showDetails =  ! ! arguments[0];// make bool
+				});
+			}
+			return this._showDetails;
+		},
+
+		position: function(){
+			return {x: 550, y: 150};
+		},
+		style: function(){
+			return {};
+		},
+		title: function(){
+			return "Ruby V. Collins";
+		},
+		description: function() {
+			return "Mom";
+		},
+		image: function(){
+			return "/images/stickmanface.jpeg";
+		},
+		data: function(){
+			return [
+				{name:"Firstname", value:"Ruby"},
+				{name:"Lastname", value:"Collins"},
+				{name:"Email", value:"mom@me.us"},
+				{name:"Address", value:"11302 S Normal Av"},
+				{name:"City", value:"Chicago"},
+				{name:"State", value:"IL"},
+				{name:"Home Phone", value : "7738215589"},
+				{name:"Work Phone", value : "7736672626"}
+			];
+		}
+	};
+
 	$scope.view = {
 		name:"Test View",
 		id:"testview1",
-		items:[$scope.viewItem, $scope.viewItem2],
+		items:[viewItem, viewItem2, viewItem3],
 		relationships:[],
-		currentView: $scope.viewItem2
+		currentView: viewItem2
 	}
 }
 

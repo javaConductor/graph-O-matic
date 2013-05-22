@@ -12,9 +12,28 @@
 				el.attr( 'id', vitem.id );
 				el.attr("ng-model", "vi"+vitem.id );
 				itemElementMap[vitem.id] = el;
-				el = f(el, vitem);
+				el = f( el, vitem );
 				parentElement.append(el);
 			});
+		};
+
+		var createRelationshipLine = function(fromConnectorElement, toConnectorElement, relationship){
+			var div = angular.element("<div></div>");
+			div.attr("style", "position:absolute");
+			var svg = angular.element("<svg></svg>");
+			var line = angular.element("<line></line>");
+
+			var toOff = toConnectorElement.offset();
+			var fromOff = fromConnectorElement.offset();
+
+			line.attr("x1", fromOff.left);
+			line.attr("y1", fromOff.top);
+			line.attr("x2", toOff.left);
+			line.attr("y2", toOff.top);
+			line.attr("style", "stroke:rgb(255,0,0);stroke-width:2");
+			div.append(svg);
+			svg.append(line);
+			return div;
 		};
 
 		return {

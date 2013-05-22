@@ -1,87 +1,90 @@
+(function (graphModule) {
 
+	var cx = 60, cy = 60;
+	var createRelationshipNode = function (relationship) {
+		var g = angular.element("<g></g>");
+		var l = angular.element("<line></line>").
+		  attr('style', relationship.type.style());
+	};
 
-/*
- Should look like this:
- <graphView  ng-model='A1234Z'  height='500' width='800' />
+	graphModule.directive('graphRelationship', ['$compile', '$timeout', '$parse', 'UtilityFunctions',
+		function ($compile, $timeout, $parse, util) {
+			console.log("creating directive graphItem");
 
- should turn into:
+			var Constants = {
+				ViewItemIdPrefix: 'vi',
+				ViewItemMovedEvent: "ViewItemMoved"
+			};
+			var getConnectors = function (el) {
+				var ret = [];
+				/// look for .connector in el
+				$('.connector').each(function (idx, connEl) {
+					ret.push(connEl);
+				});
+				return ret;
+			}
 
- <g class="draggable">
+			var positionRelationship = function (fromEl, toEl, svgEl) {
+				var fromConnectors = getConnectors(fromEl);
+				var toConnectors = getConnectors(toEl);
 
- <rect x="10" y="10" height="100" width="100"
- style="stroke:#006600; fill: #00cc00">    	</rect>
- <image x="20" y="5" width="80" height="80"
- xlink:href="http://jenkov.com/images/layout/top-bar-logo.png" />
- <foreignObject class="node" x="46" y="22" width="200" height="300">
- <body xmlns="http://www.w3.org/1999/xhtml">
- <table>
- <thead><tr><th cols="2" >{{itemType.name}}</th></tr></thead>
+				var shortestPoints = [];
+				var shortestDistance = 0;
 
- </table>
- </body>
- </foreignObject>
- <text y="100" style="stroke:#00ffff; fill: #00ffff">
- <tspan dy="25" y="50" x="15">tspan line 0</tspan>
- <tspan dy="25" y="70" x="15">tspan line 1</tspan>
- </text>
+				fromConnectors.forEach(function (fromConn) {
 
- </g>
- */
-var cx = 60, cy = 60;
-var createItemNode = function(svgElement, viewItem){
-    var g = angular.element("<g></g>");
-    var r = angular.element("rect").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
-        attr('height', cy ).
-        attr('width', cx );
+					toConnectors.forEach(function (toConn) {
+						var distance = util.distance(fromConn.offset(), toConn.offset());
 
-    var img = angular.element("image").
-        attr('x', viewItem.position.x ).
-        attr('y', viewItem.position.y).
-        attr('height', cy ).
-        attr('width', cx-20 );
+						if (!shortestDistance || shortestDistance > distance) {
+							shortestPoints = [fromConn.offset(), toConn.offset()];
+							shortestDistance = distance;
+						}
+					})
+				})
+				svgEl.find("line").attr("x1", shortestPoints[0].x + 15)
+				  .attr("y1", shortestPoints[0].y + 15)
+				  .attr("x2", shortestPoints[1].x + 15)
+				  .attr("y2", shortestPoints[1].y + 15);
 
+			};
 
-};
+			return {
+				restrict: 'E',
+				replace: true,
+				scope: true,
+				'require': '?ngModel',
+				link: function (scope, element, attrs, model) {
+					if (!model)
+						return;
 
-var graphModule = angular.module('graphOmatic.directives');
+					var mdl = $parse(Constants.ViewItemIdPrefix + attrs.from);
+					var fromViewItem = mdl(scope.$parent);
 
-graphModule.directive('graphRelationship', ['$compile', '$timeout', function ($compile, $timeout) {
-    console.log("creating directive graphItem");
+					mdl = $parse(Constants.ViewItemIdPrefix + attrs.to);
+					var toViewItem = mdl(scope.$parent);
 
+					mdl = $parse(Constants.ViewItemIdPrefix + attrs.relationship);
+					var relationship = mdl(scope.$parent);
 
+					var line = createRelationshipNode(relationship);
+					var fromEl = $(Constants.ViewItemIdPrefix + fromViewItem.id);
+					var toEl = $(Constants.ViewItemIdPrefix + toViewItem.id);
 
-    return {
-        restrict:'E',
-        replace:true,
-        scope:true,
-        'require':'?ngModel',
-        template: '<svg><rect cx="50" cy="50" x="100" y="100" color="black" ></rect></svg>',
-        link : function(scope, element, attrs, model){
-            /// Can we use this to update the screen for each item ???
-            model.$render = function () {
-                /// redisplay the item inside the view
-                console.log('$render');
-                console.dir(this.$modelValue);
-                if ( this.$modelValue ){
-                    var graphOptions = this.$modelValue;
-                    //var jsonObj = angular.fromJson( jsonText );
-                    if ( graphOptions ){
-                        var nuElem = angular.element("<div></div>");
-                        addItems(jsonObj, graphOptions);
-                        element.html(nuElem);
-                    }
-                }
-            }
-        }
+					positionRelationship(fromEl, toEl, line);
 
-    };
-}]);
-/**
- * Created with JetBrains WebStorm.
- * User: lcollins
- * Date: 4/28/13
- * Time: 4:00 PM
- * To change this template use File | Settings | File Templates.
- */
+					var handler = function (nuPos) {
+						positionRelationship(fromEl, toEl, line);
+					};
+					scope.$on(Constants.ViewItemMovedEvent + fromViewItem.id, handler);
+					scope.$on(Constants.ViewItemMovedEvent + toViewItem.id, handler);
+					element.append(line);
+					/// Can we use this to update the screen for each item ???
+					model.$render = function () {
+						/// redisplay the item inside the view
+					}
+				}
+			};
+		}])
+})(angular.module('graphOmatic.directives'));
+

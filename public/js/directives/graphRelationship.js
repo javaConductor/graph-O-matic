@@ -7,14 +7,10 @@
 		  attr('style', relationship.type.style());
 	};
 
-	graphModule.directive('graphRelationship', ['$compile', '$timeout', '$parse', 'UtilityFunctions',
-		function ($compile, $timeout, $parse, util) {
+	graphModule.directive('graphRelationship', ['$compile', '$timeout', '$parse', 'UtilityFunctions', 'ConstantsService',
+		function ($compile, $timeout, $parse, util, constants) {
 			console.log("creating directive graphItem");
 
-			var Constants = {
-				ViewItemIdPrefix: 'vi',
-				ViewItemMovedEvent: "ViewItemMoved"
-			};
 			var getConnectors = function (el) {
 				var ret = [];
 				/// look for .connector in el
@@ -41,43 +37,47 @@
 							shortestDistance = distance;
 						}
 					})
-				})
-				svgEl.find("line").attr("x1", shortestPoints[0].x + 15)
+				});
+
+				svgEl.find("line")
+				  .attr("x1", shortestPoints[0].x + 15)
 				  .attr("y1", shortestPoints[0].y + 15)
 				  .attr("x2", shortestPoints[1].x + 15)
 				  .attr("y2", shortestPoints[1].y + 15);
-
 			};
 
 			return {
 				restrict: 'E',
 				replace: true,
-				scope: true,
-				'require': '?ngModel',
+				scope: {
+					from: '@',
+					to: '@',
+					relationship: '@'
+				},
 				link: function (scope, element, attrs, model) {
 					if (!model)
 						return;
 
-					var mdl = $parse(Constants.ViewItemIdPrefix + attrs.from);
+					var mdl = $parse(constants.ViewItemIdPrefix + attrs.from);
 					var fromViewItem = mdl(scope.$parent);
 
-					mdl = $parse(Constants.ViewItemIdPrefix + attrs.to);
+					mdl = $parse(constants.ViewItemIdPrefix + attrs.to);
 					var toViewItem = mdl(scope.$parent);
 
-					mdl = $parse(Constants.ViewItemIdPrefix + attrs.relationship);
+					mdl = $parse(constants.ViewItemIdPrefix + attrs.relationship);
 					var relationship = mdl(scope.$parent);
 
 					var line = createRelationshipNode(relationship);
-					var fromEl = $(Constants.ViewItemIdPrefix + fromViewItem.id);
-					var toEl = $(Constants.ViewItemIdPrefix + toViewItem.id);
+					var fromEl = $(constants.ViewItemIdPrefix + fromViewItem.id);
+					var toEl = $(constants.ViewItemIdPrefix + toViewItem.id);
 
 					positionRelationship(fromEl, toEl, line);
 
-					var handler = function (nuPos) {
+					var moveHandler = function (nuPos) {
 						positionRelationship(fromEl, toEl, line);
 					};
-					scope.$on(Constants.ViewItemMovedEvent + fromViewItem.id, handler);
-					scope.$on(Constants.ViewItemMovedEvent + toViewItem.id, handler);
+					scope.$on(constants.ViewItemMovedEvent + fromViewItem.id, moveHandler);
+					scope.$on(constants.ViewItemMovedEvent + toViewItem.id, moveHandler);
 					element.append(line);
 					/// Can we use this to update the screen for each item ???
 					model.$render = function () {
@@ -87,4 +87,3 @@
 			};
 		}])
 })(angular.module('graphOmatic.directives'));
-

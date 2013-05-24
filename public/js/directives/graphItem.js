@@ -131,40 +131,49 @@
 		return {
 			restrict: 'E',
 			replace: true,
+			require:'?ngModel',
 			scope: true,
-			'require': '?ngModel',
 			templateUrl: 'templates/viewItem.ejs',
 			link: function (scope, element, attrs, model, ctrl) {
 
+				console.log("graphItem.link(): ENTER.");
 				if (!model)
 					return;
 
 				var mdl = $parse(attrs.ngModel);
+				console.log("graphItem.link(): Got model getter func.");
 				var viewItem = mdl( scope.$parent );
-				scope.dnd = new DndHandlerNu(viewItem, itemMoved);
+				console.log("graphItem.link(): Got viewItem from scope.");
+				var dnd = new DndHandlerNu(viewItem, itemMoved);
+				console.log("graphItem.link(): Created Dnd obj.");
 
-				element.bind('drag', scope.dnd.drag);
-				element.bind('dragend', scope.dnd.dragEnd);
-				element.bind('dragstart', scope.dnd.dragStart);
-				element.bind('dragover', scope.dnd.dragOver);
-				element.bind('drop', scope.dnd.drop);
+				element.bind('drag', dnd.drag);
+				element.bind('dragend', dnd.dragEnd);
+				element.bind('dragstart', dnd.dragStart);
+				element.bind('dragover', dnd.dragOver);
+				element.bind('drop', dnd.drop);
+				console.log("graphItem.link(): Setup Dnd functions.");
 
 				var pos = viewItem.position();
 				element.css("left", pos.x);
 				element.css("top", pos.y);
+				console.log("graphItem.link(): Set item pos.");
 
-				model.$render = function () {
-					/// redisplay the item inside the view
-					console.log('$render');
-					console.dir(this.$modelValue);
-					if (this.$modelValue) {
-						var vitem = this.$modelValue;
-						//var jsonObj = angular.fromJson( jsonText );
-						if (vitem) {
-							scope.viewItem = vitem;
+				if (model)
+					model.$render = function () {
+						/// redisplay the item inside the view
+						console.log('graphItem.$render: ENTER.');
+	//					console.dir(this.$modelValue);
+						if (this.$modelValue) {
+							var vitem = this.$modelValue;
+							if (vitem) {
+								scope.viewItem = vitem;
+								console.dir( vitem );
+							}
 						}
+						console.log('graphItem.$render: EXIT.');//
 					}
-				}
+				console.log("graphItem.link(): EXIT.");
 			}
 		};
 	}]);

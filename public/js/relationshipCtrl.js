@@ -7,7 +7,7 @@
 /*
 <graph-view ng-model="sampleView"  />
  */
-function ViewCtrl($scope, view){
+function RelationshipCtrl($scope, view){
 
 	$scope.itemMoved = function(item, x, y){
 		console.log("itemMoved");
@@ -40,9 +40,9 @@ function ViewCtrl($scope, view){
 		_showDetails : true,
 		showDetails: function(){
 			if (arguments.length > 0){
-				//$scope.$apply(function(){
+				$scope.$apply(function(){
 					this._showDetails =  ! ! arguments[0];// make bool
-			//	});
+				});
 			}
 			return this._showDetails;
 		},
@@ -138,9 +138,9 @@ function ViewCtrl($scope, view){
 		_showDetails : true,
 		showDetails: function(){
 			if (arguments.length > 0){
-				//$scope.$apply(function(){
+				$scope.$apply(function(){
 					this._showDetails =  ! ! arguments[0];// make bool
-				//});
+				});
 			}
 			return this._showDetails;
 		},
@@ -174,13 +174,46 @@ function ViewCtrl($scope, view){
 		}
 	};
 
-	$scope.view = {
-		name:"Test View",
-		id:"testview1",
-		items:[viewItem, viewItem2, viewItem3],
-		relationships:[],
-		currentView: viewItem2
-	}
+
+	$scope.relationshipType= {
+		id: 'relType1',
+		name: 'Father',
+		categoryId: "peo001",
+		style: function(){
+			return "";
+		},
+		properties: function(){
+			// return value should include all of the properties defined in the parent type
+		},
+		data: function(){
+			return {};
+		},
+		composite: function(){},
+		bidirectional: function(){},
+		reverseTypeId :  null,
+		temporal: function(){
+			/// does this rel have effective dates?
+			return false;
+		},
+		constraints: function(){
+			/// returns a list of objects
+		}
+	};
+
+	$scope.relationship = {
+		id: 'rel1',
+		type: {
+			lineStyle : function() {
+				return "stroke: blue; stroke-width: 3;";
+			},
+			labelStyle : function() {
+				return "stroke: red; stroke-width: 3";
+			}
+		},
+		data: function(){
+			return {};
+		}
+	};
 }
 
-ViewCtrl.$inject = [ "$scope", "View" ];
+RelationshipCtrl.$inject = [ "$scope", "View" ];

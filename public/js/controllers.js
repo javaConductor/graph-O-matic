@@ -33,6 +33,9 @@ function GraphOMaticCtrl($scope, World) {
         "</graphItem>" +
         "<graphRelationship ng-repeat='relationship in viewData.relationships'  ng-model='relationship' data-item-id='{{relationship.id}}' >" +
         "</graphItem>";
+	var findViewTab = function(viewId){
+
+	};
 
 	$scope.open = function(viewId){
 

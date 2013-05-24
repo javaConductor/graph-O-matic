@@ -6,6 +6,7 @@ angular.module('graphOmatic', ['graphOmatic.directives', 'GraphOMaticServices'])
 	config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {
 	$routeProvider.
 	  when('/', {templateUrl:'index', controller:GraphOMaticCtrl}).
+	  when('/testRelationship', {templateUrl:'testRelationship',controller:RelationshipCtrl}).
 	  when('/testViewItem', {templateUrl:'testViewItem', controller:ViewItemCtrl}).
 	  when('/testView', { controller:ViewCtrl});
 	$routeProvider.otherwise({redirectTo:'/'});

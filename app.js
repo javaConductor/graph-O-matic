@@ -29,6 +29,7 @@ app.configure('development', function(){
 
 app.get('/', routes.index);
 app.get('/testViewItem', routes.testViewItem);
+app.get('/testRelationship', routes.testRelationship);
 app.get('/testView', routes.testView);
 app.get('/users', user.list);
 

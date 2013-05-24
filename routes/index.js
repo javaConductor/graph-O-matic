@@ -14,3 +14,6 @@ exports.testViewItem = function(req, res){
 exports.testView = function(req, res){
 	res.render('testView', { title: 'Graph-O-Matic View Test Page' });
 };
+exports.testRelationship = function(req, res){
+	res.render('testRelationship', { title: 'Graph-O-Matic Relationship Test Page' });
+};

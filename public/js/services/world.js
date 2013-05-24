@@ -215,6 +215,11 @@
 				itemTypesForItems: function (itemIdList) {
 
 				},
+				findRelatedImages:function(item, f){
+
+					//f(items)
+
+				},
 
 				views: function (f) {
 					// an object key=view name, value=view id

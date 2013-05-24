@@ -29,12 +29,12 @@
 
 <body ng-app="graphOmatic" >
 
-<p></p>
-<div ng-controller="ViewItemCtrl">
-	<graph-item ng-model="viewItem" ></graph-item>
-	<graph-item ng-model="viewItem2" ></graph-item>
-</div>
-<span>AFTER</span><p></p>
+	<p></p>
+	<div ng-controller="RelationshipCtrl">
+		<graph-item ng-model="viewItem" ></graph-item>
+		<graph-item ng-model="viewItem2" ></graph-item>
+		<graph-relationship to='viewItem' from='viewItem2' relationship='relationship'></graph-relationship>
+	</div>
 
 </body>
 </html>

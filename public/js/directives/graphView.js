@@ -1,8 +1,7 @@
 //var graphModule = ;
 (function(graphModule){
 
-
-	graphModule.directive('graphView', ['$compile', '$parse', function ($compile, $parse) {
+	graphModule.directive('graphView', ['$compile', '$parse', 'ConstantsService', function ($compile, $parse, constants ) {
 		console.log("creating directive graphView");
 
 		var itemElementMap = {};
@@ -10,7 +9,7 @@
 			viewItems.forEach(function(vitem){
 				var el = angular.element("<graph-item></graph-item>");
 				el.attr( 'id', vitem.id );
-				el.attr("ng-model", "vi"+vitem.id );
+				el.attr("ng-model", constants.ViewItemIdPrefix + vitem.id );
 				itemElementMap[vitem.id] = el;
 				el = f( el, vitem );
 				parentElement.append(el);
@@ -50,7 +49,7 @@
 				scope.view = mdl(scope);
 				//
 				addItems(element, scope.view.items, function(nuElem, viewItem){
-					scope["vi"+viewItem.id] = viewItem;
+					scope[constants.ViewItemIdPrefix + viewItem.id] = viewItem;
 					return nuElem;
 				});
 
@@ -63,7 +62,7 @@
 						if(viewData){
 							var nuElem = angular.element("<div></div>");
 							addItems(nuElem, viewData.items, function(el, viewItem){
-								scope["vi"+viewItem.id] = viewItem;
+								scope[constants.ViewItemIdPrefix + viewItem.id] = viewItem;
 								return (el);
 							});
 

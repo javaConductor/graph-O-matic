@@ -202,6 +202,9 @@ function RelationshipCtrl($scope, view){
 
 	$scope.relationship = {
 		id: 'rel1',
+		to: 'viewItem2',
+		from: 'viewItem3',
+
 		type: {
 			lineStyle : function() {
 				return "stroke: blue; stroke-width: 3;";

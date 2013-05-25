@@ -1,14 +1,7 @@
 (function (graphModule) {
-
 	var cx = 60, cy = 60;
-	var createRelationshipNode = function (relationship) {
-		var g = angular.element("<g></g>");
-		var l = angular.element("<line></line>").
-		  attr('style', relationship.type.style());
-	};
-
-	graphModule.directive('graphRelationship', ['$compile', '$timeout', '$parse', 'UtilityFunctions', 'ConstantsService',
-		function ($compile, $timeout, $parse, util, constants) {
+	graphModule.directive('graphRelationship', ['$rootScope', '$compile', '$timeout', '$parse', 'UtilityFunctions', 'ConstantsService',
+		function (rootScope, $compile, $timeout, $parse, util, constants) {
 			console.log("creating directive graphItem");
 
 			var getConnectors = function (el) {
@@ -45,40 +38,70 @@
 				  .attr("x2", shortestPoints[1].x + 15)
 				  .attr("y2", shortestPoints[1].y + 15);
 			};
+			var createRelationshipNode = function(fromConnectorElement,
+												  toConnectorElement,
+												  relationship){
+				var div = angular.element("<div></div>");
+				var svg = angular.element("<svg></svg>");
+				var line = angular.element("<line></line>");
+
+				var toOff = toConnectorElement.offset();
+				var fromOff = fromConnectorElement.offset();
+
+				line.attr("x1", fromOff.left);
+				line.attr("y1", fromOff.top);
+				line.attr("x2", toOff.left);
+				line.attr("y2", toOff.top);
+				line.attr("style", relationship.type.lineStyle());
+				div.append(svg);
+				svg.append(line);
+				return div;// maybe just return the svg
+			};
 
 			return {
 				restrict: 'E',
 				replace: true,
-				scope: {
-					from: '@',
-					to: '@',
-					relationship: '@'
-				},
+				scope: true,
 				link: function (scope, element, attrs, model) {
-					if (!model)
-						return;
+					console.log("graphRelationship.link("+scope.$id+"): ENTER.");
 
-					var mdl = $parse(constants.ViewItemIdPrefix + attrs.from);
-					var fromViewItem = mdl(scope.$parent);
+					var mdl = $parse( attrs.from);
+					var fromViewItem = mdl(rootScope);
 
-					mdl = $parse(constants.ViewItemIdPrefix + attrs.to);
-					var toViewItem = mdl(scope.$parent);
+					mdl = $parse( attrs.to);
+					var toViewItem = mdl(rootScope);
 
-					mdl = $parse(constants.ViewItemIdPrefix + attrs.relationship);
-					var relationship = mdl(scope.$parent);
+					mdl = $parse( attrs.relationship);
+					var relationship = mdl(rootScope);
 
-					var line = createRelationshipNode(relationship);
+					console.log("graphRelationship.link("+scope.$id+"): to, from and relationship:");
+					console.dir(toViewItem);
+					console.dir(fromViewItem);
+					console.dir(relationship);
+
+					console.log("graphRelationship.link("+scope.$id+"): Creating relationship node.");
+					// these elements should already be in the DOM
 					var fromEl = $(constants.ViewItemIdPrefix + fromViewItem.id);
 					var toEl = $(constants.ViewItemIdPrefix + toViewItem.id);
+					// Create the visual representation of the relationship
+					var line = createRelationshipNode(fromEl, toEl, relationship);
+					console.log("graphRelationship.link("+scope.$id+"): element for to, from and relationship:");
+					console.dir(toEl);
+					console.dir(fromEl);
+					console.dir(line);
 
 					positionRelationship(fromEl, toEl, line);
 
 					var moveHandler = function (nuPos) {
+						console.log("graphRelationship.link("+scope.$id+").moveHandler("+nuPos+"): one of the endpoints moved.:");
+						console.dir(toEl, fromEl, line);
 						positionRelationship(fromEl, toEl, line);
 					};
+
 					scope.$on(constants.ViewItemMovedEvent + fromViewItem.id, moveHandler);
 					scope.$on(constants.ViewItemMovedEvent + toViewItem.id, moveHandler);
 					element.append(line);
+					console.log("graphRelationship.link("+scope.$id+"): Added line to DOM");
 					/// Can we use this to update the screen for each item ???
 					model.$render = function () {
 						/// redisplay the item inside the view

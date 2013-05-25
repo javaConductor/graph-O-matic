@@ -2,7 +2,7 @@
 
 (function (services) {
 
-    services.factory('UtilityFunctions', ['$http', '$location', function ($http, $location) {
+    services.factory('UtilityFunctions', ['$http', '$location', 'ConstantsService', function ($http, $location, constants) {
         /// return the util funcs
         return {
 
@@ -56,8 +56,15 @@
 				ys = ys * ys;
 
 				return Math.sqrt( xs + ys );
-			}
+			},
 
+			viewItemIdToScopeName: function(viewItemId){
+				return constants.ViewItemIdPrefix + viewItemId;
+			},
+
+			relationshipIdToScopeName: function(relId){
+				return constants.RelationshipIdPrefix + relId;
+			}
 	}
     }]);
 

@@ -7,6 +7,9 @@
 
 function ViewItemCtrl($scope){
 
+
+	console.log("ViewItemCtrl("+$scope.$id+"): ENTER.");
+
 	$scope.itemMoved = function(item, x, y){
 		console.log("itemMoved");
 	};
@@ -23,7 +26,9 @@ function ViewItemCtrl($scope){
 		return 'height:'+viewItem.height()+';';
 	};
 	$scope.widthAndHeightStyle = function(viewItem){
-		return {width: viewItem.width(), height: viewItem.height() };
+		return {
+			width: viewItem.width(),
+			height: viewItem.height() };
 	};
 
 	$scope.viewItem = {
@@ -123,6 +128,9 @@ function ViewItemCtrl($scope){
 			];
 		}
 	};
+
+	console.log("ViewItemCtrl("+$scope.$id+"): EXIT.");
+
 }
 
 ViewItemCtrl.$inject  = ["$scope"];

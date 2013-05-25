@@ -174,11 +174,28 @@ function ViewCtrl($scope, view){
 		}
 	};
 
+
+
+	var relationship = {
+		id: 'rel1',
+		type: {
+			lineStyle : function() {
+				return "stroke: blue; stroke-width: 3;";
+			},
+			labelStyle : function() {
+				return "stroke: red; stroke-width: 3";
+			}
+		},
+		data: function(){
+			return {};
+		}
+	};
+
 	$scope.view = {
 		name:"Test View",
 		id:"testview1",
 		items:[viewItem, viewItem2, viewItem3],
-		relationships:[],
+		relationships:[relationship],
 		currentView: viewItem2
 	}
 }

@@ -7,8 +7,9 @@
 (function (services) {
 
 	var Constants = {
-		ViewItemIdPrefix: 'vi',
-		ViewItemMovedEvent: "ViewItemMoved"
+		ViewItemIdPrefix: 'vi_',
+		ViewItemMovedEvent: "ViewItemMoved",
+		RelationshipIdPrefix:"rel_"
 	};
 
 	services.factory('ConstantsService', ['$resource', '$location', function ($resource, $location) {

@@ -136,33 +136,33 @@
 			templateUrl: 'templates/viewItem.ejs',
 			link: function (scope, element, attrs, model, ctrl) {
 
-				console.log("graphItem.link(): ENTER.");
+				console.log("graphItem.link(("+scope.$id+")): ENTER.");
 				if (!model)
 					return;
 
 				var mdl = $parse(attrs.ngModel);
-				console.log("graphItem.link(): Got model getter func.");
-				var viewItem = mdl( scope.$parent );
-				console.log("graphItem.link(): Got viewItem from scope.");
+				console.log("graphItem.link(("+scope.$id+")): Got model getter func.");
+				var viewItem = mdl( scope );
+				console.log("graphItem.link(("+scope.$id+")): Got viewItem from scope.");
 				var dnd = new DndHandlerNu(viewItem, itemMoved);
-				console.log("graphItem.link(): Created Dnd obj.");
+				console.log("graphItem.link(("+scope.$id+")): Created Dnd obj.");
 
 				element.bind('drag', dnd.drag);
 				element.bind('dragend', dnd.dragEnd);
 				element.bind('dragstart', dnd.dragStart);
 				element.bind('dragover', dnd.dragOver);
 				element.bind('drop', dnd.drop);
-				console.log("graphItem.link(): Setup Dnd functions.");
+				console.log("graphItem.link(("+scope.$id+")): Setup Dnd functions.");
 
 				var pos = viewItem.position();
 				element.css("left", pos.x);
 				element.css("top", pos.y);
-				console.log("graphItem.link(): Set item pos.");
+				console.log("graphItem.link(("+scope.$id+")): Set item pos.");
 
 				if (model)
 					model.$render = function () {
 						/// redisplay the item inside the view
-						console.log('graphItem.$render: ENTER.');
+						console.log('graphItem('+scope.$id+').$render: ENTER.');
 	//					console.dir(this.$modelValue);
 						if (this.$modelValue) {
 							var vitem = this.$modelValue;
@@ -171,9 +171,9 @@
 								console.dir( vitem );
 							}
 						}
-						console.log('graphItem.$render: EXIT.');//
+						console.log('graphItem('+scope.$id+').$render: EXIT.');
 					}
-				console.log("graphItem.link(): EXIT.");
+				console.log("graphItem.link("+scope.$id+"): EXIT.");
 			}
 		};
 	}]);

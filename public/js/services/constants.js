@@ -7,14 +7,16 @@
 (function (services) {
 
 	var Constants = {
-		ViewItemIdPrefix: 'vi_',
+		ViewItemIdScopePrefix: 'vi_',
+		ViewItemElementIdPrefix: 'vi_el_',
 		ViewItemMovedEvent: "ViewItemMoved",
-		RelationshipIdPrefix:"rel_"
+		RelationshipIdPrefix:"rel_",
+		RelationshipElementIdPrefix:"rel_el_"
 	};
 
 	services.factory('ConstantsService', ['$resource', '$location', function ($resource, $location) {
 		return Constants;
 
 	}]);
-})(angular.module('GraphOMaticServices'));
 
+})(angular.module('GraphOMaticServices'));

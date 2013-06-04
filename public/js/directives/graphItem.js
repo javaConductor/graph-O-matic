@@ -125,57 +125,51 @@
 		return this;
 	};
 
-	graphModule.directive('graphItem', ['$compile', '$parse', function ($compile, $parse) {
+	graphModule.directive('graphItem', ['$compile', '$parse', 'UtilityFunctions', function ($compile, $parse, utils) {
 		console.log("creating directive graphItem");
 
 		return {
 			restrict: 'E',
 			replace: true,
-			require:'?ngModel',
 			scope: true,
+			'require': '?ngModel',
 			templateUrl: 'templates/viewItem.ejs',
-			link: function (scope, element, attrs, model, ctrl) {
+			link: function (scope, element, attrs, model) {
 
-				console.log("graphItem.link(("+scope.$id+")): ENTER.");
 				if (!model)
 					return;
 
 				var mdl = $parse(attrs.ngModel);
-				console.log("graphItem.link(("+scope.$id+")): Got model getter func.");
-				var viewItem = mdl( scope );
-				console.log("graphItem.link(("+scope.$id+")): Got viewItem from scope.");
-				var dnd = new DndHandlerNu(viewItem, itemMoved);
-				console.log("graphItem.link(("+scope.$id+")): Created Dnd obj.");
+				var viewItem = mdl( scope.$parent );
+				scope.dnd = new DndHandlerNu(viewItem, itemMoved);
 
-				element.bind('drag', dnd.drag);
-				element.bind('dragend', dnd.dragEnd);
-				element.bind('dragstart', dnd.dragStart);
-				element.bind('dragover', dnd.dragOver);
-				element.bind('drop', dnd.drop);
-				console.log("graphItem.link(("+scope.$id+")): Setup Dnd functions.");
+				element.bind('drag', scope.dnd.drag);
+				element.bind('dragend', scope.dnd.dragEnd);
+				element.bind('dragstart', scope.dnd.dragStart);
+				element.bind('dragover', scope.dnd.dragOver);
+				element.bind('drop', scope.dnd.drop);
 
+				/// set the ids of the connectors
+				element.find('.connector').each(function (idx, connEl) {
+					connEl = angular.element(connEl);
+					connEl.attr("id", utils.viewItemIdToConnectorId(viewItem.id, idx));
+				});
 				var pos = viewItem.position();
-				element.css("left", pos.x);
-				element.css("top", pos.y);
-				console.log("graphItem.link(("+scope.$id+")): Set item pos.");
+				element.css("left", pos.x+"px");
+				element.css("top", pos.y+"px");
 
-				if (model)
-					model.$render = function () {
-						/// redisplay the item inside the view
-						console.log('graphItem('+scope.$id+').$render: ENTER.');
-	//					console.dir(this.$modelValue);
-						if (this.$modelValue) {
-							var vitem = this.$modelValue;
-							if (vitem) {
-								scope.viewItem = vitem;
-								console.dir( vitem );
-							}
-						}
-						console.log('graphItem('+scope.$id+').$render: EXIT.');
+				model.$render = function () {
+					/// redisplay the item inside the view
+					console.log('$render');
+					console.dir(this.$modelValue);
+					if (this.$modelValue) {
+						scope.viewItem = this.$modelValue;
+						element.offset(utils.xy2topLeft( scope.viewItem.position()));
 					}
-				console.log("graphItem.link("+scope.$id+"): EXIT.");
+				}
 			}
 		};
 	}]);
+
 
 })( angular.module('graphOmatic.directives'));

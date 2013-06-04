@@ -15,12 +15,12 @@ services.factory('Directory', ['$http', '$location', function ($http, $location)
 	var dirUrl = urlPrefix + "directory";
 	var thiz = this;
 	this.directoryEntries = {};
-	$http({method: 'JSONP', params: {callback: 'JSON_CALLBACK'}, url: dirUrl}).
-		error(function (data, status, headers, config) {
-			return null;
-		}).success(function (data) {
-			thiz.directoryEntries = data;
-		});
+//	$http({method: 'JSONP', params: {callback: 'JSON_CALLBACK'}, url: dirUrl}).
+//		error(function (data, status, headers, config) {
+//			return null;
+//		}).success(function (data) {
+//			thiz.directoryEntries = data;
+//		});
 	return {
 		entries: function () {
 			return thiz.directoryEntries;

@@ -1,7 +1,8 @@
 //var graphModule = ;
 (function(graphModule){
 
-	graphModule.directive('graphView', ['$compile', '$parse', 'ConstantsService','Utilities', function ($compile, $parse, constants, utils ) {
+	graphModule.directive('graphView', ['$compile', '$parse', 'ConstantsService','UtilityFunctions','$timeout','RelationshipManager',
+		function ($compile, $parse, constants, utils, timer,relationshipMgr ) {
 		console.log("creating directive graphView");
 
 		var itemElementMap = {};
@@ -9,10 +10,12 @@
 		function addItems(parentElement, viewItems, f){
 			viewItems.forEach(function(vitem){
 				var el = angular.element("<graph-item></graph-item>");
-				el.attr( 'id', vitem.id );
+				el.attr( 'id', utils.viewItemIdToElementId( vitem.id ) );
 				el.attr("ng-model", utils.viewItemIdToScopeName( vitem.id ));
 				itemElementMap[vitem.id] = el;
 				el = f( el, vitem );
+				console.log("graphView.addItems(): added element:"+el.attr('id')+" ngModel:"+el.attr('ng-model'));
+
 				parentElement.append(el);
 			});
 		};
@@ -64,47 +67,48 @@
 			replace: true,
 			scope: true,
 			'require':'?ngModel',
+			templateUrl:'templates/view.ejs',
 			link:function (scope, element, attrs, model) {
 				if (!model)
 					return;
+
+				console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")): ENTER.");
+
 				/// find our view in the scope
 				var mdl = $parse(attrs.ngModel);
 				scope.view = mdl(scope);
+				console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")): scope.view:"+scope.view);
 
+				element.css("position","absolute");
 				///
-				addItems(element, scope.view.items, function(nuElem, viewItem){
-					scope[viewItemIdToScopeName(viewItem.id)] = viewItem;
-					return nuElem;
-				});
-
-				/// we should already have the relationships for the items
-				addRelationships(element, scope.view.relationships, function(nuElem, rel){
-					scope[relationshipIdToScopeName(rel.id)] = rel;
+				addItems(element.find('div.items'), scope.view.items, function(nuElem, viewItem){
+					scope[utils.viewItemIdToScopeName(viewItem.id)] = viewItem;
+					nuElem = $compile(nuElem)(scope);
 					return nuElem;
 				});
 
 				// called when data value changes(like a watch)
+				/// here is where we update the gui with new data
 				model.$render = function () {
-					console.log('$render');
+					console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")).$render: ENTER.");
 					console.dir(this.$modelValue);
 					if(this.$modelValue){
 						var viewData = this.$modelValue;
 						if(viewData){
-							var nuElem = element;//angular.element("<div></div>");
+							var nuElem = element.find('div.items'); //angular.element("<div draggable='true' class='draggable'></div>");
+							nuElem.html("");
 							addItems(nuElem, viewData.items, function(el, viewItem){
-								scope[constants.ViewItemIdPrefix + viewItem.id] = viewItem;
+								console.log("graphView.link-render(("+scope.$id+", phase:"+scope.$$phase+")): added item:"+el.attr("id") );
+								el = $compile(el)(scope);
 								return (el);
 							});
-							addRelationships( nuElem, viewData.relationships, function(el, rel){
-								addItemRelationship(rel.from, rel.id, false);
-								addItemRelationship(rel.to, rel.id, true);
-								scope[constants.RelationshipIdPrefix + rel.id] = rel;
-								return el;
-							});
-
-							element.html($compile(nuElem)(scope));
+//							element.html($compile(nuElem)(scope));
+							timer(function(){
+								relationshipMgr( element.find('svg.relationships'), viewData.relationships );
+							}, 1500, false);
 						}
 					}
+					console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")).$render: EXIT.");
 				};
 			}
 		};

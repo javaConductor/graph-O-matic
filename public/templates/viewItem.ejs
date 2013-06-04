@@ -1,10 +1,9 @@
 
-<div ng-cloak  draggable='true' id='theDiv'
+<div ng-cloak  draggable='true'
 	 class="draggable viewItem"
-	 ng-controller="ViewItemCtrl"
-		>
+	 style="position: relative"	>
 
-	<div class='connector' style="position: relative;top:0px;left:185px;width: 30px;height: 30px;" >
+	<div id='connector_1' class='connector' style="position: absolute;top:0px;left:185px;width: 30px;height: 30px;" >
 		<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
 			<defs>
 				<radialGradient id="grad1" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">
@@ -50,7 +49,7 @@
 		</div>
 	</div>
 
-	<div class='connector' style="position: relative;top:0px;left:185px;width: 30px;height: 30px;" >
+	<div id='connector_2' class='connector' style="position: relative;top:0px;left:185px;width: 30px;height: 30px;" >
 		<svg xmlns="http://www.w3.org/2000/svg" version="1.1">
 			<defs>
 				<radialGradient id="grad2" cx="50%" cy="50%" r="50%" fx="50%" fy="50%">

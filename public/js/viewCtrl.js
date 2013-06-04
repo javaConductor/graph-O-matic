@@ -8,6 +8,7 @@
 <graph-view ng-model="sampleView"  />
  */
 function ViewCtrl($scope, view){
+	console.log("ViewCtrl.link(("+$scope.$id+")): Creating.");
 
 	$scope.itemMoved = function(item, x, y){
 		console.log("itemMoved");
@@ -76,7 +77,7 @@ function ViewCtrl($scope, view){
 		}
 	};
 
-	var viewItem2 = {
+	$scope.vi_vitem2 = {
 		item : {id: "item2", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem2",
 		width: function(){
@@ -89,14 +90,14 @@ function ViewCtrl($scope, view){
 		showDetails: function(){
 			if (arguments.length > 0){
 				//$scope.$apply(function(){
-					this._showDetails =  ! ! arguments[0];// make bool
+				this._showDetails =  ! ! arguments[0];// make bool
 				//});
 			}
 			return this._showDetails;
 		},
 
 		position: function(){
-			return {x: 150, y: 150};
+			return {x: 0, y: 0};
 		},
 		style: function(){
 			return {};
@@ -126,7 +127,7 @@ function ViewCtrl($scope, view){
 			];
 		}
 	};
-	var viewItem3 = {
+	$scope.vi_vitem3 = {
 		item : {id: "item3", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem3",
 		width: function(){
@@ -139,7 +140,7 @@ function ViewCtrl($scope, view){
 		showDetails: function(){
 			if (arguments.length > 0){
 				//$scope.$apply(function(){
-					this._showDetails =  ! ! arguments[0];// make bool
+				this._showDetails =  ! ! arguments[0];// make bool
 				//});
 			}
 			return this._showDetails;
@@ -174,13 +175,13 @@ function ViewCtrl($scope, view){
 		}
 	};
 
-
-
 	var relationship = {
 		id: 'rel1',
+		to: 'vitem2',
+		from: 'vitem3',
 		type: {
 			lineStyle : function() {
-				return "stroke: blue; stroke-width: 3;";
+				return "stroke: white; stroke-width: 3;";
 			},
 			labelStyle : function() {
 				return "stroke: red; stroke-width: 3";
@@ -191,13 +192,16 @@ function ViewCtrl($scope, view){
 		}
 	};
 
+	$scope.rel_rel1 = relationship;
 	$scope.view = {
 		name:"Test View",
 		id:"testview1",
-		items:[viewItem, viewItem2, viewItem3],
+		items:[$scope.vi_vitem2, $scope.vi_vitem3],
 		relationships:[relationship],
-		currentView: viewItem2
+		currentView: $scope.vi_vitem2
 	}
+	console.log("ViewCtrl.link(("+$scope.$id+")): Created.");
+
 }
 
 ViewCtrl.$inject = [ "$scope", "View" ];

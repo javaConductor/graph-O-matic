@@ -8,6 +8,7 @@
 <graph-view ng-model="sampleView"  />
  */
 function RelationshipCtrl($scope, view){
+	console.log("RelationshipCtrl.link(("+$scope.$id+")): Creating.");
 
 	$scope.itemMoved = function(item, x, y){
 		console.log("itemMoved");
@@ -75,7 +76,6 @@ function RelationshipCtrl($scope, view){
 			];
 		}
 	};
-
 	var viewItem2 = {
 		item : {id: "item2", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem2",
@@ -174,7 +174,6 @@ function RelationshipCtrl($scope, view){
 		}
 	};
 
-
 	$scope.relationshipType= {
 		id: 'relType1',
 		name: 'Father',
@@ -200,11 +199,13 @@ function RelationshipCtrl($scope, view){
 		}
 	};
 
+	$scope.viewItem = viewItem;
+	$scope.viewItem2 = viewItem2;
+
 	$scope.relationship = {
 		id: 'rel1',
-		to: 'viewItem2',
-		from: 'viewItem3',
-
+		'to': 'viewItem1',
+		'from': 'viewItem2',
 		type: {
 			lineStyle : function() {
 				return "stroke: blue; stroke-width: 3;";
@@ -217,6 +218,8 @@ function RelationshipCtrl($scope, view){
 			return {};
 		}
 	};
+	console.log("RelationshipCtrl.link(("+$scope.$id+")): Created.");
+
 }
 
 RelationshipCtrl.$inject = [ "$scope", "View" ];

@@ -19,25 +19,6 @@
 				parentElement.append(el);
 			});
 		};
-		var addItemRelationship = function(vitemId, relId, toOrFrom){
-			if (toOrFrom){
-				itemRelationshipMap[vitemId].to.push(relId);
-			}else{
-				itemRelationshipMap[vitemId].from.push(relId);
-			}
-		};
-
-		function addRelationships(parentElement, relationships, f){
-			relationships.forEach(function(rel){
-				var el = angular.element("<graph-relationship></graph-relationship>");
-				el.attr( 'id', rel.id );
-				el.attr("from", rel.from);
-				el.attr("to", rel.to );
-				el.attr("relationship", constants.RelationshipIdPrefix + rel.id );
-				el = f( el, rel );
-				parentElement.append(el);
-			});
-		};
 
 
 		// create an object to map items to relationships

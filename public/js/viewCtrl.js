@@ -29,7 +29,7 @@ function ViewCtrl($scope, view){
 		return {width: viewItem.width(), height: viewItem.height() };
 	};
 
-	var  viewItem = {
+	$scope.vi_vitem1 = {
 		item : {id: "item1", itemType:{ id: "it2", name:"Person"} },
 		id: "vitem1",
 		width: function(){
@@ -49,7 +49,7 @@ function ViewCtrl($scope, view){
 		},
 
 		position: function(){
-			return {x: 750, y: 150};
+			return {x: 750, y: 550};
 		},
 		style: function(){
 			return {};
@@ -147,7 +147,7 @@ function ViewCtrl($scope, view){
 		},
 
 		position: function(){
-			return {x: 550, y: 150};
+			return {x: 850, y: 150};
 		},
 		style: function(){
 			return {};
@@ -192,12 +192,30 @@ function ViewCtrl($scope, view){
 		}
 	};
 
+	var relationship2 = {
+		id: 'rel2',
+		to: 'vitem1',
+		from: 'vitem3',
+		type: {
+			lineStyle : function() {
+				return "stroke: white; stroke-width: 3;";
+			},
+			labelStyle : function() {
+				return "stroke: red; stroke-width: 3";
+			}
+		},
+		data: function(){
+			return {};
+		}
+	};
+
 	$scope.rel_rel1 = relationship;
+	$scope.rel_rel2 = relationship2;
 	$scope.view = {
 		name:"Test View",
 		id:"testview1",
-		items:[$scope.vi_vitem2, $scope.vi_vitem3],
-		relationships:[relationship],
+		items:[$scope.vi_vitem2, $scope.vi_vitem3,$scope.vi_vitem1],
+		relationships:[$scope.rel_rel1,$scope.rel_rel2],
 		currentView: $scope.vi_vitem2
 	}
 	console.log("ViewCtrl.link(("+$scope.$id+")): Created.");

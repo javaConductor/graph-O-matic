@@ -15,7 +15,6 @@
 				itemElementMap[vitem.id] = el;
 				el = f( el, vitem );
 				console.log("graphView.addItems(): added element:"+el.attr('id')+" ngModel:"+el.attr('ng-model'));
-
 				parentElement.append(el);
 			});
 		};
@@ -62,7 +61,7 @@
 
 				element.css("position","absolute");
 				///
-				addItems(element.find('div.items'), scope.view.items, function(nuElem, viewItem){
+				addItems(element, scope.view.items, function(nuElem, viewItem){
 					scope[utils.viewItemIdToScopeName(viewItem.id)] = viewItem;
 					nuElem = $compile(nuElem)(scope);
 					return nuElem;
@@ -76,7 +75,7 @@
 					if(this.$modelValue){
 						var viewData = this.$modelValue;
 						if(viewData){
-							var nuElem = element.find('div.items'); //angular.element("<div draggable='true' class='draggable'></div>");
+							var nuElem = element;//;.find('div.items'); //angular.element("<div draggable='true' class='draggable'></div>");
 							nuElem.html("");
 							addItems(nuElem, viewData.items, function(el, viewItem){
 								console.log("graphView.link-render(("+scope.$id+", phase:"+scope.$$phase+")): added item:"+el.attr("id") );
@@ -85,7 +84,7 @@
 							});
 //							element.html($compile(nuElem)(scope));
 							timer(function(){
-								relationshipMgr( element.find('svg.relationships'), viewData.relationships );
+								relationshipMgr( element, viewData.relationships );
 							}, 1500, false);
 						}
 					}

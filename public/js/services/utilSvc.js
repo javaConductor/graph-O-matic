@@ -126,7 +126,7 @@
 			},
 
 			viewItemIdToConnectorId: function(viewItemId, idx){
-				return constants.ViewItemElementIdPrefix + viewItemId+"_"+idx;
+				return constants.ViewItemElementIdPrefix + viewItemId+"_conn_"+idx;
 			},
 
 			relationshipIdToScopeName: function(relId){

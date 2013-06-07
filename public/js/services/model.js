@@ -9,17 +9,17 @@
 		//var applyProperties = function();
 		var types = {
 			"ItemType":  {
-			create : function(initProperties){
-			},
-			validate : function(value, f){
-			},
-			save : function(value, f){
+				create : function(initProperties){
+				},
+				validate : function(value, f){
+				},
+				save : function(value, f){
 
+				},
+				get : function(id, f){
+					persistence.getItemType(id, f);
+				}
 			},
-			get : function(id, f){
-				persistence.getItemType(id, f);
-			}
-		},
 			"Item":  {
 				create : function(initProperties){
 				},

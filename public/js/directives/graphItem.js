@@ -4,9 +4,6 @@
 */
 
 (function(graphModule){
-	var itemMoved = function (viewItem, x, y) {
-		console.log("ViewItem(" + viewItem.id + ") moved to " + x + ", " + y);
-	};
 
 	function DndHandlerNu (theViewItem, fItemMoved) {
 		if (!theViewItem) return null;
@@ -125,8 +122,13 @@
 		return this;
 	};
 
-	graphModule.directive('graphItem', ['$compile', '$parse', 'UtilityFunctions', function ($compile, $parse, utils) {
+	graphModule.directive('graphItem', ['$compile', '$parse', 'UtilityFunctions', '$rootScope', 'ConstantsService',
+		function ($compile, $parse, utils, rootScope, constants) {
 		console.log("creating directive graphItem");
+		this.itemMoved = function (viewItem, x, y) {
+			console.log("ViewItem(" + viewItem.id + ") moved to " + x + ", " + y);
+			rootScope.$broadcast(constants.ViewItemMovedEvent, {viewItemId: viewItem.id, x: x, y: y});
+		};
 
 		return {
 			restrict: 'E',
@@ -142,6 +144,7 @@
 				var mdl = $parse(attrs.ngModel);
 				var viewItem = mdl( scope.$parent );
 				scope.dnd = new DndHandlerNu(viewItem, itemMoved);
+				element.attr("id", utils.viewItemIdToElementId(viewItem.id));
 
 				element.bind('drag', scope.dnd.drag);
 				element.bind('dragend', scope.dnd.dragEnd);

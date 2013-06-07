@@ -5,8 +5,6 @@
  * Time: 6:52 PM
  */
 (function (services) {
-
-
 	services.factory('RelationshipManager', ['$resource', '$location', '$timeout', 'UtilityFunctions', '$rootScope', 'ConstantsService',
 		function ($resource, $location, $timeout, utils, rootScope, constants) {
 			var factory = this;
@@ -20,7 +18,6 @@
 				});
 				return ret;
 			};
-
 			this.positionRelationship = function (fromEl, toEl, lineEl) {
 				if (!fromEl.length || !toEl.length)
 					return;
@@ -99,6 +96,7 @@
 				svg.append(line);
 				return svg;//return the div
 			};
+
 			this.itemRelationshipMap = { };
 
 			this.addItemRelationship = function (vitemId, relId, toOrFrom) {
@@ -120,7 +118,6 @@
 				var rels = factory.relationshipsForItem(nuPos.viewItemId);
 				this.repositionRelationships(rels);
 			};
-
 
 			rootScope.$on(constants.ViewItemMovedEvent, function (e, data) {
 				moveHandler(data)

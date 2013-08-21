@@ -14,7 +14,7 @@
 		RelationshipElementIdPrefix:"rel_el_"
 	};
 
-	services.factory('ConstantsService', ['$resource', '$location', function ($resource, $location) {
+	services.factory('ConstantsService', [ function () {
 		return Constants;
 
 	}]);

@@ -41,18 +41,21 @@
 			var createRelationshipNode = function(fromConnectorElement,
 												  toConnectorElement,
 												  relationship){
-				var g = angular.element("<g></g>");
+				var div = angular.element("<div></div>");
+				var svg = angular.element("<svg></svg>");
 				var line = angular.element("<line></line>");
 
 				var toOff = toConnectorElement.offset();
 				var fromOff = fromConnectorElement.offset();
+
 				line.attr("x1", fromOff.left);
 				line.attr("y1", fromOff.top);
 				line.attr("x2", toOff.left);
 				line.attr("y2", toOff.top);
 				line.attr("style", relationship.type.lineStyle());
-				g.append(line);
-				return g;// maybe just return the svg
+				div.append(svg);
+				svg.append(line);
+				return div;// maybe just return the svg
 			};
 
 			return {
@@ -78,11 +81,8 @@
 
 					console.log("graphRelationship.link("+scope.$id+"): Creating relationship node.");
 					// these elements should already be in the DOM
-
-
-
-					var fromEl = $(  utils.viewItemIdToElementId(fromViewItem.id ));
-					var toEl = $( utils.viewItemIdToElementId(toViewItem.id ));
+					var fromEl = $(constants.ViewItemIdPrefix + fromViewItem.id);
+					var toEl = $(constants.ViewItemIdPrefix + toViewItem.id);
 					// Create the visual representation of the relationship
 					var line = createRelationshipNode(fromEl, toEl, relationship);
 					console.log("graphRelationship.link("+scope.$id+"): element for to, from and relationship:");

@@ -14,7 +14,6 @@
 				validate : function(value, f){
 				},
 				save : function(value, f){
-
 				},
 				get : function(id, f){
 					persistence.getItemType(id, f);

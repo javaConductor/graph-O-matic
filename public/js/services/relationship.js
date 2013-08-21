@@ -32,10 +32,10 @@
 
 				fromConnectors.forEach(function (fromConn) {
 					//fromConn = angular.element(fromConn);
-					var fromPos =utils.elementPosition(fromConn)
+					var fromPos =utils.elementPosition(fromConn[0])
 					toConnectors.forEach(function (toConn) {
 						//toConn = angular.element(toConn);
-						var toPos =utils.elementPosition(toConn);
+						var toPos =utils.elementPosition(toConn[0]);
 						//console.log("From connector "+fromConn.context.id+" pos:"+angular.toJson(fromPos) );
 						//console.log("To connector "+toConn.context.id+" pos:"+angular.toJson(toPos) );
 						var distance = utils.distance(

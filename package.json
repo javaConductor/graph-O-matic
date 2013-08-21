@@ -1,5 +1,5 @@
 {
-  "name": "application-name",
+  "name": "graph-o-matic",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -7,6 +7,22 @@
   },
   "dependencies": {
     "express": "3.1.0",
-    "ejs": "*"
+    "ejs": "*",
+    "grunt-contrib-jshint": "~0.6.0",
+    "grunt-contrib-nodeunit": "~0.2.0",
+    "grunt-contrib-uglify": "~0.2.2"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "karma-script-launcher": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.0",
+    "karma-requirejs": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma": "~0.10.1",
+    "karma-junit-reporter": "~0.1.0"
   }
 }

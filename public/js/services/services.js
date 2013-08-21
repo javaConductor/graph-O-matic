@@ -8,7 +8,7 @@ var neo4jPort = 7474;
 var Root, Item, ItemType, Relationship, RelationshipTypes;
 
 var services = angular.module('GraphOMaticServices', ['ngResource']);
-
+console.dir(['GraphOMaticServices',services]);
 services.factory('Directory', ['$http', '$location', function ($http, $location) {
 	/// send to server for the directory: Map(k.v)
 	var urlPrefix = "http://" + $location.hostname + ":" + $location.port + "/";
@@ -30,3 +30,4 @@ services.factory('Directory', ['$http', '$location', function ($http, $location)
 		}
 	}
 }]);
+

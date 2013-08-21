@@ -11,8 +11,7 @@
         return viewStyle.style;
     };
 
-    var ViewItemObject = function(world, view, decoratedViewItem )
-    {
+    var ViewItemObject = function(world, view, decoratedViewItem ){
             return {
 	            item: decoratedViewItem,
                 is: function (itemType) {
@@ -49,6 +48,7 @@
 		var itemTypesById = util.mapBy("id", theItemTypes);
 		var newItems = [];
 
+        // This loop initializes the items
 		viewData.items.forEach(function (vitem) {
 			newItems.push(this.initViewItem(vitem, itemTypesById));
 		});
@@ -74,9 +74,10 @@
 				viewItem = decorators.decorateViewItem(viewItem);
 				return viewItem;
 			},
+            //// This function decorates a viewItem and
+            //// creates a ViewItemObject from it
 			initViewItem: function (viewItem) {
-				viewItem = this.decorateViewItem(viewItem);
-				viewItem = decorators.decorateViewItem(viewItem );
+				viewItem = this.decorateViewItem( viewItem );
 				return ViewItemObject(this.world, this, viewItem)
 			},
 			wrapItem:  function(item){
@@ -86,23 +87,10 @@
 				};
 				return this.initViewItem(vitem);
 			},
-			vinitViewItem: function (viewItem) {
-
-
-				viewItem.viewPosition = function(){ return }
-				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.viewSyle);
-				viewItem.properties = world.initProperties(viewItem.itemType);
-
-				viewItem.image = (function(){ return {};});
-				viewItem = this.decorateViewItem(viewItem);
-				return ViewItemObject(world, this, viewItem);
-                //viewItem.image = (function(){ return viewItem.mainImage});
-				//TODO fix this
-			},
 			itemMatchesRelationshipCriteria: function (item, criteria) {
 			},//bool
 			addItem: function (item) {
-				this.createViewItem(item)
+				return this.createViewItem(item)
 			},
 			/////////////////////////////////////////////////////////
 			// Relationships

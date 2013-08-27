@@ -30,7 +30,7 @@ module.exports = function(config) {
           'public/js/app.js',
           //'public/js/**/*.js',
           //'public/js/lib/jasmine*/*.js',
-          'test/*.js'
+          'test/client/*.js'
       ],
 
 

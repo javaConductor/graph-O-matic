@@ -5,13 +5,13 @@
  * Time: 1:01 AM
  */
  
- // get connetion strings
+ // get connection strings
  
  var config = require("/config.js");
  var usrpswd = config.username + ":" + config.password;
 var db = require("mongojs")(usrpswd+"@"+config.dbHost+"/"+config.dbName, 
 	['ItemTypes','RelationshipTypes',
-	'Items','Relationships', 
+	'Items','Relationships',
 	'ItemCategories','RelationshipCategories']);
 function Api(db)  {
 	var thiz = this;
@@ -25,8 +25,7 @@ function Api(db)  {
 						res.send( {items: itemList} );
 					}
 				});
-		},
-
+		}
 	}
 }
 

@@ -1,6 +1,4 @@
 'use strict';
-
-
 // Declare app level module which depends on filters, and services
 angular.module('graphOmatic', ['graphOmatic.directives', 'GraphOMaticServices']).
 	config(['$routeProvider', '$locationProvider', function ($routeProvider, $locationProvider) {

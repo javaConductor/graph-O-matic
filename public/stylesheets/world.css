@@ -1,0 +1,18 @@
+
+.world {
+
+}
+
+.worldNavigation{
+
+    width: 900px;
+    height: 200px;
+}
+
+.worldViewSettings{
+    float: left;
+}
+
+.worldView{
+    float: right;
+}

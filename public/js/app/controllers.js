@@ -4,11 +4,11 @@
 
 function GraphOMaticCtrl($scope, World) {
 
-	$scope.title = "Graph O Matic (c)";
-
+	$scope.title = "Graph O Matic (c) 2012";
 
 	/// get all the views
 	$scope.views = [];
+    $scope.currentView=null;
 
 	// get all the categories (item,relationship)
 	$scope.relationshipCategories = [];
@@ -21,7 +21,7 @@ function GraphOMaticCtrl($scope, World) {
 	$scope.searchResults = [];
 
 	$scope.footerInfo = {
-		poweeredBy: ["nodejs", "mongoDB"]
+		poweredBy: ["nodejs", "mongoDB"]
 	};
 
 	$scope.viewTabList = [
@@ -33,11 +33,22 @@ function GraphOMaticCtrl($scope, World) {
         "</graphItem>" +
         "<graphRelationship ng-repeat='relationship in viewData.relationships'  ng-model='relationship' data-item-id='{{relationship.id}}' >" +
         "</graphItem>";
+
 	var findViewTab = function(viewId){
 
 	};
 
-	$scope.open = function(viewId){
+    $scope.getAllViews = function(){
+        world.getViews(function(err,views){
+            if(!err){
+                $scope.allViews = views;
+                if(views && views.length>0)
+                    $scope.currentView = views[0];
+            }
+        })
+    };
+
+    $scope.open = function(viewId){
 
 		World.getView(viewId, function(err, viewData){
 			//// add pane to viewTabList after making sure its not there already
@@ -49,8 +60,10 @@ function GraphOMaticCtrl($scope, World) {
 
         });
 	}
-
 }
+
+GraphOMaticCtrl.$inject=['scope','World']
+
 
 
 function MainViewCtrl($scope, View) {

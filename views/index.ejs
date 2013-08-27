@@ -2,30 +2,33 @@
 <html>
 <head>
 	<title><%= title %></title>
-	<link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/style.css'/>
+    <link rel='stylesheet' href='/stylesheets/world.css'/>
 
-	<script src="js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
+    <script src="js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
 	<script src="js/lib/jquery/jquery-ui-1.9.1.custom.js" type='text/javascript'></script>
-	<script src="js/lib/angular/angular.js" type='text/javascript'></script>
-	<script src="js/lib/angular/angular-resource.js" type='text/javascript'></script>
+    <script src="js/lib/angular/angular.js" type='text/javascript'></script>
+    <script src="js/lib/angular/angular-resource.js" type='text/javascript'></script>
     <script src="js/lib/d3/d3.v3.js" type='text/javascript'></script>
 
-	<script src="js/services/services.js" type='text/javascript'></script>
-	<script src="js/services/constants.js" type='text/javascript'></script>
-	<script src="js/services/persistence.js" type='text/javascript'></script>
-	<script src="js/services/utilSvc.js" type='text/javascript'></script>
-	<script src="js/services/model.js" type='text/javascript'></script>
-	<script src="js/services/world.js" type='text/javascript'></script>
-	<script src="js/services/contextService.js" type='text/javascript'></script>
-	<script src="js/services/relationship.js" type='text/javascript'></script>
-	<script src="js/services/view.js" type='text/javascript'></script>
-	<script src="js/filters.js" type='text/javascript'></script>
-	<script src="js/directives/directives.js" type='text/javascript'></script>
-	<script src="js/directives/graphItem.js" type='text/javascript'></script>
-	<script src="js/directives/graphRelationship.js" type='text/javascript'></script>
-	<script src="../public/js/directives/graphView.old.js" type='text/javascript'></script>
-	<script src="js/controllers.js" type='text/javascript'></script>
-	<script src="js/relationshipCtrl.js" type='text/javascript'></script>
+    <!-- The  App -->
+	<script src="js/app/services/services.js" type='text/javascript'></script>
+	<script src="js/app/services/constants.js" type='text/javascript'></script>
+	<script src="js/app/services/persistence.js" type='text/javascript'></script>
+	<script src="js/app/services/utilSvc.js" type='text/javascript'></script>
+	<script src="js/app/services/model.js" type='text/javascript'></script>
+	<script src="js/app/services/world.js" type='text/javascript'></script>
+	<script src="js/app/services/contextService.js" type='text/javascript'></script>
+	<script src="js/app/services/relationship.js" type='text/javascript'></script>
+	<script src="js/app/services/view.js" type='text/javascript'></script>
+	<script src="js/app/filters.js" type='text/javascript'></script>
+	<script src="js/app/directives/directives.js" type='text/javascript'></script>
+	<script src="js/app/directives/graphItem.js" type='text/javascript'></script>
+	<script src="js/app/directives/graphRelationship.js" type='text/javascript'></script>
+	<script src="js/app/directives/graphView.old.js" type='text/javascript'></script>
+	<script src="js/app/controllers.js" type='text/javascript'></script>
+    <script src="js/app/relationshipCtrl.js" type='text/javascript'></script>
+    <script src="js/app/worldCtrl.js" type='text/javascript'></script>
 
 	<script src="js/app.js" type='text/javascript'></script>
 
@@ -100,122 +103,49 @@
 			width: 201px;
 			height: 201px;
 		}
-	</style>
+
+        .world {
+            float: left;
+            position: relative;
+            width: 201px;
+            height: 201px;
+        }
+
+
+    </style>
 </head>
-<body ng-app >
+<body ng-app>
 
-Item Position: <label style="color: white" id='position'></label>
-<script>
-	var dnd = {
-		lastX: 0,
-		lastY: 0,
-		beforeLastX: 0,
-		beforeLastY: 0,
-		initX: 0,
-		initY: 0,
-		initTop: 0,
-		initLeft: 0,
-		dragStart: function (evt) {
+    <div class="world" ng-controller="WorldCtrl">
+        <div class="worldNavigation">
+            <div  style="float: left;width: 100px">
+                View <select  ng-model="currentView"
+                              ng-options="v.title group by v.type.id for v in allViews"></select>
+            </div>
 
-			console.log('dragStartEvent ' +
-					'client -> x:' + evt.clientX + " y:" + evt.clientY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+            <div  style="float: right;min-width: 600px">
+                <label title="Search" for="worldItemSearchText"  >Search Text:</label>
+                <input id="worldItemSearchText" type="text" ng-model="itemSearchText" ><br/>
+                <button class="worldItemSearchButton" ng-click="onSearchButtonClick()">Search</button>
+                <div class="worldItemSearchResults" >
 
-			var el = angular.element(evt.currentTarget);
-			//store the difference in top/left and where the mouse is
-			this.initX = evt.pageX;
-			this.initY = evt.pageY;
-			var off = el.offset();
-			this.initTop = off.top;
-			this.initLeft = off.left;
-			this.beforeLastX = this.lastX = off.left;
-			this.beforeLastY = this.lastY = off.top;
-			console.log('dragStartEvent ' +
-					'element pos -> x:' + this.initLeft + " y:" + this.initTop);
-			return evt;
-		},
+                </div>
+            </div>
 
-		drag: function (evt) {
-			if (evt.preventDefault)
-				evt.preventDefault();
-//			console.log('dragEvent ' +
-//					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-//					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-//					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-//					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
+        </div>
+        <div >
+            <div class="worldViewSettings">
+                View Options
+            </div>
 
-			this.beforeLastX = this.lastX ===0 ? evt.pageX : this.lastX;
-			this.beforeLastY = this.lastY ===0 ? evt.pageY : this.lastY;
+            <div class="worldView" >
+                <tabset id="viewList" ng-repeat="view in views"  vertical="false" type="navType">
+                    <tab heading="{{view.name}}"><graph-view ng-model="view" ></graph-view></tab>
+                </tabset>
+            </div>
 
-			this.lastX = evt.pageX;
-			this.lastY = evt.pageY;
-			var ofs = angular.element(evt.currentTarget).offset();
+        </div>
 
-			$('#position').text(ofs.left + ', ' + ofs.top);
-
-			var el = angular.element(evt.currentTarget);
-			var x = (this.beforeLastX - this.initX) + this.initLeft;
-			var y = (this.beforeLastY - this.initY) + this.initTop;
-//			console.log('dragEndEvent ' +
-//					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
-//					' new pos -> x:' + x + " y:" + y);
-			el.offset({"left": x, "top": y});
-
-		},
-
-		dragOver: function (evt) {
-
-			console.log('dragOverEvent ' +
-				//'client -> x:'+evt.clientX + " y:"+evt.clientY+
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			if (evt.preventDefault)
-				evt.preventDefault();
-			evt.dataTransfer.dropEffect = 'move';
-			var el = angular.element(evt.currentTarget);
-			return evt;
-		},
-
-		drop: function (evt) {
-			if (evt.preventDefault)
-				evt.preventDefault();
-			console.log('dropEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-
-		},
-
-		dragEnd: function (evt) {
-			if (evt.preventDefault)
-				evt.preventDefault();
-			var el = angular.element(evt.currentTarget);
-			var off = el.offset();
-			console.log('dragEndEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-					' moverOffset   -> x:' + off.left + " y:" + off.top +
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-			// broadcast the move
-			alert("item moved to:  x:" + off.left + " y:" + off.top);
-			return evt;
-		},
-		dropped: function (evt, node) {
-			console.log('droppedEvent ' +
-					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-		}
-
-	};
-</script>
-
-<div class="world">
-
-
-</div>
+    </div>
 </body>
 </html>

@@ -1,26 +1,21 @@
 'use strict';
 
 /* Services */
-
 var neo4jHost = "localhost";
 var neo4jPort = 7474;
 
-var Root, Item, ItemType, Relationship, RelationshipTypes;
-
+//var Root, Item, ItemType, Relationship, RelationshipTypes;
 var services = angular.module('GraphOMaticServices', ['ngResource']);
-console.dir(['GraphOMaticServices',services]);
-services.factory('Directory', ['$http', '$location', function ($http, $location) {
+console.dir(['GraphOMaticServices', services]);
+services.factory('Directory',"ConfigService", ['$http', '$location','ConfigService', function ($http, $location, config) {
 	/// send to server for the directory: Map(k.v)
-	var urlPrefix = "http://" + $location.hostname + ":" + $location.port + "/";
+	var urlPrefix = "http://" + config.dataHost + "/";
+    console.log("data urlPrefix:"+ urlPrefix);
+
 	var dirUrl = urlPrefix + "directory";
 	var thiz = this;
 	this.directoryEntries = {};
-//	$http({method: 'JSONP', params: {callback: 'JSON_CALLBACK'}, url: dirUrl}).
-//		error(function (data, status, headers, config) {
-//			return null;
-//		}).success(function (data) {
-//			thiz.directoryEntries = data;
-//		});
+
 	return {
 		entries: function () {
 			return thiz.directoryEntries;
@@ -30,4 +25,3 @@ services.factory('Directory', ['$http', '$location', function ($http, $location)
 		}
 	}
 }]);
-

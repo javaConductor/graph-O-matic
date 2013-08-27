@@ -25,8 +25,6 @@
 			var relationshipCategories = [];
 			var findOrCreateObjectFromPath = util.getOrCreateObjectFromPath;
 
-
-
 			return {
 				self: this,
 				persistence: persistence,
@@ -34,36 +32,9 @@
 				allItemTypes: persistence.allItemTypes,
 				allRelationships: persistence.allRelationships,
 				allViews: persistence.allViews,
-				initContexts: function (itemCategories, relationshipCategories, itemTypes, relationshipTypes, extensionPoints) {
-
-					var ctxtList = [contextService.basicReality].concat(contextService.loadContexts());
-
-					ctxtList.forEach(function (ctxt) {
-						ctxt.updateItemCategories(itemCategories, function (updatedItemCategories) {
-							itemCategories = updatedItemCategories;
-
-						});
-						ctxt.updateRelationshipCategories(relationshipCategories, function (updatedRelationshipCategories) {
-							relationshipCategories = updatedRelationshipCategories;
-
-						});
-						ctxt.updateItemTypes(itemTypes, function (updatedItemTypes) {
-							itemTypes = updatedItemTypes;
-
-						});
-						ctxt.updateRelationshipTypes(relationshipTypes, function (updatedRelationshipTypes) {
-							relationshipTypes = updatedRelationshipTypes;
-						});
-						ctxt.updateExtensionPoints(extensionPoints, function (updatedExtensionPoints) {
-							extensionPoints = updatedExtensionPoints;
-
-						});
-					});
-				},
                 initialize: function (f) {
                     // call user-defined function
                     f( this );
-//                  return self;
                 },
 
 				initProperties: function (itemType, defaultProps) {
@@ -72,20 +43,7 @@
 						: util.copy(defaultProps, util.mapBy("name", itemType.properties))
 				},
 
-				getCategoryViewStyle: function (category, defaultViewStyle) {
-					return (category.parent)
-						? mergeViewStyle(this.getCategoryViewStyle(category.parent, defaultViewStyle), category.viewStyle)
-						: mergeViewStyle(defaultViewStyle, category.viewStyle);
-				},
-				getItemTypeViewStyle: function (itemType, defaultViewStyle) {
-					return (itemType.parent)
-						? mergeViewStyle(this.getItemTypeViewStyle(itemType, defaultViewStyle), mergeViewStyle(itemType.viewStyle, this.getCategoryViewStyle(itemType.category)))
-						: mergeViewStyle(defaultViewStyle, mergeViewStyle(itemType.viewStyle, this.getCategoryViewStyle(itemType.category)));
-				},
 				findRelatedImages: function(item, f){
-
-
-
 				},
 
 				views: function (f) {
@@ -95,7 +53,6 @@
                         return f(e, views.map(function(vw){
                             return new View(this, vw);
                         }));
-
                     });
 				},
 

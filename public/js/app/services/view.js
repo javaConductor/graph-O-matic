@@ -39,12 +39,25 @@
                 }
             };
 
-        }
+        };
+
+    /**
+     * showViewItem
+     *
+     * Returns true if the viewItem should be displayed based on the viewOptions.
+     * @param item
+     * @param viewOptions
+     */
+    var showViewItem = function showViewItem(item, viewOptions){
+
+
+
+    };
 
     var ViewObject = function View(world, viewData) {
 		/// all initialization done here before we return object
 		/// add the types to the items
-		var theItemTypes = world.itemTypesForItems(viewData.itemIdList);
+		var theItemTypes = world.itemTypesForItems( viewData.itemIdList );
 		var itemTypesById = util.mapBy("id", theItemTypes);
 		var newItems = [];
 

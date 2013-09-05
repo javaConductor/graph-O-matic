@@ -10,6 +10,7 @@
     <script src="js/lib/angular/angular.js" type='text/javascript'></script>
     <script src="js/lib/angular/angular-resource.js" type='text/javascript'></script>
     <script src="js/lib/d3/d3.v3.js" type='text/javascript'></script>
+    <script src="js/lib/wu/wu-0.1.8.js" type='text/javascript'></script>
 
     <!-- The  App -->
 	<script src="js/app/services/services.js" type='text/javascript'></script>
@@ -25,10 +26,10 @@
 	<script src="js/app/directives/directives.js" type='text/javascript'></script>
 	<script src="js/app/directives/graphItem.js" type='text/javascript'></script>
 	<script src="js/app/directives/graphRelationship.js" type='text/javascript'></script>
-	<script src="js/app/directives/graphView.old.js" type='text/javascript'></script>
-	<script src="js/app/controllers.js" type='text/javascript'></script>
+    <script src="js/app/directives/graphView.old.js" type='text/javascript'></script>
+    <script src="js/app/directives/worldViewList.js" type='text/javascript'></script>
+    <script src="js/app/controllers.js" type='text/javascript'></script>
     <script src="js/app/relationshipCtrl.js" type='text/javascript'></script>
-    <script src="js/app/worldCtrl.js" type='text/javascript'></script>
 
 	<script src="js/app.js" type='text/javascript'></script>
 
@@ -116,34 +117,25 @@
 </head>
 <body ng-app>
 
-    <div class="world" ng-controller="WorldCtrl">
+    <div class="world" ng-controller="GraphOMaticCtrl">
         <div class="worldNavigation">
             <div  style="float: left;width: 100px">
                 View <select  ng-model="currentView"
-                              ng-options="v.title group by v.type.id for v in allViews"></select>
+                              ng-options="v.title group by v.type.id for v in views"></select>
             </div>
 
             <div  style="float: right;min-width: 600px">
                 <label title="Search" for="worldItemSearchText"  >Search Text:</label>
-                <input id="worldItemSearchText" type="text" ng-model="itemSearchText" ><br/>
+                <input id="worldItemSearchText" type="text" ng-model="searchText" ><br/>
                 <button class="worldItemSearchButton" ng-click="onSearchButtonClick()">Search</button>
-                <div class="worldItemSearchResults" >
+                <div class="worldItemSearchResults" ></div>
 
-                </div>
             </div>
 
         </div>
+
         <div >
-            <div class="worldViewSettings">
-                View Options
-            </div>
-
-            <div class="worldView" >
-                <tabset id="viewList" ng-repeat="view in views"  vertical="false" type="navType">
-                    <tab heading="{{view.name}}"><graph-view ng-model="view" ></graph-view></tab>
-                </tabset>
-            </div>
-
+            <world-view-list ng-model="views" ></world-view-list>
         </div>
 
     </div>

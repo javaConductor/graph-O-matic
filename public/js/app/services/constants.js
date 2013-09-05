@@ -9,9 +9,14 @@
 	var Constants = {
 		ViewItemIdScopePrefix: 'vi_',
 		ViewItemElementIdPrefix: 'vi_el_',
-		ViewItemMovedEvent: "ViewItemMoved",
+		ViewItemMovedEvent: "ViewItemMoved",//backward compat
 		RelationshipIdPrefix:"rel_",
-		RelationshipElementIdPrefix:"rel_el_"
+		RelationshipElementIdPrefix:"rel_el_",
+        events : {
+            ViewItemMovedEvent: "ViewItemMoved",
+            ViewSelectionChangedEvent: "view_selection_changed",
+            OpenViewEvent: "open_view"
+        }
 	};
 
 	services.factory('ConstantsService', [ function () {

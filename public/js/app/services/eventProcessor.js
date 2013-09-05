@@ -16,24 +16,17 @@
     services.factory('ContextEventProcessor', ['$rootScope', 'UtilityFunctions', 'World',
         function ( rootScope, util, theWorld ) {
             ///////////////////  return the service function
-            return function(  ){
-                var theListeners = {};
+            return {
 
-                this.on = function(eventName, f ){
+                on:function(eventName, f ){
+                    rootScope.$on(eventName, f);
+                },
+                emit:function(eventName, eventData){
+                    rootScope.$broadcast(eventName,[eventData]);
+                }
 
-                        if(!theListeners[eventName]){
-                            theListeners[eventName] = [f];
-                        }
-                        else
-                            theListeners[eventName].push( f );
-                    };
-                    this.emit = function(eventName, eventData){
-                        theListeners.forEach(function(listnr){
-
-                            listnr(eventData);
-                        } );
-                    };
-                };
-        }]);
+            }
+        }
+    ]);
 
 })(angular.module('GraphOMaticServices'));

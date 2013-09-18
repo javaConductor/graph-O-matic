@@ -13,11 +13,16 @@
  * Time: 12:08 AM
  */
 (function (services) {
-    services.factory('ContextEventProcessor', ['$rootScope', 'UtilityFunctions', 'World',
-        function ( rootScope, util, theWorld ) {
+    services.factory('ContextEventProcessor', ['$rootScope',
+        function ( rootScope) {
             ///////////////////  return the service function
             return {
 
+                /**
+                 *
+                 * @param eventName
+                 * @param f   f([data]) function taking an array of data
+                 */
                 on:function(eventName, f ){
                     rootScope.$on(eventName, f);
                 },

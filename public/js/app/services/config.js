@@ -5,6 +5,7 @@
  * Time: 1:12 AM
  */
 (function (services) {
+    console.log("services/config.js - services:"+JSON.stringify(services));
 
     var configObj = {
         dataHost: "localhost:4242"

@@ -98,8 +98,8 @@
 						positionRelationship(fromEl, toEl, line);
 					};
 
-					scope.$on(constants.ViewItemMovedEvent + fromViewItem.id, moveHandler);
-					scope.$on(constants.ViewItemMovedEvent + toViewItem.id, moveHandler);
+					scope.$on(constants.ViewItemMoved + fromViewItem.id, moveHandler);
+					scope.$on(constants.ViewItemMoved + toViewItem.id, moveHandler);
 					element.append(line);
 					console.log("graphRelationship.link("+scope.$id+"): Added line to DOM");
 					/// Can we use this to update the screen for each item ???

@@ -1,5 +1,7 @@
 (function (services) {
-	/**
+    console.log("services/persistence.js - services:"+JSON.stringify(services));
+
+    /**
 	 * This service is responsible for reading and writing to and from the server in graph-O-matic (c)
 	 *
 	 *

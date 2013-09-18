@@ -1,6 +1,7 @@
 'use strict';
 
 (function (services) {
+    console.log("services/utilSvc.js - services:"+JSON.stringify(services));
 
     services.factory('UtilityFunctions', ['$http', '$location', 'ConstantsService', '$timeout', function ($http, $location, constants, timeout) {
         /// return the util funcs
@@ -224,7 +225,16 @@
                     if (d.column === columns[0]) return d.text;
                     else if (d.column === columns[1]) return d.value;
                 });
-        }
+        },
+            addScript: function addScript(document, scripts){
+                d3.select("head")
+                    .selectAll("script[data-type='viewtype']")
+                    .data(scripts)
+                    .enter()
+                        .append("script")
+                        .attr("data-type","viewtype")
+                        .attr("src", angular.identity);
+            }
 
 	};
     }]);

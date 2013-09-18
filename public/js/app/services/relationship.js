@@ -5,6 +5,8 @@
  * Time: 6:52 PM
  */
 (function (services) {
+    console.log("services/relationship.js - services:"+JSON.stringify(services));
+
 	services.factory('RelationshipManager', ['$resource', '$location', '$timeout', 'UtilityFunctions', '$rootScope', 'ConstantsService',
 		function ($resource, $location, $timeout, utils, rootScope, constants) {
 			var factory = this;
@@ -119,7 +121,7 @@
 				this.repositionRelationships(rels);
 			};
 
-			rootScope.$on(constants.ViewItemMovedEvent, function (e, data) {
+			rootScope.$on(constants.ViewItemMoved, function (e, data) {
 				moveHandler(data)
 			});
 

@@ -123,7 +123,6 @@
                 return this;
             };
 
-
             var dragfn = d3.behavior.drag()
                 .on('dragstart', function() {
                     var sel = d3.select(this),
@@ -204,6 +203,7 @@
 			'require':'?ngModel',
 			templateUrl:'/templates/view3.ejs',
 			link:function (scope, element, attrs, model) {
+                console.log("graphView.link(("+JSON.stringify(arguments)+")): ENTER.");
 				if (!model)
 					return;
 				console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")): ENTER.");

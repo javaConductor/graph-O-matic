@@ -1,133 +1,113 @@
-Extension Points
-================
+===============================================================================
+===============================================================================
+Graph-O-matic-data  (SERVER)
 
-------------------------------------------------------------------------------------------------------------------------
-View related
-------------------------------------------------------------------------------------------------------------------------
-GetItemViewInfo = function(itemType, item) { ..., return viewInfo;}
-itemTypes.<TheItemTypeId>.GetItemViewInfo    -   Called to get the viewInfo related to an item with itemType named 'TheItemTypeName'.
-GetItemViewInfo                      -   The default function for getting the viewInfo related to an item.
+App init
+    Init Persistence{
+            create collections. Verify required data (debug-only)
+    }
+    Init World(Persistence){
 
-------------------------------------------------------------------------------------------------------------------------
-GetItemTitle = function(itemType, item) { ..., return title;}
-itemTypes.<TheItemTypeId>.GetItemTitle       -   Called to get the title related to an item with itemType named 'TheItemTypeName'.
-GetItemTitle                         -   The default function for getting the title related to an item.
-
-------------------------------------------------------------------------------------------------------------------------
-DrawItem = function(view, element, viewItem) { /* Draw the Item as  a child of element */ }
-itemTypes.<TheItemTypeId>.DrawItem       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-DrawItem       -                  The default - provided.
-This is called by the view to draw a viewItem
-
-
-------------------------------------------------------------------------------------------------------------------------
-Relationship related
-------------------------------------------------------------------------------------------------------------------------
-DrawRelationship = function(element,  // element that contains both viewItems
-        relationship,
-        viewElementFrom,
-        viewElementTo) { /* Draw the Relationship between
-    viewElementFrom and viewElementTo */ }
-itemTypes.<TheItemTypeId>.DrawRelationship       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-DrawRelationship                         -   The default - provided.
-This is called by the view to draw a viewItem
-
-
-------------------------------------------------------------------------------------------------------------------------
-Dynamic Relationship related
-------------------------------------------------------------------------------------------------------------------------
-DetermineRelationships = function(world, itemType, item) { ..., return relationships; }
-itemTypes.<TheItemTypeId>.DetermineRelationships       -   For items with itemType named 'TheItemTypeName' - provided for builtin types.
-DetermineRelationships                         -   The default - provided.
-This is called by dynamic relationships to determine the relationships that it would be replacing itself with
-
-
-------------------------------------------------------------------------------------------------------------------------
-To access
-------------------------------------------------------------------------------------------------------------------------
-Extension functions are passed the original function.
-
-World.Extensions = {
-    "GetItemViewInfo" : {
-                            f: function(item) { ..., return viewInfo;},
-                            previous: function(item) { ..., return viewInfo;}
-                         },
-    "DrawItem": {
-                    f: function(view, element, viewItem){},
-                    previous: function(view, element, viewItem){}
-                 },
-    "DrawRelationship": {
-                  f: function(element, relationship, viewElementFrom, viewElementTo){},
-                  previous: function(element, relationship, viewElementFrom, viewElementTo){}
-          },
-    "views": {
-        "44ac-143d-33fa-b3aa" : {
-             "items":{
-                 "aaac-143d-33fa-678c-b34c":{
-                     "GetItemViewInfo" : {
-                        f: function(item) { ..., return viewInfo;},
-                        previous: function(item) { ..., return viewInfo;}
-                     },
-                     "GetItemTitle" : {
-                          f: function(item) { ..., return title;},
-                          previous: function(item) { ..., return item.name;}
-                   },
-                    "GetItemRelationships": {
-                        f: function(item) { ..., return viewInfo;},
-                        previous: function(item) { ..., return relationships;}// To and From???
-                    }
-                 }
-
-             },
-              "relationships":{
-                  "678c-aaac-143d-33fa-b34c":{
-                      "GetRelationshipViewInfo" : {
-                        f: function(relationship) { ..., return viewInfo;},
-                        previous: function(relationship) { ..., return viewInfo;}
-                        },
-                      "DrawRelationship": {
-                              f: function(element, relationship, viewElementFrom, viewElementTo){},
-                              previous: function(element, relationship, viewElementFrom, viewElementTo){}
-                      }
-                  }
-              }
-        }
-    },
-    "itemTypes": {
-        "678c-cccc-143d-b34c-33fa": {
-            "GetItemViewInfo" : {
-                f: function(item) { ..., return viewInfo;},
-                previous: function(item) { ..., return viewInfo;}
-             },
-            "GetItemTitle" : {
-                 f: function(item) { ..., return viewInfo;},
-                 previous: function(item) { ..., return viewInfo;}
-              },
-            "GetItemRelationships": {
-                f: function(item) { ..., return viewInfo;},
-                previous: function(item) { ..., return relationships;}// To and From???
-            }
-        }
-    },
-    "relationshipTypes": {
-        "143d-b34c-33fa-3482-dd7a": {
-            "GetRelationshipViewInfo" : {
-                f: function(relationship) { ..., return viewInfo;},
-                previous: function(relationship) { ..., return viewInfo;}
-                },
-              "GetRelationshipText" : {
-                f: function(element, relationship, viewElementFrom, viewElementTo){},
-                previous: function(element, relationship, viewElementFrom, viewElementTo){}
-                },
-
-              "DrawRelationship": {
-                  f: function(element, relationship, viewElementFrom, viewElementTo){},
-                  previous: function(element, relationship, viewElementFrom, viewElementTo){}
-                }
+        Init View Types{
+             '/view-types' path should be ready
         }
     }
+
+    Ready!
+
+===============================================================================
+===============================================================================
+Graph-O-Matic  (CLIENT)
+
+App Init
+
+
+
+    WorldController(world).init(){
+            load the list of views from world(viewList)
+            check the url to see if a view is specified - if so, load it
+            if not, check the cookie for which views were last displayed - if found, load them
+    }
+
+    WorldController.selectView(viewId):{
+        fire selectView event
+    }
+
+    WorldController.loadView(viewId):{
+        fire openView event
+    }
+
+    WorldController.removeView(viewId):{
+        fire removeView event
+    }
+
+    World.init (Persistence, view-type): {
+
+        /// Add caches to $RootScope or localStorage
+            create viewType cache
+            create item cache
+            create relationshipType cache
+
+    }
+
+    World.onOpenView:{
+            get view from persistence
+            load view
+    }
+
+    World.onCloseView:{
+            close view
+            fire viewClosed event
+            }
+
+    World.onSelectView:{
+            select view
+            fire viewSelected event
+    }
+
+    World.onRemoveView:{
+            remove view
+            fire viewRemoved event
+    }
+
+    view-type.init(): {
+            GET /view-types
+            add view-type artifacts to the document (via head tag)
+    }
+
+
+Events:
+viewRemoved, viewSelected, removeView, viewRemoved, closeView, viewClosed,
+ viewOptionsChanged,
+
+
+
+
+
+
+
+The world contains a set of services for accessing the server, common functions, and view management.
+ All services are AngularJs based and client side. Services include:
+    World   -   create views, manage viewType artifacts,
+    View    -   creates viewItems and relationships, manages the movement of viewItems, manages viewTimer event broadcasts.
+
+A viewType is identified by a directory under public/viewTypes.
+the dir should contain an artifacts.json file.
+{
+    "viewTemplate": "view.ejs",
+    "scripts": [
+        "directives/directives.js",
+        "services/services.js",
+        "services/services.js",
+        "services/services.js",
+        "services/services.js",
+    ]
+
 }
 
-Utility funcs:
-World.getItemFunctions(viewId, itemTypeId, itemId);
-World.getRelationshipFunctions(viewId, relationshipTypeId, relationshipId);
+viewTemplate - the template that will be deployed for a view of this type
+
+World also includes AngularJs directives
+
+===============================================================================
+===============================================================================

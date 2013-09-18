@@ -1,8 +1,10 @@
 'use strict';
 
 /* Model Service */
-
+console.log("services/model.js");
 (function(services){
+
+    console.log("services/model.js - services:"+JSON.stringify(services));
 	services.factory('Model', ['persistence', function (persistence) {
 		var thisf = this;
         var Validator = require('../../lib/jsonschema/validator');

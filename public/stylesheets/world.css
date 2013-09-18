@@ -1,18 +1,29 @@
 
 .world {
-
+    background: url("/images/golden_steel_plate_highdefinition_picture_4_169701.jpg");
 }
 
 .worldNavigation{
-
+    position: relative;
+    left: 0;
+    top: 20px;
     width: 900px;
     height: 200px;
 }
 
 .worldViewSettings{
     float: left;
+    position: relative;
+    left: 0;
+    top: 201px;
+    width: 200px;
+    height: 100%;
 }
 
-.worldView{
+.worldViewList{
     float: right;
+    left: 201px;
+    top: 201px;
+    width: 700px;
+    height: 100%;
 }

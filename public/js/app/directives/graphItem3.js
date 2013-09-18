@@ -127,7 +127,7 @@
 		console.log("creating directive graphItem");
 		this.itemMoved = function (viewItem, x, y) {
 			console.log("ViewItem(" + viewItem.id + ") moved to " + x + ", " + y);
-			rootScope.$broadcast(constants.ViewItemMovedEvent, {viewItemId: viewItem.id, x: x, y: y});
+			rootScope.$broadcast(constants.ViewItemMoved, {viewItemId: viewItem.id, x: x, y: y});
 		};
 
 		return {

@@ -9,18 +9,47 @@
      *
      * ## No Really it's sweet!
      */
-	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService',
-		function (persistence, util, ctxtSvc) {
+	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window',
+		function (persistence, util, ctxtSvc, $window) {
 			var thisf = this;
 			var mergeViewStyle = function (destViewStyle, srcViewStyle) {
 				return util.copy(destViewStyle, srcViewStyle);
 			};
-			///////////////////////////////////////////////////////////////////////////
+
+            this.onOpenView = function(viewId){
+                persistence.getView(viewId, function(view){
+                    $window.document
+                    thisf.loadView(view);
+                })
+            };
+
+            this.loadView = function( document, view ){
+                    // insert a new element into the array??
+            };
+
+            var onSelectView = function(viewId){
+                d3.select("tab[data-view-id='+viewId+']")
+                    .attr("active",true);
+            };
+
+            var onRemoveView = function(viewId){
+                d3.select("tab[data-view-id='+viewId+']")
+                    .remove();
+            };
+
+            ///////////////////////////////////////////////////////////////////////////
 			/// Extension functions
 			///////////////////////////////////////////////////////////////////////////
 
 			return {
-				allItems: persistence.allItems,
+
+
+
+
+
+
+
+            allItems: persistence.allItems,
 				allItemTypes: persistence.allItemTypes,
 				allRelationships: persistence.allRelationships,
 				initialize: function (f) {
@@ -57,4 +86,4 @@
 				}
 			}
 		}]);
-})(angular.module('graphOmatic.directives'));
+})(angular.module('GraphOMaticServices'));

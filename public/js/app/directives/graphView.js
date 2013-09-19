@@ -1,234 +1,398 @@
 //var graphModule = ;
-(function(graphModule){
+(function (directivesModule) {
 
-	graphModule.directive('graphView', ['$compile', '$parse', 'ConstantsService','UtilityFunctions','$timeout','RelationshipManager',
-		function ($compile, $parse, constants, utils, timer,relationshipMgr ) {
-		console.log("creating directive graphView");
+    directivesModule.
+        directive('graphView', ['$compile', '$parse', function ($compile, $parse) {
 
-
-            function DndHandlerNu (theViewItem, fItemMoved) {
-                if (!theViewItem) return null;
-
-                this.viewItem = theViewItem;
-                this.lastX = 0;
-                this.lastY = 0;
-                this.beforeLastX = 0;
-                this.beforeLastY = 0;
-                this.initX = 0;
-                this.initY = 0;
-                this.initTop = 0;
-                this.initLeft = 0;
-
-                this.dragStart = $.proxy( function(event) {
-                    var evt = event.originalEvent;
-                    console.log('dragStartEvent ' +
-                        'client -> x:' + evt.clientX + " y:" + evt.clientY +
-                        ' page  -> x:' + evt.pageX + " y:" + evt.pageY);
-
-                    var el = angular.element(evt.currentTarget);
-                    //store the difference in top/left and where the mouse is
-                    this.initX = evt.pageX;
-                    this.initY = evt.pageY;
-                    var off = el.offset();
-                    this.initTop = off.top;
-                    this.initLeft = off.left;
-                    this.beforeLastX = this.lastX = off.left;
-                    this.beforeLastY = this.lastY = off.top;
-                    console.log('dragStartEvent ' +
-                        'element pos -> x:' + this.initLeft + " y:" + this.initTop);
-                    return evt;
-                }, this);
-
-                this.drag = $.proxy(function(event) {
-                    var evt = event.originalEvent;
-                    if (evt.preventDefault)
-                        evt.preventDefault();
-//			console.log('dragEvent ' +
-//					' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-//					' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-//					' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-//					' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-
-                    this.beforeLastX = this.lastX === 0 ? evt.pageX : this.lastX;
-                    this.beforeLastY = this.lastY === 0 ? evt.pageY : this.lastY;
-
-                    this.lastX = evt.pageX;
-                    this.lastY = evt.pageY;
-                    var ofs = angular.element(evt.currentTarget).offset();
-
-                    $('#position').text(ofs.left + ', ' + ofs.top);
-
-                    var el = angular.element(evt.currentTarget);
-                    var x = (this.beforeLastX - this.initX) + this.initLeft;
-                    var y = (this.beforeLastY - this.initY) + this.initTop;
-//			console.log('dragEndEvent ' +
-//					' last -> x:' + this.beforeLastX + " y:" + this.beforeLastY +
-//					' new pos -> x:' + x + " y:" + y);
-                    el.offset({"left": x, "top": y});
-
-                },this);
-
-                this.dragOver = $.proxy(function(event) {
-                    var evt = event.originalEvent;
-
-//		console.log('dragOverEvent ' +
-//			//'client -> x:'+evt.clientX + " y:"+evt.clientY+
-//		  ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-//		  ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-                    if (evt.preventDefault)
-                        evt.preventDefault();
-                    var el = angular.element(evt.currentTarget);
-                    return evt;
-                },this);
-
-                this.drop = $.proxy(function(event) {
-                    var evt = event.originalEvent;
-
-                    if (evt.preventDefault)
-                        evt.preventDefault();
-                    console.log('dropEvent ' +
-                        ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-                        ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-                        ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-                        ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-
-                },this);
-
-                this.dragEnd = $.proxy(function(event) {
-                    var evt = event.originalEvent;
-                    if (evt.preventDefault)
-                        evt.preventDefault();
-                    var el = angular.element(evt.currentTarget);
-                    var off = el.offset();
-                    console.log('dragEndEvent ' +
-                        ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-                        ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-                        ' moverOffset   -> x:' + off.left + " y:" + off.top +
-                        ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-                        ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-                    // broadcast the move
-                    fItemMoved(this.viewItem, off.left, off.top);
-                    return evt;
-                },this);
-                this.dropped = $.proxy(function(event, node) {
-                    var evt = event.originalEvent;
-
-                    console.log('droppedEvent ' +
-                        ' client   -> x:' + evt.clientX + " y:" + evt.clientY +
-                        ' offset   -> x:' + evt.offsetX + " y:" + evt.offsetY +
-                        ' screen   -> x:' + evt.screenX + " y:" + evt.screenY +
-                        ' page   -> x:' + evt.pageX + " y:" + evt.pageY);
-                },this);
-
-                return this;
+            var distance = function (x, y) {
+                return  ( Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
             };
 
-            var dragfn = d3.behavior.drag()
-                .on('dragstart', function() {
-                    var sel = d3.select(this),
-                        cx = sel.attr('cx'),
-                        cy = sel.attr('cy');
-                    var cursorData = d3.select(this).data();
+            function selectItem(d,i){
+                //var element = evt.target;
+                var g = d3.select(this);
+                putToTop(this);
+                g.classed("selectedRect")
+            }
 
-                })
-                .on('drag', function(d, i) {
-                    var sel = d3.select('.drag'),
-                        cy = sel.attr('cy');
-                    sel.attr('cy', parseInt(cy)+d3.event.dy);
+            function deselectItem(){
+                var g = d3.select(this);
+                g.classList.remove("selectedRect")
 
-                    console.log(d,i,cy);
-                })
-                .on('dragend', function(d, i) {
-                    var drag = d3.selectAll('.drag');
-                    drag.remove();
-                });
+            }
 
-            var itemElementMap = {};
-		var itemRelationshipMap = {};
-		function addItems(parentElement, viewItems, scope){
+            function putToBottom(element) {
+                //insert selected  element before the first child
+                //first test if it isn't already the first Child
+                if (element.previousSibling) {
+                    element.parentNode.insertBefore(element,element.parentNode.firstChild);
+                }
+            }
 
-            var viewEnter = (parentElement) .selectAll("g")
-                .data(viewItems)
-                .enter()
-                    .append("g")
-                    .attr("id",  function(d){return utils.viewItemIdToElementId(d.id );} )
-                    .attr("ng-model",  function(d){ return utils.viewItemIdToScopeName(d.id ) } )
-                    .attr("style", function(d){  return "left:"+d.position().x+"px;top:"+d.position().y+"px"} )
+            function putToTop(element) {
+                //appendChild after the last child
+                element.parentNode.appendChild(element);
+            }
+
+            function createView(data, svgElement){
+                var outerHeight = 250;
+                var outerWidth = 200;
+                var innerX = 10;
+                var innerY = 20;
+                var innerHeight = outerHeight - (2 * innerY);
+                var innerWidth = outerWidth - (2 * innerX);
+
+                var whenNewData = d3.select(svgElement)
+                    .attr("width", window.screen.availWidth)
+                    .attr("height", window.screen.availHeight)
+                    .selectAll("g")
+                    .data(data.items)
+                    .enter();
+
+                function dragmove() {
+                    var oldx = +d3.select(this).attr("data-transform-x");
+                    var oldy = +d3.select(this).attr("data-transform-y");
+                    var newX = Math.round(oldx+d3.event.dx);
+                    var newY = Math.round(oldy+d3.event.dy);
+
+                    d3.select(this).attr("data-transform-x", newX );
+                    d3.select(this).attr("data-transform-y", newY);
+                    d3.select(this).attr("transform", function(d) {
+                        var pos = d.position();
+                        console.log("dragmove(): transform: " + newX + ", " + newY );
+                        return "translate("+ newX+","+ newY+")";
+                    });
+                };
+
+                var drag = d3.behavior.drag()
+                    .on("drag", dragmove);
+                var whenNewDatag =
+                    whenNewData
+                        .append("g")
+                        .attr("draggable", "true" );
+
+                var pointsString = function(x, y, width, height){
+                    var xtra = 5;//strokeRange(distance(x,y));
+                    return  ""+(x+width)+","+y+" " +
+                        ""+(x+width)+","+(y+height-xtra)+" " +
+                        ""+(x)+","+(y+height-xtra) +" " +
+                        ""+(x)+","+y + " "+
+                        ""+(x+width)+","+(y)+" " +
+                        ""+(x+width)+","+(y+height-xtra);
+                };
+
+                whenNewDatag
                     .each(function(d,i){
-                        scope[utils.viewItemIdToScopeName(d.id)] = d;
-                        var thing = d3.select(this);
-                        var pos = utils.elementPosition(thing.node());
-                        console.log("graphView.addItems("+ d.title()+"): added element:"+thing.attr('id')+" ngModel:"+thing.attr('ng-model') + "@"+ pos.toString());
-                });
+                        d3.select(this).attr("data-transform-x", d.position().x );
+                        d3.select(this).attr("data-transform-y", d.position().y );
+                    });
 
-            viewEnter.append("circle")
-                .attr("cx", 15)
-                .attr("cy", 15)
-                .attr("r", 10)
-                .attr("class", "connector")
-                //.attr("fill", "url(#grad1)")
-                .attr("id", function(d){  return utils.viewItemIdToConnectorId(d.id, 1);})
-                .attr("fill", "white")
-                .attr("style", "stroke:black;stroke-width:2");
+                whenNewDatag
+                    .attr("transform", function(d) {
+                        var xformx = d.position().x;
+                        var xformy = d.position().y;
+                        return "translate("+xformx+","+xformy+")";
+                    });
 
-            viewEnter.append("text")
-                .attr("x", 250)
-                .attr("y", 250)
-                .attr("class", "node")
-                .text(function(d){ return d.title(); });
 
-            viewEnter.append("image")
-                .attr("x", 20)
-                .attr("y", 50)
-                .attr("width", 160)
-                .attr("height", 80)
-                .attr("xlink:href", function(d){return d.image();});
+                whenNewDatag
+                    .append("polyline")
+                    .attr("points", function (d, i) {
+                        return pointsString(0, 0, outerWidth, outerHeight);
+                    })
+                    .attr("stroke", "navy")
+                    .attr("stroke-width", function(d){return 5;})
+                    .attr("fill","navy");
 
-            viewEnter.append("circle")
-                .attr("cx", 235)
-                .attr("cy", 200)
-                .attr("r", 10)
-                .attr("class", "connector")
-                .attr("id", function(d){  return utils.viewItemIdToConnectorId(d.id, 2);})
-                .attr("fill", "white")
-                .attr("style", "stroke:black;stroke-width:2");
+                var textFunc = function(d, i){
+                    return "" + d.item.itemType.name;
+                };
 
-            viewEnter.call(dragfn);
-        };
+                whenNewDatag
+                    .append("image")
+                    .attr("x",innerX)
+                    .attr("y", innerY)
+                    .attr("height", innerHeight)
+                    .attr("width", innerWidth)
+                    .attr("preserveAspectRatio","none")
+//                .attr("xlink:href",function(d,i){ return d.image ? d.image(): "#";});
+                    .attr("xlink:href", "/images/silvermetaltexture.jpg");
 
-		return {
-			restrict: 'E',
-			replace: true,
-			scope: true,
-			'require':'?ngModel',
-			templateUrl:'/templates/view3.ejs',
-			link:function (scope, element, attrs, model) {
-                console.log("graphView.link(("+JSON.stringify(arguments)+")): ENTER.");
-				if (!model)
-					return;
-				console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")): ENTER.");
+                whenNewDatag
+                    .append("text")
+                    .attr("x", innerX)
+                    .attr("y", innerY+15)
+                    .attr("stroke", "darkblue")
+                    .text(textFunc);
 
-				/// find our view in the scope
-				var mdl = $parse(attrs.ngModel);
-				scope.view = mdl(scope);
-				console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")): scope.view:"+scope.view);
-                var theView = d3.select(element[0]);//.append("g");
-				// called when data value changes(like a watch)
-				/// here is where we update the gui with new data
-                scope.$watch(attrs.ngModel, function (viewData, oldVal) {
-                //    model.$render = function () {
-					console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")).$render: ENTER.");
-					console.dir(viewData);
-                    theView.select("*").remove();
-					if(viewData){
-				        addItems(theView, viewData.items, scope);
-					    timer(function(){
-								relationshipMgr( element, viewData.relationships );
-						}, 1500, false);
-					}
-					console.log("graphView.link(("+scope.$id+", phase:"+scope.$$phase+")).$render: EXIT.");
-				});
-			}
-		};
-	}]);
+                var titleFunc = function(d, i){
+                    return  d.title();
+                };
+
+                whenNewDatag
+                    .append("text")
+                    .attr("x", innerX)
+                    .attr("y", innerY+30)
+                    .attr("stroke", "navy")
+                    .text(titleFunc);
+
+                var imageWidth = innerWidth;
+                var imageHeight = innerHeight - 50;
+                var imageX = innerX;
+                var imageY = innerY+35;
+                whenNewDatag
+                    .append("image")
+                    .attr("x", function(d,i){
+                        return d.image() ? imageX : 0
+                    })
+                    .attr("y", function(d,i){
+                        return d.image() ? imageY : 0
+                    })
+                    .attr("height", function(d,i){
+                        return d.image() ? imageHeight : 0
+                    })
+                    .attr("width", function(d,i){
+                        return d.image() ? imageWidth : 0
+                    })
+                    .attr("preserveAspectRatio","none")
+                    .attr("xlink:href",function(d,i){ return d.image ? d.image(): "#";});
+//                .attr("xlink:href", "/images/silvermetaltexture.jpg");
+
+
+                var descX = innerX+10;
+                var descY = innerY+innerHeight - 50;
+                var descWidth = innerWidth;
+                var descHeight = 50;
+                var fobjEnter =whenNewDatag
+                    .append("svg:foreignObject")
+                    .attr("x", descX)
+                    .attr("y", descY)
+                    .attr("height", descHeight)
+                    .attr("width", descWidth )
+                    .attr("requiredExtensions", "http://www.w3.org/1999/xhtml")
+                    .attr("style","pointer-events: all;");
+
+                var descEnter =fobjEnter
+                    .append("xhtml:textarea")
+                    .attr("style","overflow:auto;height:"+descHeight+";background: url('/images/silvermetaltexture.jpg')")
+                    .text(function(d){
+                        return d.description();
+                    });
+
+                whenNewDatag.append("circle")
+                    .attr("cx", innerX + (innerWidth/2))
+                    .attr("cy", 0)
+                    .attr("r", 10)
+                    .attr("class", "connector")
+                    //.attr("fill", "url(#grad1)")
+                    .attr("id", function (d) {
+                        return "connector1"+ d.id;
+                    })
+                    .attr("fill", "white")
+                    .attr("style", "stroke:black;stroke-width:2");
+
+
+                whenNewDatag.append("circle")
+                    .attr("cx", innerX + (innerWidth/2))
+                    .attr("cy", outerHeight)
+                    .attr("r", 10)
+                    .attr("class", "connector")
+                    //.attr("fill", "url(#grad1)")
+                    .attr("id", function (d) {
+                        return "connector2"+ d.id;
+                    })
+                    .attr("fill", "white")
+                    .attr("style", "stroke:black;stroke-width:2");
+
+
+                whenNewDatag
+                    .on("click", selectItem)
+                    .call(drag);
+            }
+
+            function createViewWithHtmlTable(data, svgElement){
+                var whenNewData = d3.select(svgElement)
+                    .attr("width", window.screen.availWidth)
+                    .attr("height", window.screen.availHeight)
+                    .selectAll("g")
+                    .data(data.items)
+                    .enter();
+
+                function dragmove() {
+                    var oldx = +d3.select(this).attr("data-transform-x");
+                    var oldy = +d3.select(this).attr("data-transform-y");
+                    var newX = Math.round(oldx+d3.event.dx);
+                    var newY = Math.round(oldy+d3.event.dy);
+
+                    d3.select(this).attr("data-transform-x", newX );
+                    d3.select(this).attr("data-transform-y", newY);
+                    d3.select(this).attr("transform", function(d) {
+                        var pos = d.position();
+                        console.log("dragmove(): transform: " + newX + ", " + newY );
+                        return "translate("+ newX+","+ newY+")";
+                    });
+                };
+
+                var drag = d3.behavior.drag()
+                    .on("drag", dragmove);
+                var whenNewDatag =
+                    whenNewData
+                        .append("g")
+                        .attr("draggable", "true" );
+
+                var pointsString = function(x, y, width, height){
+                    var xtra = 5;//strokeRange(distance(x,y));
+                    return  ""+(x+width)+","+y+" " +
+                        ""+(x+width)+","+(y+height-xtra)+" " +
+                        ""+(x)+","+(y+height-xtra) +" " +
+                        ""+(x)+","+y + " "+
+                        ""+(x+width)+","+(y)+" " +
+                        ""+(x+width)+","+(y+height-xtra);
+                };
+
+                whenNewDatag
+                    .each(function(d,i){
+                        d3.select(this).attr("data-transform-x", d.position().x );
+                        d3.select(this).attr("data-transform-y", d.position().y );
+                    });
+
+                whenNewDatag
+                    .attr("transform", function(d) {
+                        var xformx = d.position().x;
+                        var xformy = d.position().y;
+                        return "translate("+xformx+","+xformy+")";
+                    });
+
+                whenNewDatag
+                    .append("polyline")
+                    .attr("points", function (d, i) {
+                        return pointsString(0, 0, 200, 200);
+                    })
+                    .attr("stroke", "navy")
+                    .attr("stroke-width", function(d){return 5;})
+                    .attr("fill","navy");
+
+                var textFunc = function(d, i){
+                    return "" + d.item.itemType.name;
+                };
+
+                whenNewDatag
+                    .append("text")
+                    .attr("x", 10)
+                    .attr("y", 15)
+                    .attr("stroke", "white")
+                    .text(textFunc);
+
+                var titleFunc = function(d, i){
+                    return  d.title();
+                };
+
+                whenNewDatag
+                    .append("text")
+                    .attr("x", 10)
+                    .attr("y", 30)
+                    .attr("stroke", "white")
+                    .text(titleFunc);
+
+                whenNewDatag
+                    .append("image")
+                    .attr("x", 20)
+                    .attr("y", 45)
+                    .attr("height", 150)
+                    .attr("width", 160 )
+                    .attr("preserveAspectRatio","none")
+//                .attr("xlink:href",function(d,i){ return d.image ? d.image(): "#";});
+                    .attr("xlink:href", "/images/silvermetaltexture.jpg");
+
+
+                whenNewDatag.append("circle")
+                    .attr("cx", 100)
+                    .attr("cy", 0)
+                    .attr("r", 10)
+                    .attr("class", "connector")
+                    //.attr("fill", "url(#grad1)")
+                    .attr("id", function (d) {
+                        return "connector1"+ d.id;
+                    })
+                    .attr("fill", "white")
+                    .attr("style", "stroke:black;stroke-width:2");
+
+
+                whenNewDatag.append("circle")
+                    .attr("cx", 100)
+                    .attr("cy", 200)
+                    .attr("r", 10)
+                    .attr("class", "connector")
+                    //.attr("fill", "url(#grad1)")
+                    .attr("id", function (d) {
+                        return "connector2"+ d.id;
+                    })
+                    .attr("fill", "white")
+                    .attr("style", "stroke:black;stroke-width:2");
+
+
+                var fobjEnter =whenNewDatag
+                    .append("svg:foreignObject")
+                    .attr("x", 20)
+                    .attr("y", 45)
+                    .attr("height", 150)
+                    .attr("width", 160 )
+                    .attr("requiredExtensions", "http://www.w3.org/1999/xhtml")
+                    .attr("style","pointer-events: all;");
+
+                var tblEnter =fobjEnter
+                    .append("xhtml:table")
+                    .attr("class","itemData")
+                    .selectAll("tr")
+                    .data(function(d){
+                        return d.data();
+                    })
+                    .enter()
+                    .append("tr")
+                    .attr("class", "itemData");
+
+                tblEnter
+                    .append("th")
+                    .text(function(d,i){
+                        return d.name;});
+
+                tblEnter
+                    .append("td")
+                    .text(function(d,i){
+                        return d.value;});
+
+                whenNewDatag
+                    .on("click", selectItem)
+                    .call(drag);
+            }
+
+            return {
+                restrict: 'E',
+                replace: true,
+                scope: true,
+                'require': '?ngModel',
+                template: "<svg> </svg>",
+                link: function (scope, element, attrs, model) {
+
+                    if (!model)
+                        return;
+
+                    var mdl = $parse(attrs.ngModel);
+                    var modelData = mdl(scope.$parent);
+
+                    createView(modelData, element[0]);
+
+                    /// change the view if the data changes
+                    model.$render = function () {
+                        /// redisplay the item inside the view
+                        if (this.$modelValue) {
+                            // use new value
+                            // nuData = this.$modelValue;
+                        }
+                    }
+                }
+            };
+        }]);
+
 })(angular.module('graphOmatic.directives'));
+

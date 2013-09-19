@@ -86,6 +86,9 @@ console.log("graphWorld.js");
                     .data(viewList);
 
                 var ngModel = viewListVar+'['+ i+']';
+
+                ///FIX THIS !!!!
+
                 selection.enter()
                         .append("tab")
                         .attr("heading", function(d,i){return d.name;})

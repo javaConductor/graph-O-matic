@@ -6,7 +6,9 @@ angular.module('graphOmatic', ['graphOmatic.directives', 'GraphOMaticServices'])
         console.log("graphOmatic module created.");
 	$routeProvider.
 	  when('/', {templateUrl:'index', controller:MainCtrl}).
-      when('/testView', { controller:ViewCtrl});
+      when('/testView', { templateUrl:'testView',controller:ViewCtrl});
 	$routeProvider.otherwise({redirectTo:'/'});
 	$locationProvider.html5Mode(true);
-}]);
+        console.log("graphOmatic module creation DONE.");
+
+    }]);

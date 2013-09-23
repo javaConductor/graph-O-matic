@@ -18,7 +18,7 @@
 
                 },
                 position:function(){
-                    return decoratedViewItem.viewPosition;
+                    return decoratedViewItem.position;
                 },
                 image: function(){
                     /// for now we use the default from the itemType
@@ -27,9 +27,6 @@
                 },
                 title: function(){
                     return decoratedViewItem.data()['title'];
-                },
-                style: function(){
-                    return decoratedViewItem.viewStyle;
                 },
                 properties:function(){
                     return decoratedViewItem.item.itemType.properties;
@@ -49,15 +46,12 @@
      * @param viewOptions
      */
     var showViewItem = function showViewItem(item, viewOptions){
-
-
-
     };
 
     var ViewObject = function View(world, viewData) {
 		/// all initialization done here before we return object
 		/// add the types to the items
-		var theItemTypes = world.itemTypesForItems( viewData.itemIdList );
+		var theItemTypes = world.allItemTypes( viewData.itemIdList );
 		var itemTypesById = util.mapBy("id", theItemTypes);
 		var newItems = [];
 
@@ -81,7 +75,6 @@
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
 			decorateViewItem: function(viewItem){
-				viewItem.viewStyle = world.getItemTypeViewStyle(viewItem.itemType);
 				viewItem.properties = world.initProperties(viewItem.itemType);
 				viewItem.item.itemType = decorators.decorateItemType(viewItem.item.itemType);
 				viewItem = decorators.decorateViewItem(viewItem);
@@ -96,7 +89,7 @@
 			wrapItem:  function(item){
 				var vitem = {
 					item: item,
-					itemType: itemTypesById[item.itemTypeId]
+					itemType: itemTypesById[item.type.id]
 				};
 				return this.initViewItem(vitem);
 			},
@@ -127,6 +120,7 @@
         };
 	services.factory('View', ['persistence', 'UtilityFunctions', 'World',
 		function ( persistence, util, theWorld ) {
+            console.log("View Service created.");
 			return function(viewData){
 				return new ViewObject( theWorld, viewData);
 			}

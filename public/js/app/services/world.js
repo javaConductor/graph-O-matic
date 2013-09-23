@@ -18,7 +18,7 @@
 
             this.onOpenView = function(viewId){
                 persistence.getView(viewId, function(view){
-                    $window.document
+                   // $window.document
                     thisf.loadView(view);
                 })
             };
@@ -42,11 +42,6 @@
 			///////////////////////////////////////////////////////////////////////////
 
 			return {
-
-
-
-
-
 
 
             allItems: persistence.allItems,

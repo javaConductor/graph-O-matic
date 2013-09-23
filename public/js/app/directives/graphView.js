@@ -122,7 +122,7 @@
                     .append("text")
                     .attr("x", innerX)
                     .attr("y", innerY+15)
-                    .attr("stroke", "darkblue")
+                    .attr("stroke", "darkgray")
                     .text(textFunc);
 
                 var titleFunc = function(d, i){
@@ -133,7 +133,7 @@
                     .append("text")
                     .attr("x", innerX)
                     .attr("y", innerY+30)
-                    .attr("stroke", "navy")
+                    .attr("stroke", "black")
                     .text(titleFunc);
 
                 var imageWidth = innerWidth;
@@ -161,7 +161,7 @@
 
                 var descX = innerX+10;
                 var descY = innerY+innerHeight - 50;
-                var descWidth = innerWidth;
+                var descWidth = innerWidth + 0;
                 var descHeight = 50;
                 var fobjEnter =whenNewDatag
                     .append("svg:foreignObject")
@@ -169,12 +169,13 @@
                     .attr("y", descY)
                     .attr("height", descHeight)
                     .attr("width", descWidth )
+
                     .attr("requiredExtensions", "http://www.w3.org/1999/xhtml")
-                    .attr("style","pointer-events: all;");
+                    .attr("style","pointer-events: all;overflow:hidden");
 
                 var descEnter =fobjEnter
                     .append("xhtml:textarea")
-                    .attr("style","overflow:auto;height:"+descHeight+";background: url('/images/silvermetaltexture.jpg')")
+                    .attr("style","overflow:auto;height:"+descHeight+"; width:"+descWidth+"; background: url('/images/silvermetaltexture.jpg')")
                     .text(function(d){
                         return d.description();
                     });
@@ -380,6 +381,10 @@
                     var mdl = $parse(attrs.ngModel);
                     var modelData = mdl(scope.$parent);
 
+                    if (!modelData){
+                        alert("Value "+attrs.ngModel+ " not found in scope.");
+                        return null;
+                    }
                     createView(modelData, element[0]);
 
                     /// change the view if the data changes

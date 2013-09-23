@@ -70,3 +70,7 @@ body {
     width: 201px;
     height: 201px;
 }
+
+textarea.itemDescription {
+    width: 180px;
+}

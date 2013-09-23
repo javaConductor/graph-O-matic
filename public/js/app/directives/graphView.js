@@ -159,7 +159,7 @@
 //                .attr("xlink:href", "/images/silvermetaltexture.jpg");
 
 
-                var descX = innerX+10;
+                var descX = innerX+0;
                 var descY = innerY+innerHeight - 50;
                 var descWidth = innerWidth + 0;
                 var descHeight = 50;
@@ -169,13 +169,13 @@
                     .attr("y", descY)
                     .attr("height", descHeight)
                     .attr("width", descWidth )
-
                     .attr("requiredExtensions", "http://www.w3.org/1999/xhtml")
                     .attr("style","pointer-events: all;overflow:hidden");
 
                 var descEnter =fobjEnter
                     .append("xhtml:textarea")
                     .attr("style","overflow:auto;height:"+descHeight+"; width:"+descWidth+"; background: url('/images/silvermetaltexture.jpg')")
+                    .attr("class", "itemDescription")
                     .text(function(d){
                         return d.description();
                     });
@@ -191,7 +191,6 @@
                     })
                     .attr("fill", "white")
                     .attr("style", "stroke:black;stroke-width:2");
-
 
                 whenNewDatag.append("circle")
                     .attr("cx", innerX + (innerWidth/2))

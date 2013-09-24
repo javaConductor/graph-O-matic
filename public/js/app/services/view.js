@@ -35,7 +35,6 @@
                     return decoratedViewItem.item.data;
                 }
             };
-
         };
 
     /**

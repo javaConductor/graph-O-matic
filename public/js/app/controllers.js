@@ -49,6 +49,11 @@ console.log("WorldCtrl()");
             eventProcessor.emit(constants.events.OpenViewEvent, [viewData]);
         });
 	};
+
+
+    $scope.newView = function newView(){
+        alert("Should b creating a new view.");
+    }
 }
 
 WorldCtrl.$inject=['$scope', 'GraphWorld', "ContextEventProcessor" ];

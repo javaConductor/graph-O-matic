@@ -1,7 +1,8 @@
 
 .world {
-    background: url("/images/golden_steel_plate_highdefinition_picture_4_169701.jpg");
+    position: absolute;
 }
+
 
 .worldNavigation{
     position: relative;
@@ -9,21 +10,52 @@
     top: 20px;
     width: 900px;
     height: 200px;
+    background-color: #ffffff;
+    opacity: 0.6;
+}
+
+.worldViewSelection{
+    position: absolute;
+    left: 0;
+    top: 20px;
+    width: 200px;
+    height: 100%;
+    background: inherit;
+}
+
+.worldViewSelection select {
+    width: 100px;
+}
+
+.worldItemSearch{
+    min-width: 600px;
+    position: absolute;
+    left: 201px;
+    top: 20px;
+    width: 700px;
+    height: 100%;
+    background: inherit;
 }
 
 .worldViewSettings{
     float: left;
     position: relative;
     left: 0;
-    top: 201px;
+    top: 221px;
     width: 200px;
     height: 100%;
 }
 
 .worldViewList{
-    float: right;
-    left: 201px;
+    left: 20px;
+    top: 221px;
+    width: 900px;
+    height: 100%;
+}
+tabset.worldViewList{
+    position: absolute;
+    left: 20px;
     top: 201px;
-    width: 700px;
+    width: 900px;
     height: 100%;
 }

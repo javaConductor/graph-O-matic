@@ -88,14 +88,13 @@ console.log("graphWorld.js");
                 var ngModel = viewListVar+'['+ i+']';
 
                 ///FIX THIS !!!!
-
                 selection.enter()
                         .append("tab")
                         .attr("heading", function(d,i){return d.name;})
                         .attr("active", true)
                         .attr("class","worldViewList")
                         .attr("select", function(d,i){  return onSelectedFunc(d); })
-                        .attr("data-view-id",  function(d,i){  return (d._id); })
+                        .attr("data-view-id",  function(d,i){  return (d.id); })
                             .append( $compile("graph-view")(scope))
                             .attr("ng-model", function(d,i){  return  viewListVar+'['+ i+']'; })
             };

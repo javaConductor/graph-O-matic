@@ -6,6 +6,7 @@
  * Time: 12:08 AM
  */
 (function (services) {
+    console.log("services/view.js");
 
     var viewStyleToCSSStyle = function(viewStyle){
         return viewStyle.style;
@@ -119,8 +120,8 @@
         };
 	services.factory('View', ['persistence', 'UtilityFunctions', 'World',
 		function ( persistence, util, theWorld ) {
-            console.log("View Service created.");
-			return function(viewData){
+            console.log("services/view.js - services:"+JSON.stringify(services));
+            return function(viewData){
 				return new ViewObject( theWorld, viewData);
 			}
 		}]);

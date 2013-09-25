@@ -1,8 +1,10 @@
 'use strict';
 
 (function (services) {
+    console.log("services/throttle.js");
 
     services.factory('throttle', [ 'ConstantsService', '$timeout', function ( constants, timeout) {
+        console.log("services/throttle.js - services:"+JSON.stringify(services));
         /// return the util funcs
         var factory = this;
         var printLastVal = function (x) {

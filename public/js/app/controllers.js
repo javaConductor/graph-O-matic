@@ -13,8 +13,8 @@ console.log("WorldCtrl()");
         viewOptions:{}
     };
 	/// get all the views
-    $scope.views = [tmp];
-    $scope.viewList = [];
+    $scope.viewList = [tmp];
+    $scope.openViewList = [tmp];
     $scope.currentView=null;
 
 	// get all the categories (item,relationship)
@@ -53,6 +53,7 @@ console.log("WorldCtrl()");
 
     $scope.newView = function newView(){
         alert("Should b creating a new view.");
+        World.createView()
     }
 }
 

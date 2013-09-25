@@ -5,11 +5,11 @@
  * Time: 6:52 PM
  */
 (function (services) {
-    console.log("services/relationship.js - services:"+JSON.stringify(services));
 
 	services.factory('RelationshipManager', ['$resource', '$location', '$timeout', 'UtilityFunctions', '$rootScope', 'ConstantsService',
 		function ($resource, $location, $timeout, utils, rootScope, constants) {
-			var factory = this;
+            console.log("services/relationship.js - services:"+JSON.stringify(services));
+            var factory = this;
 			console.log("RelationshipManager.factory: CREATED.");
 
 			this.getConnectors = function (el) {

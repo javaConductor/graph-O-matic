@@ -18,13 +18,15 @@
             ViewSelectionChanged: "view_selection_changed",
             OpenViewEvent: "open_view",
             ViewOpened: "view_opened",
+            ViewOptionsChanged: "view_options_changed",
             CloseView: "close_view",
             ViewClosed: "view_closed"
         }
 	};
 
 	services.factory('ConstantsService', [ function () {
-		return Constants;
+        console.log("services/constants.js - services:"+JSON.stringify(services));
+        return Constants;
 	}]);
 
 })(angular.module('GraphOMaticServices'));

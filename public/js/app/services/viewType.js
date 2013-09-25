@@ -25,6 +25,7 @@
 	services.factory('ViewTypeManager', ['persistence', 'UtilityFunctions', 'World',
 		function ( persistence, util, theWorld ) {
 
+            console.log("services/viewType.js - services:"+JSON.stringify(services));
 
             var initViewTypes = function(){
 

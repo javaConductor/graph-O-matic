@@ -124,7 +124,7 @@
 
 	graphModule.directive('graphItem', ['$compile', '$parse', 'UtilityFunctions', '$rootScope', 'ConstantsService',
 		function ($compile, $parse, utils, rootScope, constants) {
-		console.log("creating directive graphItem");
+            console.log("directives/graphItem.js - directives:"+JSON.stringify(graphModule));
 		this.itemMoved = function (viewItem, x, y) {
 			console.log("ViewItem(" + viewItem.id + ") moved to " + x + ", " + y);
 			rootScope.$broadcast(constants.ViewItemMoved, {viewItemId: viewItem.id, x: x, y: y});

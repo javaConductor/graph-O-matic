@@ -9,15 +9,11 @@
      *
      * ## No Really it's sweet!
      */
-    console.log("world.js")
+    console.log("world.js");
 	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window',
 		function (persistence, util, ctxtSvc, $window) {
 			var thisf = this;
-            console.log("GraphWorld service created!")
-
-//            var mergeViewStyle = function (destViewStyle, srcViewStyle) {
-//				return util.copy(destViewStyle, srcViewStyle);
-//			};
+            console.log("services/world.js - services:"+JSON.stringify(services));
 
             this.onOpenView = function(viewId){
                 persistence.getView(viewId, function(view){
@@ -87,7 +83,16 @@
 						if (e) return f(e, null);
 						return f(null, v ? new View(this, v) : null);
 					});
+                },
+                /// returns error if viewId could not be created
+				createView: function (viewName, viewType, f) {
+					// a view or null
+					persistence.createView(viewName, viewType, function (e, v) {
+						if (e) return f(e, null);
+						return f(null, v ? new View(this, v) : null);
+					});
 				}
+                /////////////////// /////////////////////// /////////////////////////////// ///////////////////////////
 			}
 		}]);
 })(angular.module('GraphOMaticServices'));

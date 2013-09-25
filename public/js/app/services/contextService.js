@@ -71,8 +71,8 @@
                 /// look for views.<viewId>.items
                 /// look for views.<viewId>.relationships
                 ///
-                var fList = util.getOrCreateObjectFromPath(extensionTable, "views." + viewId + ".items", {});
-                fList = util.copy(fList, util.getOrCreateObjectFromPath(extensionTable, "views." + viewId + ".relationships", {}));
+                var fList = util.getOrCreateObjectFromPath(extensionTable, "views." + viewItemId + ".items", {});
+                fList = util.copy(fList, util.getOrCreateObjectFromPath(extensionTable, "views." + viewItemId + ".relationships", {}));
                 return fList;
             },
             applyViewItemExtensions: function (viewItem, extensionTable) {
@@ -104,7 +104,8 @@
     };
 
     services.factory('ContextService', ['$resource', '$location', function ($resource, $location) {
-		return {
+        console.log("services/contextService.js - services:"+JSON.stringify(services));
+        return {
 
             decorator: function(){
                 return {

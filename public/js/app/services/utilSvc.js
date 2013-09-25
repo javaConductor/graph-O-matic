@@ -1,9 +1,10 @@
 'use strict';
 
 (function (services) {
-    console.log("services/utilSvc.js - services:"+JSON.stringify(services));
+    console.log("services/utilSvc.js");
 
     services.factory('UtilityFunctions', ['$http', '$location', 'ConstantsService', '$timeout', function ($http, $location, constants, timeout) {
+        console.log("services/utilSvc.js - services:"+JSON.stringify(services));
         /// return the util funcs
 		function findPosX(obj) {
 			var curleft = 0;

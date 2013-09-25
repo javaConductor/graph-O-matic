@@ -37,12 +37,12 @@
 
         }
 
-	services.factory('ItemEditor', ['$rootScope', 'UtilityFunctions', 'World',
-		function ( rootScope, util, theWorld ) {
+	services.factory('ItemEditor', ['UtilityFunctions', 'World',
+		function ( util, theWorld ) {
 
             ///////////////////  return the service function
-			return function(itemType, item ){
-				return new ItemEditorObject( theWorld, viewData);
+			return function( item ){
+				return new ItemEditorObject( theWorld, item);
 			}
 
 

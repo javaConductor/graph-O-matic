@@ -13,11 +13,11 @@
  *      openViewEvent  - recv'd when the user wants to open a view that is not open
  *
  */
-console.log("graphWorld.js");
+console.log("graphViewList.js");
 (function (graphModule) {
-    graphModule.directive('graphWorld', ['$rootScope', '$compile', 'ContextEventProcessor', '$parse', 'UtilityFunctions', 'ConstantsService',
+    graphModule.directive('graphViewList', ['$rootScope', '$compile', 'ContextEventProcessor', '$parse', 'UtilityFunctions', 'ConstantsService',
         function (rootScope, $compile, eventProcessor, $parse, util, constants) {
-            console.log("directives/graphWorld.js - directives:"+JSON.stringify(graphModule));
+            console.log("directives/graphViewList.js - directives:"+JSON.stringify(graphModule));
             /**
              * This function is called when the user wants to open a view that may not be open
              *
@@ -57,12 +57,12 @@ console.log("graphWorld.js");
                     .attr("active",false);
                 // select the one
                 if(viewId)
-                    d3.select("tab[data-view-id='+viewId+']")
+                    d3.select("tab[data-view-id="+viewId+"]")
                         .attr("active",true);
             };
 
             var closeView = function(viewId){
-                d3.select("tab[data-view-id='+viewId+']")
+                d3.select("tab[data-view-id="+viewId+"]")
                     .remove();
             };
 
@@ -95,7 +95,7 @@ console.log("graphWorld.js");
                         .attr("select", function(d,i){  return onSelectedFunc(d); })
                         .attr("data-view-id",  function(d,i){  return (d.id); })
                             //.append( $compile("<graph-view/>")(scope))
-                            .append(("<graph-view/>"))
+                            .append(("<graph-view />"))
                             .attr("ng-model", function(d,i){  return  viewListVar+'['+ i+']'; })
             };
 
@@ -103,11 +103,11 @@ console.log("graphWorld.js");
                 restrict: 'E',
                 replace: true,
                 scope: true,
-                templateUrl: 'templates/world.ejs',
+                template: "<tabset class='worldViewList'/>",
                 link: function (scope, element, attrs, model) {
                     console.log("worldViewList.link("+scope.$id+"): ENTER.");
                     var mdl = $parse( attrs.ngModel);
-                    //var viewList = mdl(rootScope);
+                    var viewList = mdl(rootScope);
                     var selection = d3.select( element[0])
                         .select("tabset.worldViewList");
 

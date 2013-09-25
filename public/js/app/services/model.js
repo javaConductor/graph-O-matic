@@ -4,8 +4,9 @@
 console.log("services/model.js");
 (function(services){
 
-    console.log("services/model.js - services:"+JSON.stringify(services));
 	services.factory('Model', ['persistence', function (persistence) {
+        console.log("services/model.js - services:"+JSON.stringify(services));
+
 		var thisf = this;
         var Validator = require('../../lib/jsonschema/validator');
 		//var applyProperties = function();

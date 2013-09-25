@@ -1,22 +1,34 @@
 (function (services) {
-    console.log("services/persistence.js - services:"+JSON.stringify(services));
+    console.log("services/persistence.js");
 
     /**
 	 * This service is responsible for reading and writing to and from the server in graph-O-matic (c)
 	 *
 	 *
 	 */
-    console.log("Defining persistence service.");
+
 	services.factory('persistence', ['$http', '$resource', 'Directory', function ($http, $resource, restDirectory) {
+        console.log("services/persistence.js - services:"+JSON.stringify(services));
 		var prefix = 'http://' + restDirectory.prefix;
-        var View = $resource(prefix + 'views/:id', {alt:'json', callback:'JSON_CALLBACK'},{id: '@id'});
+        var View = $resource(prefix + 'views/:id', {alt:'json', callback:'JSON_CALLBACK', id: '@id'},
+            {
+                create: {
+                    method: "PUT",
+                    url: "prefix + 'views/new/:viewName/:viewType",
+                    params: {
+                        viewName: "@viewName",
+                        viewType: "@viewType"
+                    }
+                }
+            }
+
+        );
         var Item = $resource(prefix + 'items/:id', {alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
         var ViewItem = $resource(prefix + 'view-items/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
         var ItemType = $resource(prefix + 'item-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
 		var Relationship = $resource(prefix + 'relationships/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
         var RelationshipType = $resource(prefix + 'relationship-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
 
-        console.log("Creating persistence service.");
 		return {
 
  			getItem: function (itemId, f) {
@@ -77,11 +89,18 @@
 			removeView: function (viewId, f) {
 			},
 
+			createView: function (viewName, viewType, f) {
+                View.create({},{viewName: viewName, viewType: viewType}, function(view){
+                    f(null, view);
+                },function(err){
+                    f('Could not create View: name='+viewName +" of type "+viewType +': '+ err, []);
+                });
+			},
+
 			saveView: function (viewData, f) {
 			},
 
             getView: function (viewId, f) {
-
                 View.get({}, {id: viewId}, function (view) {
                     f(null, view);
                 }, function (err) {

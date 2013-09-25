@@ -15,6 +15,8 @@
 (function (services) {
     services.factory('ContextEventProcessor', ['$rootScope',
         function ( rootScope) {
+            console.log("services/eventProcessor.js - services:"+JSON.stringify(services));
+
             ///////////////////  return the service function
             return {
 

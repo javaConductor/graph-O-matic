@@ -1,0 +1,30 @@
+<div class="world" ng-controller="WorldCtrl" >
+<div class="worldNavigation" >
+        <div class="worldViewSelection" >
+            <label title="View" for="currentView"  >View</label>
+            <select   id="currentView" ng-model="currentView"
+                          ng-options="v.title group by v.type.id for v in viewList"></select>
+            <button>New View...</button>
+        </div>
+
+        <div class="worldItemSearch" >
+            <form action="#" >
+            <label title="Search" for="worldItemSearchText"  >Search Text:</label>
+            <input id="worldItemSearchText" type="text" ng-model="searchText" ><br/>
+            <button class="worldItemSearchButton" >Search</button>
+            <div class="worldItemSearchResults" ></div>
+            </form>
+        </div>
+</div>
+
+    <div class="worldViewList">
+        <view-list ng-model="openViewList"  class="worldViewList">
+        </view-list>
+    </div>
+
+    <div class="worldViewSettings">
+        <view-options  class="worldViewSettings">
+        </view-options>
+    </div>
+
+</div>

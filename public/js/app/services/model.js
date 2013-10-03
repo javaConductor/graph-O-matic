@@ -57,4 +57,4 @@ console.log("services/model.js");
 	}]);
 
 
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

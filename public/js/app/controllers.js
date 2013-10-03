@@ -28,8 +28,9 @@ console.log("WorldCtrl()");
 	$scope.searchResults = [];
 
 	$scope.footerInfo = {
-		poweredBy: ["nodejs", "mongoDB"]
+		poweredBy: ["nodejs", "d3js", "mongoDB"]
 	};
+    $scope.newViews = 0;
 
     $scope.getAllViews = function(){
         World.views(function(err,views){
@@ -50,10 +51,20 @@ console.log("WorldCtrl()");
         });
 	};
 
-
     $scope.newView = function newView(){
-        alert("Should b creating a new view.");
-        World.createView()
+        var viewname = prompt("View Name?", "new-view");
+        var viewtype = prompt("View Type?", "baseRT");
+
+        alert("Should b creating a new view:"+viewname + ", "+ viewtype);
+        // do popup to get name.
+        World.createView( {
+            viewName:viewname,
+            viewType: viewtype},
+            function(e,v){
+            /// do some stuff when it is created.
+           console.log("controller.newView:"+JSON.stringify(v));
+           console.log("controller.error:"+JSON.stringify(e));
+        });
     }
 }
 

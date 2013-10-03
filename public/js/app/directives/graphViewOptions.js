@@ -27,16 +27,15 @@ console.log("graphViewOptions.js");
              */
             var onOptionsChanged = function onOptionsChanged( scope, key, view ){
 
-            };
+                //the\
 
-            var selectView = function(viewId){
-                //deselect all
-                d3.select("tab")
-                    .attr("active",false);
-                // select the one
-                if(viewId)
-                    d3.select("tab[data-view-id='+viewId+']")
-                        .attr("active",true);
+            };
+            var onViewSelectionChanged = function onViewSelectionChanged( scope, key, view ){
+
+                /// get the options from the view
+                scope[key] = view.options;
+
+
             };
 
             return {
@@ -46,18 +45,17 @@ console.log("graphViewOptions.js");
                 templateUrl: 'templates/viewOptions.ejs',
                 link: function (scope, element, attrs, model) {
                     console.log("viewOptions.link("+scope.$id+"): ENTER.");
-                    var mdl = $parse( attrs.ngModel);
-                    //var viewList = mdl(rootScope);
-                    var selection = d3.select( element[0])
-                        .select("tabset.viewOptions");
+                    var accordionSelection = d3.select( element[0])
+                        .select("accordion");
+
 
                     /// listen for the ViewOptionsChanged event
-                    eventProcessor.on(constants.events.ViewOptionsChanged,
+                    eventProcessor.on(constants.events.ViewSelectionChanged,
                         // returns a function waiting ONLY for a view - 1st 2 args fixed.
-                       wu.curry(onOptionsChanged, scope, attrs.ngModel)
+                       wu.curry(onViewSelectionChanged, scope, attrs.ngModel)
                     );
 
-                }
+                }/// link
             };
         }])
 })(angular.module('graphOmatic.directives'));

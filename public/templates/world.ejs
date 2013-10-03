@@ -2,9 +2,9 @@
 <div class="worldNavigation" >
         <div class="worldViewSelection" >
             <label title="View" for="currentView"  >View</label>
-            <select   id="currentView" ng-model="currentView"
+            <select   id="currentView" ng-model="currentView" style="width:100px;"
                           ng-options="v.title group by v.type.id for v in viewList"></select>
-            <button>New View...</button>
+            <button ng-click="newView()" >New View...</button>
         </div>
 
         <div class="worldItemSearch" >
@@ -22,9 +22,7 @@
         </view-list>
     </div>
 
-    <div class="worldViewSettings">
         <view-options  class="worldViewSettings">
         </view-options>
-    </div>
 
 </div>

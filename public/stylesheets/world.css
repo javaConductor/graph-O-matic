@@ -23,7 +23,7 @@
     background: inherit;
 }
 
-.worldViewSelection select {
+select.worldViewSelection  {
     width: 100px;
 }
 
@@ -37,25 +37,29 @@
     background: inherit;
 }
 
+
 .worldViewSettings{
-    float: left;
-    position: relative;
+    position: absolute;
     left: 0;
     top: 221px;
     width: 200px;
     height: 100%;
+    background-color: #ffffff;
+    opacity: 0.6;
 }
 
 .worldViewList{
+    position: absolute;
     left: 20px;
     top: 221px;
     width: 900px;
-    height: 100%;
+    min-width: 900px;
+    height: 800px;
 }
 tabset.worldViewList{
     position: absolute;
     left: 20px;
     top: 201px;
     width: 900px;
-    height: 100%;
+    height: 800px;
 }

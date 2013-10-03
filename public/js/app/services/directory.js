@@ -29,4 +29,4 @@
         }
     }]);
 
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

@@ -75,7 +75,7 @@
 				return this.world.createViewItem(item);//creates both Item&ViewItem - sweet!
 			},
 			decorateViewItem: function(viewItem){
-				viewItem.properties = world.initProperties(viewItem.itemType);
+				viewItem.properties = world.initProperties(viewItem.item.itemType);
 				viewItem.item.itemType = decorators.decorateItemType(viewItem.item.itemType);
 				viewItem = decorators.decorateViewItem(viewItem);
 				return viewItem;
@@ -113,7 +113,13 @@
 			relationships: function () {
 			},
 			findItemRelationships: function (item) {
-			}
+			},
+            applyFilters: function(options, itemList){
+                /// returns a new list of Items that match the options
+
+
+            }
+
 			}
 
 		return theObject;
@@ -126,4 +132,4 @@
 			}
 		}]);
 
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

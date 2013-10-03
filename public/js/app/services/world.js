@@ -4,7 +4,7 @@
 (function (services) {
     /**
      * @ngdoc service
-     * @name GraphOMaticServices:World
+     * @name graph-O-matic-services:World
      * @description This is everything!!
      *
      * ## No Really it's sweet!
@@ -85,9 +85,11 @@
 					});
                 },
                 /// returns error if viewId could not be created
-				createView: function (viewName, viewType, f) {
-					// a view or null
-					persistence.createView(viewName, viewType, function (e, v) {
+				createView: function (nuView, f) {
+                    console.log("World.createView("+JSON.stringify(nuView)+")");
+                    var viewName = nuView.viewName;
+                    var viewType = nuView.viewType;
+                   	persistence.createView(viewName, viewType, function (e, v) {
 						if (e) return f(e, null);
 						return f(null, v ? new View(this, v) : null);
 					});
@@ -95,4 +97,4 @@
                 /////////////////// /////////////////////// /////////////////////////////// ///////////////////////////
 			}
 		}]);
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

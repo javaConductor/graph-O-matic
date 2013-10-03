@@ -20,7 +20,8 @@
             ViewOpened: "view_opened",
             ViewOptionsChanged: "view_options_changed",
             CloseView: "close_view",
-            ViewClosed: "view_closed"
+            ViewClosed: "view_closed",
+            SelectionChanged: "selection_changed"// data -
         }
 	};
 
@@ -29,4 +30,4 @@
         return Constants;
 	}]);
 
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

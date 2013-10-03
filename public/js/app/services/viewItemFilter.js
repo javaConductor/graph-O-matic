@@ -7,29 +7,24 @@
  */
 (function (services) {
 
-    var ViewTypeObject = function ViewTypeObject(world, viewType){
+    var ViewItemFilterObject = function ViewItemFilterObject( viewObject ){
+
             return {
-                name:           viewType.name ,
-                id:                 viewType.id,
-                pathPrefix:     function(){ return viewType.name },
-                scripts :          viewType.scripts,
-                css:                viewType.styleSheets,
-                defaultOptions: {},
-                isType:           function (viewType) {
+
+                filter: function(){
+
+
 
                 }
             };
         };
 
-
-	services.factory('ViewTypeManager', ['persistence', 'UtilityFunctions', 'World',
+	services.factory('ViewItemFilter', ['persistence', 'UtilityFunctions', 'World',
 		function ( persistence, util, theWorld ) {
 
             console.log("services/viewType.js - services:"+JSON.stringify(services));
 
             var initViewTypes = function(){
-
-
 
                 // look in /public/viewTypes for the viewType defs
                 // for each dir
@@ -45,7 +40,7 @@
             };
 
 			return function(viewData){
-				return new ViewTypeObject( theWorld, viewData);
+				return new ViewItemCtrl( theWorld, viewData);
 			}
 
 		}]);

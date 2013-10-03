@@ -1,0 +1,36 @@
+    <accordion>
+
+        <accordion-group>
+            <accordion-heading>
+                Category Filter  <input type="checkbox" ng-model="options.useCategoryFilter"
+                                        ng-true-value="YES" ng-false-value="NO">
+            </accordion-heading>
+            <selection-list ng-model="options.category.values"
+                    label-fn="options.category.labelFn"
+                    value-fn="options.category.valueFn"
+                    title="options.category.title"
+                    class="options.category.class"
+                    selection-class="options.category.selectionClass"
+                    ></selection-list>
+
+            </selection-list>
+
+        </accordion-group>
+
+        <accordion-group>
+            <accordion-heading>
+                Relationship Filter  <input type="checkbox" ng-model="options.useRelationshipFilter"
+                                        ng-true-value="YES" ng-false-value="NO">
+            </accordion-heading>
+            <selection-list ng-model="options.relationship.values"
+                            label-fn="options.relationship.labelFn"
+                            value-fn="options.relationship.valueFn"
+                            title="options.relationship.title"
+                            class="options.relationship.class"
+                            selection-class="options.relationship.selectionClass"
+                    ></selection-list>
+
+            </selection-list>
+
+        </accordion-group>
+    </accordion>

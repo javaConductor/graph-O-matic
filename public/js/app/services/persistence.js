@@ -90,6 +90,7 @@
 			},
 
 			createView: function (viewName, viewType, f) {
+                console.log("Persistence.createView("+viewName+","+viewType+")")
                 View.create({},{viewName: viewName, viewType: viewType}, function(view){
                     f(null, view);
                 },function(err){
@@ -98,6 +99,7 @@
 			},
 
 			saveView: function (viewData, f) {
+
 			},
 
             getView: function (viewId, f) {
@@ -108,7 +110,7 @@
                 });
             },
 
-            getViews: function ( f ) {
+            allViews: function ( f ) {
                 View.get({}, {}, function (views) {
                     f(null, views);
                 }, function (err) {
@@ -125,4 +127,4 @@
 	}]);
 
 
-})(angular.module('GraphOMaticServices'));
+})(angular.module('graph-O-matic-services'));

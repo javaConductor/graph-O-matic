@@ -21,6 +21,11 @@ console.log("WorldCtrl()");
 	$scope.relationshipCategories = [];
 	$scope.itemCategories = [];
 
+World.allItems(function(e,items){
+    console.dir(['WorldCtrl.getItems()', items]);
+
+})
+
 	//edit fields
 	$scope.searchText = "";
 

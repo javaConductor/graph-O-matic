@@ -9,12 +9,12 @@
 
 	services.factory('persistence', ['$http', '$resource', 'Directory', function ($http, $resource, restDirectory) {
         console.log("services/persistence.js - services:"+JSON.stringify(services));
-		var prefix = 'http://' + restDirectory.prefix;
+		var prefix =  "http://localhost:4242/";//restDirectory.prefix();
         var View = $resource(prefix + 'views/:id', {alt:'json', callback:'JSON_CALLBACK', id: '@id'},
             {
                 create: {
                     method: "PUT",
-                    url: "prefix + 'views/new/:viewName/:viewType",
+                    url: prefix + 'views/new/:viewName/:viewType',
                     params: {
                         viewName: "@viewName",
                         viewType: "@viewType"
@@ -23,7 +23,7 @@
             }
 
         );
-        var Item = $resource(prefix + 'items/:id', {alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
+        var Item = $resource(prefix + 'items/:id', { callback:'JSON_CALLBACK', id: '@id'});
         var ViewItem = $resource(prefix + 'view-items/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
         var ItemType = $resource(prefix + 'item-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
 		var Relationship = $resource(prefix + 'relationships/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
@@ -35,15 +35,40 @@
 				Item.get({}, {id: itemId}, function (item) {
 					f(null, item);
 				}, function (err) {
-					f('Could not get Item:' + err, null);
+					f('Could not get Item:' + err);
 				})
 			},
+
+ 			allItems: function ( f) {
+                $http({
+                    method: 'GET',
+                    url: prefix + "items"
+                })
+                .success(function(data, status, headers, config){
+                        f(null, data);
+                    })
+                .error(function(data, status, headers, config){
+                        f(status)
+                    });
+               // .error()
+
+                /*
+                var ret = Item.get({},
+                    function () {
+					    f(null, ret);
+				},
+                    function (err) {
+					    f(err);
+				} )*/;
+                ;
+			},
+
 
 			removeItem: function (itemId, f) {
                 Item.delete({id : itemId}, function (resp) {
                     f( null, resp);
                 }, function (err) {
-                    f('Could not delete item:' + err, null);
+                    f('Could not delete item:' + err);
                 });
 
 			},
@@ -53,7 +78,7 @@
 					item.id = savedItem.id;
 					f( null, savedItem);
 				}, function (err) {
-					f('Could not save item:' + err, null);
+					f('Could not save item:' + err);
 				});
 			},
 
@@ -67,20 +92,19 @@
 
 			getItemType: function (id, f) {
 			},
-			getItemCategory: function (categoryId, f) {
+			getCategory: function (categoryId, f) {
 			},
-			getItemCategories: function (f) {
+
+			getCategories: function (f) {
 			},
-			getRelationshipCategory: function (categoryId,  f) {
-			},
+
 			getRelationshipType: function (id,  f) {
 			},
+
 			getRelationshipTypes: function (f) {
 			},
-			getRelationshipCategories: function (f) {
-			},
-            getPossibleNewRelationshipTypes: function(itemFrom, itemTo, f){
 
+            getPossibleNewRelationshipTypes: function(itemFrom, itemTo, f){
             },
 
 			removeViewItem: function (viewItem, f) {

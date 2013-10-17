@@ -10,7 +10,7 @@
 	services.factory('persistence', ['$http', '$resource', 'Directory', function ($http, $resource, restDirectory) {
         console.log("services/persistence.js - services:"+JSON.stringify(services));
 		var prefix =  "http://localhost:4242/";//restDirectory.prefix();
-        var View = $resource(prefix + 'views/:id', {alt:'json', callback:'JSON_CALLBACK', id: '@id'},
+        var View = $resource(prefix + 'views/:id', {alt:'json',  id: '@id'},
             {
                 create: {
                     method: "PUT",
@@ -114,12 +114,27 @@
 			},
 
 			createView: function (viewName, viewType, f) {
-                console.log("Persistence.createView("+viewName+","+viewType+")")
-                View.create({},{viewName: viewName, viewType: viewType}, function(view){
-                    f(null, view);
-                },function(err){
-                    f('Could not create View: name='+viewName +" of type "+viewType +': '+ err, []);
-                });
+                console.log("Persistence.createView("+viewName+","+viewType+")");
+
+                $http({
+                    method: 'PUT',
+                    url: prefix + "views/",
+                    data:{
+                        name: viewName,
+                        typeName: viewType}
+                })
+                    .success(function(data, status, headers, config){
+                        f(null, data);
+                    })
+                    .error(function(data, status, headers, config){
+                        f(status)
+                    });
+
+//                View.create({},{viewName: viewName, viewType: viewType}, function(view){
+//                    f(null, view);
+//                },function(err){
+//                    f('Could not create View: name='+viewName +" of type "+viewType +': '+ err, []);
+//                });
 			},
 
 			saveView: function (viewData, f) {
@@ -135,11 +150,17 @@
             },
 
             allViews: function ( f ) {
-                View.get({}, {}, function (views) {
-                    f(null, views);
-                }, function (err) {
-                    f('Could not get Views ==>>'+ err, []);
+                $http({
+                    method: 'GET',
+                    url: prefix + "views"
                 })
+                    .success(function(data, status, headers, config){
+                        f(null, data);
+                    })
+                    .error(function(data, status, headers, config){
+                        f(status)
+                    });
+
             },
 
 			createViewItem: function (theViewItem, f) {

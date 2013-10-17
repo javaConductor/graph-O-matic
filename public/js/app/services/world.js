@@ -10,8 +10,8 @@
      * ## No Really it's sweet!
      */
     console.log("world.js");
-	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window',
-		function (persistence, util, ctxtSvc, $window) {
+	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window','ContextEventProcessor','GraphView',
+		function (persistence, util, ctxtSvc, $window, evtProcessor, GraphView) {
 			var thisf = this;
             console.log("services/world.js - services:"+JSON.stringify(services));
 
@@ -46,7 +46,6 @@
             console.log("GraphWorld service - returning service obj!");
 
 			return {
-
                 allItems: persistence.allItems,
 				allItemTypes: persistence.allItemTypes,
 				allRelationships: persistence.allRelationships,
@@ -71,7 +70,7 @@
                         if(e) return (f(e, null));
                         return f(e, views.map(function(vw){
                             console.log("GraphWorld.views: returning view "+vw.id);
-                            return new View(this, vw);
+                            return new GraphView( vw);
                         }));
                     });
 				},
@@ -81,7 +80,7 @@
 					// a view or null
 					persistence.getView(viewId, function (e, v) {
 						if (e) return f(e, null);
-						return f(null, v ? new View(this, v) : null);
+						return f(null, v ? new GraphView( v) : null);
 					});
                 },
                 /// returns error if viewId could not be created
@@ -91,7 +90,7 @@
                     var viewType = nuView.viewType;
                    	persistence.createView(viewName, viewType, function (e, v) {
 						if (e) return f(e, null);
-						return f(null, v ? new View(this, v) : null);
+						return f(null, v ? new GraphView( v) : null);
 					});
 				}
                 /////////////////// /////////////////////// /////////////////////////////// ///////////////////////////

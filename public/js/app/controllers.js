@@ -21,11 +21,6 @@ console.log("WorldCtrl()");
 	$scope.relationshipCategories = [];
 	$scope.itemCategories = [];
 
-World.allItems(function(e,items){
-    console.dir(['WorldCtrl.getItems()', items]);
-
-})
-
 	//edit fields
 	$scope.searchText = "";
 
@@ -40,7 +35,7 @@ World.allItems(function(e,items){
     $scope.getAllViews = function(){
         World.views(function(err,views){
             if(!err){
-                $scope.views = views;
+                $scope.viewList = views;
                 if( views && views.length > 0 )
                     $scope.currentView = views[ 0 ];
             }else{
@@ -57,10 +52,10 @@ World.allItems(function(e,items){
 	};
 
     $scope.newView = function newView(){
-        var viewname = prompt("View Name?", "new-view");
-        var viewtype = prompt("View Type?", "baseRT");
+        var viewname = prompt("View Name?", "new-view"+($scope.viewList ?$scope.viewList.length: 1 ));
+        var viewtype = prompt("View Type?", "default.built-in.baseVT");
 
-        alert("Should b creating a new view:"+viewname + ", "+ viewtype);
+        //alert("Should b creating a new view:"+viewname + ", "+ viewtype);
         // do popup to get name.
         World.createView( {
             viewName:viewname,
@@ -71,6 +66,8 @@ World.allItems(function(e,items){
            console.log("controller.error:"+JSON.stringify(e));
         });
     }
+
+    $scope.getAllViews();
 }
 
 WorldCtrl.$inject=['$scope', 'GraphWorld', "ContextEventProcessor" ];

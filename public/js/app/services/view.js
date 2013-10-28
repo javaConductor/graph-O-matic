@@ -27,9 +27,7 @@
                 properties:function(){
                     return decoratedViewItem.item.type.properties;
                 },
-                data: function(){
-                    return decoratedViewItem.item.data;
-                }
+                data: decoratedViewItem.item.data
             };
         };
 
@@ -43,7 +41,7 @@
     var showViewItem = function showViewItem(item, viewOptions){
     };
 
-    var ViewObject = function View( viewData, ContextEventProcessor ) {
+    var ViewObject = function View( viewData, ContextEventProcessor,persistence ) {
 		/// all initialization done here before we return object
 		/// add the types to the items
 		//var theItemTypes = world.allItemTypes( viewData.itemIdList );
@@ -58,13 +56,14 @@
 	    //var decorators = world.decorator();
 		//// REFACTOR: move all non-public methods out of object
 		var theObject = {
+			'id': viewData.id,
 			'name': viewData.name,
 			//"world": world,
 			/////////////////////////////////////////////////////////
 			// Items
 			/////////////////////////////////////////////////////////
 			viewItems: function () {
-				return viewData.items;
+				return newItems;
 			},//returns list of items for this view
 			createViewItem: function (item, f) {
 				return this.createViewItem(item);//creates both Item&ViewItem - sweet!
@@ -76,6 +75,20 @@
 				return ViewItemObject( this, viewItem)
 			},
 			addItem: function (item) {
+				return this.createViewItem(item)
+			},
+			populateData:  function (item, f) {
+                    if( item.item.data['$href'] ){
+                        // the data has not been loaded
+                        // we must load it via the $href url
+                        persistence.getItemData(item.id, function(e,d){
+
+                        });
+                    }else{
+
+                    }
+
+
 				return this.createViewItem(item)
 			},
 			/////////////////////////////////////////////////////////
@@ -95,11 +108,11 @@
 		return theObject;
         };
 
-	services.factory('GraphView', ['ContextEventProcessor', 'UtilityFunctions',
-		function ( evtProcessor, util ) {
+	services.factory('GraphView', ['ContextEventProcessor', 'UtilityFunctions','persistence',
+		function ( evtProcessor, util, persistence ) {
             console.log("services/view.js - services:"+JSON.stringify(services));
             return function(viewData){
-				return new ViewObject(  viewData, evtProcessor);
+				return new ViewObject(  viewData, evtProcessor,persistence);
 			}
 		}]);
 

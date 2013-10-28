@@ -10,5 +10,4 @@ angular.module('graphOmatic', ['graphOmatic.directives', 'graph-O-matic-services
 	$routeProvider.otherwise({redirectTo:'/'});
 	$locationProvider.html5Mode(true);
         console.log("graphOmatic module creation DONE.");
-
     }]);

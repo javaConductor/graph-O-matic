@@ -1,25 +1,25 @@
 <div class="world" ng-controller="WorldCtrl" >
-<div class="worldNavigation" >
-        <div class="worldViewSelection" >
-            <label title="View" for="currentView"  >View</label>
-            <select   id="currentView" ng-model="currentView" style="width:100px;"
-                          ng-options="v.name group by v.type.id for v in viewList"></select>
-            <button ng-click="newView()" >New View...</button>
-        </div>
+    <div class="worldNavigation" >
+            <div class="worldViewSelection" >
+                <label title="View" for="currentView"  >View</label>
+                <select   id="currentView" ng-model="currentView" style="width:100px;"
+                              ng-options="v.name group by v.type.id for v in viewList"></select>
+                <button ng-click="newView()" >New View...</button>
+            </div>
 
-        <div class="worldItemSearch" >
-            <form action="#" >
-            <label title="Search" for="worldItemSearchText"  >Search Text:</label>
-            <input id="worldItemSearchText" type="text" ng-model="searchText" ><br/>
-            <button class="worldItemSearchButton" >Search</button>
-            <div class="worldItemSearchResults" ></div>
-            </form>
-        </div>
-</div>
+            <div class="worldItemSearch" >
+                <form action="#" >
+                <label title="Search" for="worldItemSearchText"  >Search Text:</label>
+                <input id="worldItemSearchText" type="text" ng-model="searchText" ><br/>
+                <button class="worldItemSearchButton" >Search</button>
+                <div class="worldItemSearchResults" ></div>
+                </form>
+            </div>
+    </div>
 
     <div class="worldViewList">
-        <view-list ng-model="openViewList"  class="worldViewList">
-        </view-list>
+        <graph-view-list ng-model="openViewList"  class="worldViewList">
+        </graph-view-list>
     </div>
 
         <view-options  class="worldViewSettings">

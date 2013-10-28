@@ -29,7 +29,7 @@ console.log("graphViewList.js");
                 var t = findTab(view);
                 // if we have a tab then set it to active
                 // if not, add this view to the related scope variable
-                if (t)
+                if ( t )
                     t.attr("active",true);
                 else{
                     scope[key] = scope[key] || [];
@@ -79,12 +79,11 @@ console.log("graphViewList.js");
                 return t.empty() ? null : t;
             };
 
-            var  createContent = function( scope, viewListVar, tabsetSelection  ){
+            var  createContent = function( viewList, tabsetSelection  ){
 
-                var viewList = scope[viewListVar] || [];
+                viewList = viewList || [];
                 var selection = tabsetSelection.selectAll("tab")
                     .data(viewList);
-
 
                 ///FIX THIS !!!!
                 selection.enter()
@@ -96,18 +95,21 @@ console.log("graphViewList.js");
                         .attr("data-view-id",  function(d,i){  return (d.id); })
                             //.append( $compile("<graph-view/>")(scope))
                             .append(("<graph-view />"))
-                            .attr("ng-model", function(d,i){  return  viewListVar+'['+ i+']'; })
+                            .attr("ng-model", function(d,i){  return 'viewList['+ i+']'; })
             };
 
             return {
                 restrict: 'E',
                 replace: true,
-                scope: true,
+                scope: {
+                    viewList: '=ngModel'
+                },
                 template: "<tabset class='worldViewList'/>",
                 link: function (scope, element, attrs, model) {
                     console.log("worldViewList.link("+scope.$id+"): ENTER.");
-                    var mdl = $parse( attrs.ngModel);
-                    var viewList = mdl(rootScope);
+                    //var mdl = $parse( attrs.ngModel );
+                    var viewList = scope.viewList;
+                    //var viewList = mdl(rootScope);
                     var selection = d3.select( element[0])
                         .select("tabset.worldViewList");
 
@@ -119,11 +121,13 @@ console.log("graphViewList.js");
                     //listen for openView, closeView, selectView, removeView
                     eventProcessor.on(constants.events.SelectView, selectView );
                     eventProcessor.on(constants.events.CloseView, closeView );
+                    createContent( viewList, selection  );
 
                         /// Can we use this to update the screen for each item ???
-                    scope.$watch( attrs.ngModel, function (nuList, oldVal) {
-                        createContent( scope, attrs.ngModel, selection, nuList );
+                    scope.$watch( "viewList", function (nuList, oldVal) {
+                        createContent( nuList,  selection );
                     });
+                    console.log("worldViewList.link("+scope.$id+"): EXIT.");
                 }
             };
         }])

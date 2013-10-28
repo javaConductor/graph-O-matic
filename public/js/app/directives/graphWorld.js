@@ -94,7 +94,6 @@ console.log("graphWorld.js");
                         .attr("class","worldViewList")
                         .attr("select", function(d,i){  return onSelectedFunc(d); })
                         .attr("data-view-id",  function(d,i){  return (d.id); })
-                            //.append( $compile("<graph-view/>")(scope))
                             .append(("<graph-view/>"))
                             .attr("ng-model", function(d,i){  return  viewListVar+'['+ i+']'; })
             };
@@ -105,17 +104,17 @@ console.log("graphWorld.js");
                 scope: true,
                 templateUrl: 'templates/world.ejs',
                 link: function (scope, element, attrs, model) {
-                    console.log("worldViewList.link("+scope.$id+"): ENTER.");
+                    console.log("graphWorld.link("+scope.$id+"): ENTER.");
                     var mdl = $parse( attrs.ngModel);
                     //var viewList = mdl(rootScope);
                     var selection = d3.select( element[0])
                         .select("tabset.worldViewList");
 
-                    /// listen for the OpenView event
-                    eventProcessor.on(constants.events.OpenViewEvent,
-                        // returns a function waiting ONLY for a view - 1st 2 args fixed.
-                       wu.curry(onOpenView, scope, attrs.ngModel)
-                    );
+//                    /// listen for the OpenView event
+//                    eventProcessor.on(constants.events.OpenViewEvent,
+//                        // returns a function waiting ONLY for a view - 1st 2 args fixed.
+//                       wu.curry(onOpenView, scope, attrs.ngModel)
+//                    );
                     //listen for openView, closeView, selectView, removeView
                     eventProcessor.on(constants.events.SelectView, selectView );
                     eventProcessor.on(constants.events.CloseView, closeView );
@@ -124,6 +123,7 @@ console.log("graphWorld.js");
                     scope.$watch( attrs.ngModel, function (nuList, oldVal) {
                         createContent( scope, attrs.ngModel, selection, nuList );
                     });
+                    console.log("graphWorld.link("+scope.$id+"): EXIT!");
                 }
             };
         }])

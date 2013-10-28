@@ -1,25 +1,19 @@
-'use strict';
+    'use strict';
 
 /* Controllers */
 console.log("controllers.js");
-function WorldCtrl($scope, World, eventProcessor) {
+function WorldCtrl($scope, World, eventProcessor,  constants) {
 
 	$scope.title = "Graph O Matic (c) 2012";
 console.log("WorldCtrl()");
-    var tmp = {
-        id: "testeroni",
-        name: "View 1",
-        items: [],
-        viewOptions:{}
-    };
+
 	/// get all the views
-    $scope.viewList = [tmp];
-    $scope.openViewList = [tmp];
+    $scope.viewList = [];
+    $scope.openViewList = [];
     $scope.currentView=null;
 
 	// get all the categories (item,relationship)
-	$scope.relationshipCategories = [];
-	$scope.itemCategories = [];
+	$scope.categories = [];
 
 	//edit fields
 	$scope.searchText = "";
@@ -37,7 +31,7 @@ console.log("WorldCtrl()");
             if(!err){
                 $scope.viewList = views;
                 if( views && views.length > 0 )
-                    $scope.currentView = views[ 0 ];
+                    $scope.openViewList = [views[ 0 ]];
             }else{
                 //report error
             }
@@ -45,9 +39,10 @@ console.log("WorldCtrl()");
     };
 
     $scope.openView = function(viewId){
-		World.getView(viewId, function(err, viewData){
+		World.view(viewId, function(err, viewData){
             //// fireevent
             eventProcessor.emit(constants.events.OpenViewEvent, [viewData]);
+            $scope.openViewList.push(viewData);
         });
 	};
 
@@ -61,16 +56,19 @@ console.log("WorldCtrl()");
             viewName:viewname,
             viewType: viewtype},
             function(e,v){
-            /// do some stuff when it is created.
-           console.log("controller.newView:"+JSON.stringify(v));
-           console.log("controller.error:"+JSON.stringify(e));
+                /// do some stuff when it is created.
+               console.log("controller.newView:"+JSON.stringify(v));
+               console.log("controller.error:"+JSON.stringify(e));
+                $scope.viewList.push(v);
+                /// make it the current View
+                $scope.openView(v.id);
         });
-    }
+    };
 
     $scope.getAllViews();
 }
 
-WorldCtrl.$inject=['$scope', 'GraphWorld', "ContextEventProcessor" ];
+WorldCtrl.$inject=['$scope', 'GraphWorld', "ContextEventProcessor", "ConstantsService" ];
 
 function MainCtrl($scope){
 

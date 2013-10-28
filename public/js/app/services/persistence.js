@@ -24,73 +24,54 @@
 
         );
         var Item = $resource(prefix + 'items/:id', { callback:'JSON_CALLBACK', id: '@id'});
+        var ItemData = $resource(prefix + 'item-data/:id', { callback:'JSON_CALLBACK', id: '@id'});
         var ViewItem = $resource(prefix + 'view-items/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
-        var ItemType = $resource(prefix + 'item-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
+        var ViewType = $resource(prefix + 'view-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
+		var ItemType = $resource(prefix + 'item-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
 		var Relationship = $resource(prefix + 'relationships/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
         var RelationshipType = $resource(prefix + 'relationship-types/:id',{alt:'json', callback:'JSON_CALLBACK'}, {id: '@id'});
 
 		return {
 
- 			getItem: function (itemId, f) {
-				Item.get({}, {id: itemId}, function (item) {
-					f(null, item);
-				}, function (err) {
-					f('Could not get Item:' + err);
-				})
+ 			getItem: function (itemId) {
+				return Item.get({}, {id: itemId})
+                    .then(function(itm){
+                        return itm;
+                    });
 			},
 
- 			allItems: function ( f) {
-                $http({
+ 			allItems: function ( ) {
+                return $http({
                     method: 'GET',
                     url: prefix + "items"
                 })
-                .success(function(data, status, headers, config){
-                        f(null, data);
-                    })
-                .error(function(data, status, headers, config){
-                        f(status)
-                    });
-               // .error()
-
-                /*
-                var ret = Item.get({},
-                    function () {
-					    f(null, ret);
-				},
-                    function (err) {
-					    f(err);
-				} )*/;
-                ;
+                .then(function(items){
+                        return items;
+                });
 			},
 
+ 			getItemData: function (itemId) {
+                return $http({
+                    method: 'GET',
+                    url: prefix + "item-data/"+itemId
+                })
+                .then(function(itemData){
+                        return ( itemData );
+                    })
+			},
 
-			removeItem: function (itemId, f) {
-                Item.delete({id : itemId}, function (resp) {
-                    f( null, resp);
-                }, function (err) {
-                    f('Could not delete item:' + err);
-                });
-
+			removeItem: function (itemId) {
+                return Item.delete({id : itemId});
 			},
 
 			saveItem: function (item, f) {
-				Item.save({}, item, function (savedItem) {
-					item.id = savedItem.id;
-					f( null, savedItem);
-				}, function (err) {
-					f('Could not save item:' + err);
-				});
+				return Item.save({}, item)
+                .then(function(saved){
+                        return saved;
+                    });
 			},
 
-			getRelatedItems: function (itemId, relationshipType, f) {
-				Item.get({}, {id: itemId}, function (items) {
-					f(null, items);
-				}, function (err) {
-					f('Could not get Item:' + err, []);
-				})
-			},
-
-			getItemType: function (id, f) {
+			getItemType: function (id) {
 			},
 			getCategory: function (categoryId, f) {
 			},
@@ -115,59 +96,87 @@
 
 			createView: function (viewName, viewType, f) {
                 console.log("Persistence.createView("+viewName+","+viewType+")");
-
-                $http({
+                return $http({
                     method: 'PUT',
                     url: prefix + "views/",
                     data:{
                         name: viewName,
                         typeName: viewType}
                 })
-                    .success(function(data, status, headers, config){
-                        f(null, data);
+                    .then(function(data, status, headers, config){
+                        return( data );
                     })
-                    .error(function(data, status, headers, config){
-                        f(status)
+                    .catch(function(e){
+                        throw Error(e);
                     });
-
-//                View.create({},{viewName: viewName, viewType: viewType}, function(view){
-//                    f(null, view);
-//                },function(err){
-//                    f('Could not create View: name='+viewName +" of type "+viewType +': '+ err, []);
-//                });
 			},
 
-			saveView: function (viewData, f) {
-
+			saveView: function (viewData ) {
+                return $http({
+                    method: 'POST',
+                    url: prefix + "views/",
+                    data:viewData})
+                    .then(function(data){
+                        return( data );
+                    })
+                    .catch(function(e){
+                        throw Error(e);
+                    });
 			},
 
-            getView: function (viewId, f) {
-                View.get({}, {id: viewId}, function (view) {
-                    f(null, view);
-                }, function (err) {
-                    f('Could not get View: id='+viewId +' ==>>'+ err, []);
+            getView: function (viewId) {
+                return View.get({}, {id: viewId})
+                    .then(function (view) {
+                        console.log(['Could not get View: id='+viewId +' ==>>', view] );
+                        return view;
+                    })
+                    .catch (function(err) {
+                        console.error('Could not get View: id='+viewId +' ==>>'+ err );
+                        throw new Error('Could not get View: id='+viewId +' ==>>'+ err );
                 });
             },
 
-            allViews: function ( f ) {
-                $http({
+            allViews: function (  ) {
+                return $http({
                     method: 'GET',
                     url: prefix + "views"
                 })
-                    .success(function(data, status, headers, config){
-                        f(null, data);
+                    .then(function(views){
+                        return views;
                     })
-                    .error(function(data, status, headers, config){
-                        f(status)
-                    });
-
             },
 
 			createViewItem: function (theViewItem, f) {
+                console.log("Persistence.createViewItem("+")");
+                return $http({
+                    method: 'PUT',
+                    url: prefix + "view-items/",
+                    data:theViewItem
+                })
+                    .then(function(vi){
+                        return( vi );
+                    })
+                    .catch(function(e){
+                        throw Error(e);
+                    });
+
 			},
 
-			saveViewItem: function (viewItem, f) {
-			}
+			updateViewItem: function (theViewItem, f) {
+                console.log("Persistence.updateViewItem("+")");
+                return $http({
+                    method: 'PUT',
+                    url: prefix + "view-items/",
+                    data:theViewItem
+                })
+                    .then(function(vi){
+                        return( vi );
+                    })
+                    .catch(function(e){
+                        throw Error(e);
+                    });
+
+            }
 		}
 	}]);
 

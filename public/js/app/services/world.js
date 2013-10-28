@@ -84,12 +84,16 @@
 					});
                 },
                 /// returns error if viewId could not be created
+                // Create the View and make it the currentView
 				createView: function (nuView, f) {
                     console.log("World.createView("+JSON.stringify(nuView)+")");
                     var viewName = nuView.viewName;
                     var viewType = nuView.viewType;
                    	persistence.createView(viewName, viewType, function (e, v) {
-						if (e) return f(e, null);
+						if (e) {
+                            console.log("World.createView("+JSON.stringify(v)+": Error:"+e);
+                            return f(e, null);
+                        };
 						return f(null, v ? new GraphView( v) : null);
 					});
 				}

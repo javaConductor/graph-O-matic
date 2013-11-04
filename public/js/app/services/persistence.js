@@ -7,17 +7,17 @@
 	 *
 	 */
 
-	services.factory('persistence', ['$http', '$resource', 'Directory', function ($http, $resource, restDirectory) {
+	services.factory('persistence', ['$http', '$resource', 'Directory','$q', function ($http, $resource, restDirectory,q) {
         console.log("services/persistence.js - services:"+JSON.stringify(services));
 		var prefix =  "http://localhost:4242/";//restDirectory.prefix();
         var View = $resource(prefix + 'views/:id', {alt:'json',  id: '@id'},
             {
                 create: {
                     method: "PUT",
-                    url: prefix + 'views/new/:viewName/:viewType',
-                    params: {
-                        viewName: "@viewName",
-                        viewType: "@viewType"
+                    url: prefix + 'views',
+                    data: {
+                        name: "@name",
+                        typeName: "@typeName"
                     }
                 }
             }
@@ -96,19 +96,25 @@
 
 			createView: function (viewName, viewType, f) {
                 console.log("Persistence.createView("+viewName+","+viewType+")");
-                return $http({
-                    method: 'PUT',
+                var d = q.defer();
+
+                $.ajax({
                     url: prefix + "views/",
-                    data:{
+                    type: "put",
+                    data: {
                         name: viewName,
-                        typeName: viewType}
-                })
-                    .then(function(data, status, headers, config){
-                        return( data );
+                        typeName: viewType
+                        }
                     })
-                    .catch(function(e){
-                        throw Error(e);
+                    .done(function( data ) {
+                        if(f) (f(null, data));
+                        d.resolve( data );
+                    })
+                    .fail(function( jqXHR, textStatus, errorThrown){
+                        if(f) (f("Error("+textStatus+"): "+errorThrown));
+                        d.reject("Error("+textStatus+"): "+errorThrown);
                     });
+                return d.promise;
 			},
 
 			saveView: function (viewData ) {
@@ -125,25 +131,34 @@
 			},
 
             getView: function (viewId) {
-                return View.get({}, {id: viewId})
-                    .then(function (view) {
-                        console.log(['Could not get View: id='+viewId +' ==>>', view] );
-                        return view;
+
+                var d = q.defer();
+                $.ajax({
+                    url: prefix + "views/"+viewId,
+                    type: "get"
+                })
+                    .done(function( data ) {
+                        if(f) (f(null, data));
+                        d.resolve( data );
                     })
-                    .catch (function(err) {
-                        console.error('Could not get View: id='+viewId +' ==>>'+ err );
-                        throw new Error('Could not get View: id='+viewId +' ==>>'+ err );
-                });
+                    .fail(function( jqXHR, textStatus, errorThrown){
+                        if(f) (f('Could not get View: id='+viewId +' ==>>'+ errorThrown));
+                        d.reject('Could not get View: id='+viewId +' ==>>'+ errorThrown);
+                    });
+                return d.promise;
             },
 
             allViews: function (  ) {
-                return $http({
-                    method: 'GET',
-                    url: prefix + "views"
+                return $.ajax({
+                    url: prefix + "views",
+                    type: "get"
                 })
-                    .then(function(views){
-                        return views;
+                    .done(function( data ) {
+                        return ( data );
                     })
+                    .fail(function( jqXHR, textStatus, errorThrown){
+                        throw ('Could not get Views:  ==>>'+ errorThrown);
+                    });
             },
 
 			createViewItem: function (theViewItem, f) {
@@ -151,13 +166,13 @@
                 return $http({
                     method: 'PUT',
                     url: prefix + "view-items/",
-                    data:theViewItem
+                    data: theViewItem
                 })
-                    .then(function(vi){
+                    .success(function(vi, status, headers, config){
                         return( vi );
                     })
                     .catch(function(e){
-                        throw Error(e);
+                        throw new Error(e);
                     });
 
 			},
@@ -173,7 +188,7 @@
                         return( vi );
                     })
                     .catch(function(e){
-                        throw Error(e);
+                        throw new Error(e);
                     });
 
             }

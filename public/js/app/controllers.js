@@ -34,35 +34,50 @@ console.log("WorldCtrl()");
                     $scope.openViewList = [views[ 0 ]];
             }else{
                 //report error
+                console.error("Error getting all views: "+ e);
+                $scope.addErrorMessage("Error opening view: "+ e);
             }
         })
     };
 
     $scope.openView = function(viewId){
-		World.view(viewId, function(err, viewData){
+		World.view(viewId)
+            .then( function(err, viewData){
             //// fireevent
             eventProcessor.emit(constants.events.OpenViewEvent, [viewData]);
             $scope.openViewList.push(viewData);
-        });
+        })
+            .fail(function(e){
+                console.error("Error opening view: "+ e);
+                $scope.addErrorMessage("Error opening view: "+ e);
+            });
 	};
+
+    $scope.addErrorMessage = function(msg){
+
+
+
+
+    };
 
     $scope.newView = function newView(){
         var viewname = prompt("View Name?", "new-view"+($scope.viewList ?$scope.viewList.length: 1 ));
         var viewtype = prompt("View Type?", "default.built-in.baseVT");
 
+       // var d = q.defer();
         //alert("Should b creating a new view:"+viewname + ", "+ viewtype);
         // do popup to get name.
         World.createView( {
             viewName:viewname,
-            viewType: viewtype},
-            function(e,v){
+            viewType: viewtype})
+            .then(function(v){
                 /// do some stuff when it is created.
                console.log("controller.newView:"+JSON.stringify(v));
-               console.log("controller.error:"+JSON.stringify(e));
+//               console.log("controller.error:"+JSON.stringify(v));
                 $scope.viewList.push(v);
                 /// make it the current View
                 $scope.openView(v.id);
-        });
+            });
     };
 
     $scope.getAllViews();

@@ -3,7 +3,8 @@
 (function (services) {
     console.log("services/utilSvc.js");
 
-    services.factory('UtilityFunctions', ['$http', '$location', 'ConstantsService', '$timeout', function ($http, $location, constants, timeout) {
+    services.factory('UtilityFunctions', ['$http', '$location', 'ConstantsService', '$timeout','$q','Directory',
+        function ($http, $location, constants, timeout,q, directory) {
         console.log("services/utilSvc.js - services:"+JSON.stringify(services));
         /// return the util funcs
 		function findPosX(obj) {
@@ -62,6 +63,34 @@
 		};
 
         return {
+
+            ensure: function(obj, property){
+                var d = q.defer();
+                if (!obj || !property)
+                    throw new Error("ensure() requires obj and property.");
+                if (obj[property] && obj[property]['$href'] ){
+                    // its a REST reference to the data
+                    // we need to do an $http call for that
+                    var url = directory.prefix + obj[property]['$href'];
+                    $http.get({
+                       url: url
+                    }).then(function(propertyValue){
+                            obj[property] = propertyValue;
+                            d.resolve(propertyValue);
+                        });
+                }else{
+                    // this is not a REST ref so just use the value
+                    if(obj[property]){
+                        q.when(obj[property], function(propertyValue){
+                            d.resolve(propertyValue);
+                        });
+                    }
+                    else{
+                        d.resolve(null);
+                    }
+                }
+                return d.promise;
+            },
 
             mapBy: function (key, objectArray) {
                 var destination = {};

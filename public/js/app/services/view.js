@@ -47,7 +47,7 @@
 		//var theItemTypes = world.allItemTypes( viewData.itemIdList );
 		//var itemTypesById = util.mapBy("id", theItemTypes);
 		var newItems = [];
-
+        viewData.items = viewData.items || [];
         // This loop initializes the items
 		viewData.items.forEach(function (vitem) {
 			newItems.push(this.initViewItem(vitem));

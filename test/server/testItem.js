@@ -6,7 +6,6 @@
  * Time: 5:36 PM
  *
  */
-
 var request = require('supertest');
 //    , express = require('express');
 
@@ -22,6 +21,7 @@ request(app)
     //.expect('Content-Length', '20')
     .expect(201)
     .end(function(err, res){
+        console.dir(["Error",err, "/items: ", res.body]);
         if (err) throw err;
         console.dir(["/items: End:", res]);
         process.exit();

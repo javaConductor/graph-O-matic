@@ -10,8 +10,8 @@
      * ## No Really it's sweet!
      */
     console.log("world.js");
-	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window','ContextEventProcessor','GraphView',
-		function (persistence, util, ctxtSvc, $window, evtProcessor, GraphView) {
+	services.factory('GraphWorld', ['persistence', 'UtilityFunctions', 'ContextService', '$window','ContextEventProcessor','GraphView','$q',
+		function (persistence, util, ctxtSvc, $window, evtProcessor, GraphView, q) {
 			var thisf = this;
             console.log("services/world.js - services:"+JSON.stringify(services));
 
@@ -64,40 +64,40 @@
 				},
 
 				views: function (f) {
-                    console.log("GraphWorld.views: ENTER")
-					// an object key=view name, value=view id
-                    persistence.allViews( function(e, views){
-                        if(e) return (f(e, null));
-                        return f(e, views.map(function(vw){
-                            console.log("GraphWorld.views: returning view "+vw.id);
-                            return new GraphView( vw);
-                        }));
-                    });
+                    console.log("GraphWorld.views: ENTER");
+                    var d = q.defer();
+                    return  persistence.allViews()
+                        .then( function (v) {
+                            console.log("GraphWorld.views: returning view "+v.id);
+                            return d.resolve(v.map(function(x){return new GraphView( x);} ));
+                        })
+                        .fail(function(e){
+                            console.error("GraphWorld.views: "+e);
+                            return d.reject(e);
+                        });
+
+
 				},
 
                 /// returns a new EMPTY view if viewId not found
-				view: function (viewId, f) {
+				view: function (viewId) {
 					// a view or null
-					persistence.getView(viewId, function (e, v) {
-						if (e) return f(e, null);
-						return f(null, v ? new GraphView( v) : null);
-					});
+					return  persistence.getView(viewId)
+                        .then( function (v) {
+						    return (new GraphView( v) );
+					    })
+                        .fail(function(e){
+                            throw (e);
+                        });
                 },
                 /// returns error if viewId could not be created
                 // Create the View and make it the currentView
-				createView: function (nuView, f) {
+				createView: function (nuView) {
                     console.log("World.createView("+JSON.stringify(nuView)+")");
                     var viewName = nuView.viewName;
                     var viewType = nuView.viewType;
-                   	persistence.createView(viewName, viewType, function (e, v) {
-						if (e) {
-                            console.log("World.createView("+JSON.stringify(v)+": Error:"+e);
-                            return f(e, null);
-                        };
-						return f(null, v ? new GraphView( v) : null);
-					});
+                   	return  persistence.createView(viewName, viewType);
 				}
-                /////////////////// /////////////////////// /////////////////////////////// ///////////////////////////
-			}
+            }
 		}]);
 })(angular.module('graph-O-matic-services'));

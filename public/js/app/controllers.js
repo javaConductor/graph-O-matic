@@ -4,7 +4,7 @@
 console.log("controllers.js");
 function WorldCtrl($scope, World, eventProcessor,  constants) {
 
-	$scope.title = "Graph O Matic (c) 2012";
+	$scope.title = "Graph O Matic (c) 2012-2013";
 console.log("WorldCtrl()");
 
 	/// get all the views
@@ -27,15 +27,17 @@ console.log("WorldCtrl()");
     $scope.newViews = 0;
 
     $scope.getAllViews = function(){
-        World.views(function(err,views){
+        World.views(function(err, views){
             if(!err){
-                $scope.viewList = views;
-                if( views && views.length > 0 )
-                    $scope.openViewList = [views[ 0 ]];
+                $scope.$apply(function(){
+                    $scope.viewList = views;
+                    if( views && views.length > 0 )
+                        $scope.openViewList = [views[ 0 ]];
+                })
             }else{
                 //report error
-                console.error("Error getting all views: "+ e);
-                $scope.addErrorMessage("Error opening view: "+ e);
+                console.error("Error getting all views: "+ err);
+                $scope.addErrorMessage("Error opening view: "+ err);
             }
         })
     };

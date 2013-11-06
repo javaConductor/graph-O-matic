@@ -65,18 +65,15 @@
 
 				views: function (f) {
                     console.log("GraphWorld.views: ENTER");
-                    var d = q.defer();
-                    return  persistence.allViews()
-                        .then( function (v) {
-                            console.log("GraphWorld.views: returning view "+v.id);
-                            return d.resolve(v.map(function(x){return new GraphView( x);} ));
-                        })
-                        .fail(function(e){
+                    persistence.allViews(function(e,av){
+                        if(e){
                             console.error("GraphWorld.views: "+e);
-                            return d.reject(e);
-                        });
-
-
+                            return f(e);
+                        }
+                        var gvList = av.map(function(x){return new GraphView( x);} );
+                        console.log("GraphWorld.views: returning views "+JSON.stringify(gvList));
+                           f(null,(gvList));
+                    });
 				},
 
                 /// returns a new EMPTY view if viewId not found
@@ -100,4 +97,5 @@
 				}
             }
 		}]);
+
 })(angular.module('graph-O-matic-services'));

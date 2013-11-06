@@ -94,11 +94,10 @@
 			removeView: function (viewId, f) {
 			},
 
-			createView: function (viewName, viewType, f) {
+			createView: function (viewName, viewType) {
                 console.log("Persistence.createView("+viewName+","+viewType+")");
-                var d = q.defer();
-
-                $.ajax({
+               // var d = q.defer();
+                return $.ajax({
                     url: prefix + "views/",
                     type: "put",
                     data: {
@@ -107,14 +106,14 @@
                         }
                     })
                     .done(function( data ) {
-                        if(f) (f(null, data));
-                        d.resolve( data );
+                        console.log("Persistence.createView.done("+JSON.stringify(data)+")");
+                        return( data );
                     })
                     .fail(function( jqXHR, textStatus, errorThrown){
-                        if(f) (f("Error("+textStatus+"): "+errorThrown));
-                        d.reject("Error("+textStatus+"): "+errorThrown);
+                        console.error("Persistence.createView.fail("+textStatus+" - "+errorThrown+")");
+                        throw new Error("Error("+textStatus+"): "+errorThrown);
                     });
-                return d.promise;
+                //return d.promise;
 			},
 
 			saveView: function (viewData ) {
@@ -131,34 +130,39 @@
 			},
 
             getView: function (viewId) {
-
-                var d = q.defer();
-                $.ajax({
+                console.log("Persistence.getView("+(viewId)+")");
+                return $.ajax({
                     url: prefix + "views/"+viewId,
                     type: "get"
                 })
                     .done(function( data ) {
-                        if(f) (f(null, data));
-                        d.resolve( data );
+                        console.log("Persistence.getView.done("+(data.id)+")");
+                        return ( data );
                     })
                     .fail(function( jqXHR, textStatus, errorThrown){
-                        if(f) (f('Could not get View: id='+viewId +' ==>>'+ errorThrown));
-                        d.reject('Could not get View: id='+viewId +' ==>>'+ errorThrown);
+                        console.error("Persistence.getView"+(viewId)+".fail("+textStatus+" - "+errorThrown+")");
+                        throw ('Could not get View: id='+viewId +' ==>>'+ errorThrown);
                     });
-                return d.promise;
             },
 
-            allViews: function (  ) {
-                return $.ajax({
+            allViews: function ( f ) {
+                console.log("Persistence.allViews()");
+
+                var avP= $.ajax({
                     url: prefix + "views",
                     type: "get"
                 })
                     .done(function( data ) {
-                        return ( data );
+                        console.log("Persistence.allViews.done("+JSON.stringify(data)+")");
+                        if (f) f(null, data);
+                        //return ( data );
                     })
                     .fail(function( jqXHR, textStatus, errorThrown){
-                        throw ('Could not get Views:  ==>>'+ errorThrown);
+                        console.log("Persistence.allViews.fail("+textStatus+" - "+errorThrown+")");
+                        if (f) f ("Persistence.allViews.fail("+textStatus+" - "+errorThrown);
+                        //throw ("Persistence.allViews.fail("+textStatus+" - "+errorThrown);
                     });
+                return avP;
             },
 
 			createViewItem: function (theViewItem, f) {

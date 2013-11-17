@@ -43,23 +43,10 @@ console.log("WorldCtrl()");
     };
 
     $scope.openView = function(viewId){
-		World.view(viewId)
-            .then( function(err, viewData){
-            //// fireevent
-            eventProcessor.emit(constants.events.OpenViewEvent, [viewData]);
-            $scope.openViewList.push(viewData);
-        })
-            .fail(function(e){
-                console.error("Error opening view: "+ e);
-                $scope.addErrorMessage("Error opening view: "+ e);
-            });
+        eventProcessor.emit(constants.events.OpenViewEvent, [viewId]);
 	};
 
     $scope.addErrorMessage = function(msg){
-
-
-
-
     };
 
     $scope.newView = function newView(){
@@ -78,7 +65,7 @@ console.log("WorldCtrl()");
 //               console.log("controller.error:"+JSON.stringify(v));
                 $scope.viewList.push(v);
                 /// make it the current View
-                $scope.openView(v.id);
+                $scope.openView( v.id );
             });
     };
 

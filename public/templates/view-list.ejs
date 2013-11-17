@@ -1,0 +1,17 @@
+<div>
+    <tabset ng-controller="ViewListCtrl" >
+        <tab  ng-repeat="view in viewList"
+            ng-controller="ViewCtrl"
+            ng-init="viewIdx=$index"
+            heading="{{view.name}}"
+            active="{{ isActive($index) }}"
+            class="worldViewList"
+            data-view-id='{{view.id}}'
+                >
+            <graph-view data-view-index='$index'  >
+
+            </graph-view>
+
+        </tab>
+    </tabset>
+</div>

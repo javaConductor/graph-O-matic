@@ -5,10 +5,31 @@
  * Time: 5:09 PM
  */
 /*
-<graph-view ng-model="sampleView"  />
+<graph-view ng-model="sampleView"  viewIndex="21" />
  */
-function ViewCtrl(scope, location, view){
+function ViewCtrl(scope, worldSvc, constants){
 	console.log("ViewCtrl.link(("+scope.$id+")): Creating.");
+
+    /// what is in the scope?:
+        // view: the view
+        // currentViewId : id of the currently selected view
+        //
+    scope.model = {};
+
+    scope.model.currentViewId = 0;
+
+    var viewsP = worldSvc.views();
+
+    //// the problem  -  we do not have the scope.view
+    // value until the 'then' fn is called
+    viewsP.then(function(views){
+        if( views && views[0] ){
+            scope.$apply(function(){
+                scope.model.view = views[0];
+            });
+        }
+    });
+
     var item1  = {
         item : {id: "item3", itemType:{ id: "it2", name:"Person"} },
         id: "vitem3",
@@ -72,13 +93,14 @@ function ViewCtrl(scope, location, view){
         }
     };
 
-    scope.view =
+    scope.view2 =
     {
         id: "test-view-1",
         name: "super view 1",
-        viewType: "b-neg",
+        typeName: "baseVT",
         items: [item2,item1]
     };
+
     // get the viewId from the location
     // try to fetch the view
     // if found, set the scope.view to the view
@@ -87,4 +109,4 @@ function ViewCtrl(scope, location, view){
 
 }
 
-ViewCtrl.$inject = [ "$scope","$location", "View" ];
+ViewCtrl.$inject = [ "$scope", "GraphWorld","ConstantsService" ];

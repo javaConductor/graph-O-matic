@@ -4,10 +4,6 @@
     directivesModule.
         directive('graphView', ['$compile', '$parse', function ($compile, $parse) {
 
-            var distance = function (x, y) {
-                return  ( Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
-            };
-
             function selectItem(d,i){
                 //var element = evt.target;
                 var g = d3.select(this);
@@ -18,7 +14,6 @@
             function deselectItem(){
                 var g = d3.select(this);
                 g.classList.remove("selectedRect")
-
             }
 
             function putToBottom(element) {
@@ -42,6 +37,7 @@
                 var innerHeight = outerHeight - (2 * innerY);
                 var innerWidth = outerWidth - (2 * innerX);
 
+                data.items = data.items || [];
                 var whenNewData = d3.select(svgElement)
                     .attr("width", window.screen.availWidth)
                     .attr("height", window.screen.availHeight)
@@ -105,7 +101,7 @@
                     .attr("fill","navy");
 
                 var textFunc = function(d, i){
-                    return "" + d.item.itemType.name;
+                    return "" + d.item.item.typeName;
                 };
 
                 whenNewDatag
@@ -209,7 +205,7 @@
                     .on("click", selectItem)
                     .call(drag);
             }
-
+/*
             function createViewWithHtmlTable(data, svgElement){
                 var whenNewData = d3.select(svgElement)
                     .attr("width", window.screen.availWidth)
@@ -365,28 +361,54 @@
                     .on("click", selectItem)
                     .call(drag);
             }
-
+*/
             return {
                 restrict: 'E',
                 replace: true,
-                scope: true,
-                'require': '?ngModel',
+                scope: {
+                    view: '=ngModel',
+                    viewIndex: '=viewIndex'
+                },
                 template: "<svg> </svg>",
+                /**
+                 *  Directive must have either:
+                 *      ngModel attribute - scope name for the viewData
+                 *      or
+                 *      viewIndex - index into the parentScope value -> scope.viewList[viewIndex]
+                 * @param scope
+                 * @param element
+                 * @param attrs
+                 * @param model
+                 * @returns {null}
+                 */
                 link: function (scope, element, attrs, model) {
 
-                    if (!model)
-                        return;
+//                    if (!model)
+//                        return;
 
-                    var mdl = $parse(attrs.ngModel);
-                    var modelData = mdl(scope.$parent);
-
-                    if (!modelData){
-                        alert("Value "+attrs.ngModel+ " not found in scope.");
-                        return null;
+                    var modelData;
+                    var viewIndex;
+                    var mdl;
+                    if( attrs.ngModel ){
+                        mdl = $parse( attrs.ngModel );
+                        modelData = mdl(scope.$parent);
+                    }else{
+                        mdl = $parse( attrs.viewIndex );
+                        viewIndex = mdl(scope.$parent);
+                        modelData = scope.viewList[+viewIndex];
+                        scope[attrs.ngModel] = modelData;
                     }
-                    createView(modelData, element[0]);
+
 
                     /// change the view if the data changes
+                    scope.$parent.$watch(attrs.ngModel, function(nu, old) {
+                        if(nu){
+                            console.log("scope."+attrs.ngModel+ " has been changed to: "+JSON.stringify(nu));
+                            createView(nu, element[0]);
+                        }
+                    });
+
+                    if(model)
                     model.$render = function () {
                         /// redisplay the item inside the view
                         if (this.$modelValue) {
@@ -394,6 +416,7 @@
                             // nuData = this.$modelValue;
                         }
                     }
+
                 }
             };
         }]);

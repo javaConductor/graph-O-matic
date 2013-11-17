@@ -22,6 +22,14 @@
             CloseView: "close_view",
             ViewClosed: "view_closed",
             SelectionChanged: "selection_changed"// data -
+        },
+        viewItemStates:{
+            SummaryEdit: "summary_edit",
+            SummaryView: "summary_view",
+            DataEdit: "data_edit",
+            DataView: "data_view",
+            FullScreen: "full_screen",
+            Hidden: "hidden"
         }
 	};
 

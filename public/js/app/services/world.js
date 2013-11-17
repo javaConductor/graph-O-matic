@@ -54,26 +54,25 @@
                     f( this );
                 },
 
-				initProperties: function (itemType, defaultProps) {
-					return (itemType.parent)
-						? util.copy(this .initProperties(itemType.parent, defaultProps), util.mapBy("name", itemType.properties))
-						: util.copy(defaultProps, util.mapBy("name", itemType.properties))
-				},
 
 				findRelatedImages: function(item, f){
 				},
 
-				views: function (f) {
+				views: function () {
                     console.log("GraphWorld.views: ENTER");
-                    persistence.allViews(function(e,av){
-                        if(e){
-                            console.error("GraphWorld.views: "+e);
-                            return f(e);
-                        }
-                        var gvList = av.map(function(x){return new GraphView( x);} );
-                        console.log("GraphWorld.views: returning views "+JSON.stringify(gvList));
-                           f(null,(gvList));
-                    });
+                    return persistence.allViews()
+                        .then(function(av){
+
+                            var gvList = av.map(function(x){ return new GraphView( x ); } );
+                            console.log("GraphWorld.views: returning views "+JSON.stringify(gvList));
+                               return(gvList);
+                        });
+//                        .fail(function(e){
+//                            if (e) {
+//                                console.error("GraphWorld.views: "+e);
+//                                throw (e) ;
+//                            }
+//                        });
 				},
 
                 /// returns a new EMPTY view if viewId not found

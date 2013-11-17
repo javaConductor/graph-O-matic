@@ -64,7 +64,7 @@
                 return Item.delete({id : itemId});
 			},
 
-			saveItem: function (item, f) {
+			saveItem: function (item) {
 				return Item.save({}, item)
                 .then(function(saved){
                         return saved;
@@ -145,35 +145,33 @@
                     });
             },
 
-            allViews: function ( f ) {
+            allViews: function ( ) {
                 console.log("Persistence.allViews()");
 
-                var avP= $.ajax({
+                return $.ajax({
                     url: prefix + "views",
-                    type: "get"
+                    type: "GET"
                 })
-                    .done(function( data ) {
-                        console.log("Persistence.allViews.done("+JSON.stringify(data)+")");
-                        if (f) f(null, data);
-                        //return ( data );
-                    })
-                    .fail(function( jqXHR, textStatus, errorThrown){
-                        console.log("Persistence.allViews.fail("+textStatus+" - "+errorThrown+")");
-                        if (f) f ("Persistence.allViews.fail("+textStatus+" - "+errorThrown);
-                        //throw ("Persistence.allViews.fail("+textStatus+" - "+errorThrown);
+                .then(
+                        function( data ) {
+                            console.log("Persistence.allViews.done("+JSON.stringify(data)+")");
+                            return ( data);
                     });
-                return avP;
             },
 
-			createViewItem: function (theViewItem, f) {
+
+			createViewItem: function (viewId, theItem, position) {
                 console.log("Persistence.createViewItem("+")");
                 return $http({
                     method: 'PUT',
-                    url: prefix + "view-items/",
-                    data: theViewItem
+                    url: prefix + "view/"+viewId+"/items/",
+                    data: {
+                        item: theItem,
+                        position: position
+                    }
                 })
-                    .success(function(vi, status, headers, config){
-                        return( vi );
+                    .success(function(v, status, headers, config){
+                        return( v );
                     })
                     .catch(function(e){
                         throw new Error(e);
@@ -181,11 +179,11 @@
 
 			},
 
-			updateViewItem: function (theViewItem, f) {
+			updateViewItem: function (theViewItem) {
                 console.log("Persistence.updateViewItem("+")");
                 return $http({
-                    method: 'PUT',
-                    url: prefix + "view-items/",
+                    method: 'POST',
+                    url: prefix + "view/"+theViewItem.viewId+"/items/"+theViewItem.id,
                     data:theViewItem
                 })
                     .then(function(vi){
@@ -194,7 +192,6 @@
                     .catch(function(e){
                         throw new Error(e);
                     });
-
             }
 		}
 	}]);

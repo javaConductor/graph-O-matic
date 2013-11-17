@@ -15,25 +15,55 @@
  */
 console.log("graphViewList.js");
 (function (graphModule) {
-    graphModule.directive('graphViewList', ['$rootScope', '$compile', 'ContextEventProcessor', '$parse', 'UtilityFunctions', 'ConstantsService',
-        function (rootScope, $compile, eventProcessor, $parse, util, constants) {
+    graphModule.directive('graphViewList', ['GraphWorld','$rootScope', '$compile', 'ContextEventProcessor', '$parse', 'UtilityFunctions', 'ConstantsService',
+        function (World, rootScope, $compile, eventProcessor, $parse, util, constants) {
             console.log("directives/graphViewList.js - directives:"+JSON.stringify(graphModule));
+
+            var selectView = function(viewId){
+                console.log("GraphViewList.selectView("+viewId+")");
+                //deselect all
+                d3.select("tab")
+                    .attr("active",false);
+                // select the one
+                if ( viewId ) {
+                    var tab = findTab( viewId );
+                    if ( tab ){
+                        tab.attr( "active", true );
+                        return tab;
+                    }else
+                        return null;
+                }else
+                    return null;
+            };
+
             /**
              * This function is called when the user wants to open a view that may not be open
              *
+             *
              * @param scope
              * @param key
-             * @param view
+             * @param evt
+             * @param viewIdInArray
              */
-            var onOpenView = function onOpenView( scope, key, view ){
-                var t = findTab(view);
+            var onOpenView = function onOpenView( scope, key, evt, viewIdInArray ){
+                var viewId = viewIdInArray[0][0];
+                if(!viewId)
+                    return;
+
+                console.log("GraphViewList.onOpenView("+scope.$id+","+key+","+viewId+")");
+                var t = findTab(viewId);
                 // if we have a tab then set it to active
                 // if not, add this view to the related scope variable
                 if ( t )
-                    t.attr("active",true);
+                    t.attr( "active", true );
                 else{
                     scope[key] = scope[key] || [];
-                    scope[key].push(view);
+                    World.view(viewId).then(function(view){
+                        scope.$apply(function(){
+                            scope[key].push( view );
+                        });
+                        selectView(view.id);
+                    })
                 }
             };
 
@@ -51,52 +81,31 @@ console.log("graphViewList.js");
                 };
             };
 
-            var selectView = function(viewId){
-                //deselect all
-                d3.select("tab")
-                    .attr("active",false);
-                // select the one
-                if(viewId)
-                    d3.select("tab[data-view-id="+viewId+"]")
-                        .attr("active",true);
-            };
-
             var closeView = function(viewId){
-                d3.select("tab[data-view-id="+viewId+"]")
-                    .remove();
+                console.log("GraphViewList.closeView("+viewId+")");
+                var tab = findTab( viewId );
+                if ( tab )
+                    tab.remove();
             };
 
             /**
              * Given a view, this function returns the related tab or null if the view
              * is not already open.
              *
-             * @param view
+             * @param viewId
              * @returns {null}
              */
-            var findTab = function findTab(view){
-                var selector = 'tab[data-view-id="'+ view.id +'"]  ';
+            var findTab = function findTab(viewId){
+                var selector = 'tab[data-view-id="'+ viewId +'"]  ';
                 var t = d3.select(selector);
                 return t.empty() ? null : t;
             };
-
-            var  createContent = function( viewList, tabsetSelection  ){
-
-                viewList = viewList || [];
-                var selection = tabsetSelection.selectAll("tab")
-                    .data(viewList);
-
-                ///FIX THIS !!!!
-                selection.enter()
-                        .append("tab")
-                        .attr("heading", function(d,i){return d.name;})
-                        .attr("active", true)
-                        .attr("class","worldViewList")
-                        .attr("select", function(d,i){  return onSelectedFunc(d); })
-                        .attr("data-view-id",  function(d,i){  return (d.id); })
-                            //.append( $compile("<graph-view/>")(scope))
-                            .append(("<graph-view />"))
-                            .attr("ng-model", function(d,i){  return 'viewList['+ i+']'; })
+  /*
+            var scopeKeyForView = function(idx){
+                return 'view.'+ idx;
             };
+*/
+//            var  createContent = function( scope, viewList  ){ };
 
             return {
                 restrict: 'E',
@@ -104,29 +113,31 @@ console.log("graphViewList.js");
                 scope: {
                     viewList: '=ngModel'
                 },
-                template: "<tabset class='worldViewList'/>",
+                templateUrl: "/templates/view-list.ejs",
                 link: function (scope, element, attrs, model) {
                     console.log("worldViewList.link("+scope.$id+"): ENTER.");
                     //var mdl = $parse( attrs.ngModel );
-                    var viewList = scope.viewList;
                     //var viewList = mdl(rootScope);
+                    var viewList = scope.viewList;
                     var selection = d3.select( element[0])
                         .select("tabset.worldViewList");
 
                     /// listen for the OpenView event
                     eventProcessor.on(constants.events.OpenViewEvent,
                         // returns a function waiting ONLY for a view - 1st 2 args fixed.
-                       wu.curry(onOpenView, scope, attrs.ngModel)
+                       wu.curry(onOpenView, scope, "viewList")
                     );
                     //listen for openView, closeView, selectView, removeView
                     eventProcessor.on(constants.events.SelectView, selectView );
                     eventProcessor.on(constants.events.CloseView, closeView );
-                    createContent( viewList, selection  );
+//                    createContent( scope, viewList, element  );
 
-                        /// Can we use this to update the screen for each item ???
-                    scope.$watch( "viewList", function (nuList, oldVal) {
-                        createContent( nuList,  selection );
-                    });
+                    /// Can we use this to update the screen for each item ???
+//                    scope.$watch( "viewList" /*attrs.ngModel*/, function (nuList, oldVal) {
+//                        if(nuList) console.log("GraphViewList.link.$watch("+ JSON.stringify(nuList.map(function(x){ return x.id;}) ) +")");
+//                        createContent( scope, nuList,  selection );
+//                    });
+
                     console.log("worldViewList.link("+scope.$id+"): EXIT.");
                 }
             };

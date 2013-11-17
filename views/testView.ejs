@@ -6,111 +6,51 @@
     <link rel='stylesheet' href='/stylesheets/style.css'/>
 	<link rel='stylesheet' href='/stylesheets/itemView.css'/>
 
-	<script src="/js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
-	<script src="/js/lib/jquery/jquery-ui-1.9.1.custom.js" type='text/javascript'></script>
-	<script src="/js/lib/angular/angular.js" type='text/javascript'></script>
-	<script src="/js/lib/angular/angular-resource.js" type='text/javascript'></script>
-    <script src="js/lib/angular/ui-bootstrap-0.6.0.js" type='text/javascript'></script>
+    <script src="/js/lib/jquery/jquery-1.8.2.js" type='text/javascript'></script>
+    <script src="/js/lib/jquery/jquery-ui-1.9.1.custom.js" type='text/javascript'></script>
+    <script src="/js/lib/angular/angular.js" type='text/javascript'></script>
+    <script src="/js/lib/angular/angular-resource.js" type='text/javascript'></script>
+    <script src="/js/lib/angular-ui/angular-ui.js" type='text/javascript'></script>
+    <script src="/js/lib/angular/ui-bootstrap-0.6.0.js" type='text/javascript'></script>
     <script src="/js/lib/d3/d3.v3.js" type='text/javascript'></script>
     <script src="/js/lib/wu/wu-0.1.8.js" type='text/javascript'></script>
 
-	<script src="/js/app/services/services.js" type='text/javascript'></script>
-	<script src="/js/app/services/constants.js" type='text/javascript'></script>
-	<script src="/js/app/services/persistence.js" type='text/javascript'></script>
-	<script src="/js/app/services/utilSvc.js" type='text/javascript'></script>
-	<script src="/js/app/services/model.js" type='text/javascript'></script>
-	<script src="/js/app/services/world.js" type='text/javascript'></script>
-	<script src="/js/app/services/relationship.js" type='text/javascript'></script>
-	<script src="/js/app/services/view.js" type='text/javascript'></script>
-	<script src="/js/app/services/contextService.js" type='text/javascript'></script>
-	<script src="/js/app/filters.js" type='text/javascript'></script>
-	<script src="/js/app/directives/directives.js" type='text/javascript'></script>
-	<script src="/js/app/directives/graphItem.js" type='text/javascript'></script>
-	<script src="/js/app/directives/graphRelationship.js" type='text/javascript'></script>
-	<script src="/js/app/directives/graphView.js" type='text/javascript'></script>
-	<script src="/js/app/controllers.js" type='text/javascript'></script>
-	<script src="/js/app/relationshipCtrl.js" type='text/javascript'></script>
-	<script src="/js/app/itemCtrl.js" type='text/javascript'></script>
+    <!-- The  App -->
+    <script src="/js/app/services/services.js" type='text/javascript'></script>
+    <script src="/js/app/services/config.js" type='text/javascript'></script>
+    <script src="/js/app/services/constants.js" type='text/javascript'></script>
+    <script src="/js/app/services/directory.js" type='text/javascript'></script>
+    <script src="/js/app/services/persistence.js" type='text/javascript'></script>
+    <script src="/js/app/services/utilSvc.js" type='text/javascript'></script>
+    <script src="/js/app/services/model.js" type='text/javascript'></script>
+    <script src="/js/app/services/world.js" type='text/javascript'></script>
+    <script src="/js/app/services/relationship.js" type='text/javascript'></script>
+    <script src="/js/app/services/view.js" type='text/javascript'></script>
+    <script src="/js/app/services/contextService.js" type='text/javascript'></script>
+    <script src="/js/app/services/eventProcessor.js" type='text/javascript'></script>
+    <script src="/js/app/filters.js" type='text/javascript'></script>
+    <script src="/js/app/directives/directives.js" type='text/javascript'></script>
+    <script src="/js/app/directives/selectionList.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphItem.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphRelationship.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphView.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphViewList.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphViewOptions.js" type='text/javascript'></script>
+    <script src="/js/app/directives/graphWorld.js" type='text/javascript'></script>
+    <script src="/js/app/controllers.js" type='text/javascript'></script>
+
+    <script src="/js/app/viewOptionsCtrl.js" type='text/javascript'></script>
+    <script src="/js/app/relationshipCtrl.js" type='text/javascript'></script>
+    <script src="/js/app/itemCtrl.js" type='text/javascript'></script>
     <script src="/js/app/viewCtrl.js" type='text/javascript'></script>
+    <script src="/js/app/viewListCtrl.js" type='text/javascript'></script>
     <script src="/js/app.js" type='text/javascript'></script>
+</head>
 
 <body  ng-app="graphOmatic">
-<script>
-function ViewCtrl2($scope){
-    var item1  = {
-        item : {id: "item3", itemType:{ id: "it2", name:"Person"} },
-        id: "vitem3",
 
-        position: function(){
-            return {x: 550, y: 150};
-        },
-        title: function(){
-            return "Ruby V. Collins";
-        },
-        description: function() {
-            return "Mom";
-        },
-        image: function(){
-            return "/images/redFist.jpg";
-        },
-        data: function(){
-            return [
-                {name:"Firstname", value:"Ruby"},
-                {name:"Lastname", value:"Collins"},
-                {name:"Email", value:"mom@me.us"},
-                {name:"Address", value:"11302 S Normal Av"},
-                {name:"City", value:"Chicago"},
-                {name:"State", value:"IL"},
-                {name:"Home Phone", value : "7738215589"},
-                {name:"Work Phone", value : "7736672626"}
-            ];
-        }
-    };
-
-    var item2 = {
-        item : {id: "item2", itemType:{ id: "it2", name:"Person"} },
-        id: "vitem2",
-
-        position: function(){
-            return {x: 150, y: 150};
-        },
-        title: function(){
-            return "David Collins";
-        },
-        description: function() {
-            return "Mini Me";
-        },
-        image: function(){
-            return "/images/blackLight.jpg";
-        },
-        data: function(){
-            return [
-                {name:"Firstname", value:"David"},
-                {name:"Lastname", value:"Collins"},
-                {name:"Email", value:"you@me.us"},
-                {name:"Address", value:"6640 S Vernon Av"},
-                {name:"City", value:"Chicago"},
-                {name:"State", value:"IL"},
-                {name:"Game Phone", value : "7739555589"},
-                {name:"Work Phone", value : "7736678236"},
-                {name:"Game1", value : "ROBLOX"},
-                {name:"Game2", value : "StickPage.com"},
-                {name:"Game3", value : "Mind Craft"}
-            ];
-        }
-    };
-
-    $scope.view =
-    {
-        id: "test-view-1",
-        name: "super view 1",
-        viewType: "b-neg",
-        items: [item2,item1]
-    };
-}
-</script>
-<div  style="top: 0;left:0;width: 1600px;height: 1600px;" ng-controller="ViewCtrl2" >
-	<graph-view  ng-model="view" ></graph-view>
+<div  style="top: 0;left:0;width: 1600px;height: 1600px;" ng-controller="ViewCtrl" >
+	<graph-view  ng-model="model.view" ></graph-view>
 </div>
 </body>
 </html>

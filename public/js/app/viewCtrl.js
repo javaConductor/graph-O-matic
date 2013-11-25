@@ -7,7 +7,7 @@
 /*
 <graph-view ng-model="sampleView"  viewIndex="21" />
  */
-function ViewCtrl(scope, worldSvc, constants){
+function ViewCtrl(scope, worldSvc, constants, createDialog){
 	console.log("ViewCtrl.link(("+scope.$id+")): Creating.");
 
     /// what is in the scope?:
@@ -25,10 +25,15 @@ function ViewCtrl(scope, worldSvc, constants){
     viewsP.then(function(views){
         if( views && views[0] ){
             scope.$apply(function(){
-                scope.model.view = views[0];
+                scope.model.view = views.reverse()[0];
             });
         }
     });
+
+
+    scope.onNewItem=function(){
+
+    };
 
     var item1  = {
         item : {id: "item3", itemType:{ id: "it2", name:"Person"} },
@@ -109,4 +114,7 @@ function ViewCtrl(scope, worldSvc, constants){
 
 }
 
-ViewCtrl.$inject = [ "$scope", "GraphWorld","ConstantsService" ];
+ViewCtrl.$inject = [ "$scope",
+    "GraphWorld",
+    "ConstantsService",
+    "createDialog" ];

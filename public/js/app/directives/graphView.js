@@ -173,7 +173,7 @@
                     .attr("style","overflow:auto;height:"+descHeight+"; width:"+descWidth+"; background: url('/images/silvermetaltexture.jpg')")
                     .attr("class", "itemDescription")
                     .text(function(d){
-                        return d.description();
+                        return d.description;
                     });
 
                 whenNewDatag.append("circle")
